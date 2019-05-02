@@ -264,11 +264,16 @@ const AbsenceForm = {
             vn.state.elements_list = result.results.map(function(e){
                 return {'value': e.id, 'text': e.name};
             })
+            console.log('ABSENCE TYPE ', vn.state.elements_list);
         }).
         catch(function(error){
             console.log(error);
         });
         vn.state.absence_info = {};
+        vn.state.absence_info['start_morning'] = true;
+        vn.state.absence_info['start_afternoon'] = true;
+        vn.state.absence_info['end_morning'] = true;
+        vn.state.absence_info['end_afternoon'] = true;  
     },
     view: function(vn) {
         return m('.worker_form', [
@@ -331,7 +336,10 @@ const AbsenceForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWCheckbox, {
                                                 'label': 'Start morning',
-                                                'checked': true,
+                                                'checked': (vn.state.absence_info['start_morning'] !== undefined) ?
+                                                    vn.state.absence_info['start_morning']
+                                                    :
+                                                    false,
                                                 onchange: function(ev){
                                                     vn.state.absence_info['start_morning'] = ev.target.checked;
                                                     console.log('checkbox onchange ', vn.state.absence_info['start_morning']);
@@ -345,7 +353,10 @@ const AbsenceForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWCheckbox, {
                                                 'label': 'End afternoon',
-                                                'checked': true,
+                                                'checked': (vn.state.absence_info['end_afternoon'] !== undefined) ?
+                                                    vn.state.absence_info['end_afternoon']
+                                                    :
+                                                    false,                                                
                                                 onchange: function(ev){
                                                     vn.state.absence_info['end_afternoon'] = ev.target.checked;
                                                     console.log('checkbox onchange ', vn.state.absence_info['end_afternoon']);
@@ -357,34 +368,10 @@ const AbsenceForm = {
                                 m(Layout,
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
-                                            /*m(MCWTextField, {
-                                                "placeholder":"Gender",
-                                                onblur: function (e){
-                                                    vn.state.worker['gender'] = e.target.value
-                                                },
-                                            })*/
-                                        )
-                                    )
-                                ),
-                                m(Layout,
-                                    m(Layout.Row,
-                                        m(Layout.Cell, {span:12},
-                                            /*m(MCWTextField, {
-                                                "placeholder":"Category",
-                                                onblur: function (e){
-                                                    vn.state.worker['category'] = e.target.value
-                                                },
-                                            })*/
-                                        )
-                                    )
-                                ),
-                                m(Layout,
-                                    m(Layout.Row,
-                                        m(Layout.Cell, {span:12},
-                                            m(MCWSelectmenu, {elements_list: vn.state.elements_list,
+                                            m(MCWSelectmenu, {
+                                                elements_list: vn.state.elements_list,
                                                 onchange: function(ev){
-                                                    vn.state.worker['vacation_policy'] = parseInt(ev.target.value);
-                                                    console.log(vn.state.worker['vacation_policy']);
+                                                    vn.state.absence_info['absence_type'] = parseInt(ev.target.value);
                                                 }
                                             })
                                         )
@@ -392,7 +379,9 @@ const AbsenceForm = {
                                 ),
                                 m(MCWButton, {
                                     onclick: function(){
-                                        m.request({
+                                        console.log('Ready to posted ', vn.state.absence_info);
+                                        // TODO: SOLVE BACKEND
+                                        /*m.request({
                                         method: 'POST',
                                         url: 'http://localhost:8000/absencies/workers',
                                         headers: {
@@ -407,10 +396,9 @@ const AbsenceForm = {
                                         }).
                                         catch(function(error){
                                         console.log(error);
-                                        });
+                                        });*/
                                     },
                                     name: 'Create'
-
                                 }),
                             )
                         )

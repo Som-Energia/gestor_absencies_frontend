@@ -7,7 +7,7 @@ const MCWSelectmenu = {
         m('.mdc-select', vn.attrs,
             m('i.mdc-select__dropdown-icon'),
             m('select.mdc-select__native-control', 
-                m('option', {'value': 'YOLO', 'selected': 'YOLO'}, 'hola'), 
+                m('option'), 
                     vn.attrs.elements_list.map(function(e){
                         return m('option', {'value': e['value'], 'text': e['text']})
                     })
