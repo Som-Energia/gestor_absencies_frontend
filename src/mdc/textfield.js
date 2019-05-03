@@ -5,7 +5,7 @@ require('@material/textfield/dist/mdc.textfield.css');
 
 
 function applyInputFilter(input, inputfilter, event) {
-  var filtered = inputfilter instanceof Function?
+  var filtered = inputfilter instanceof Function ?
     inputfilter(input.value) :
     (RegExp(inputfilter).test(input.value) && input.value);
 
@@ -44,7 +44,7 @@ var TextField = {
     vn.state.native.setCustomValidity(errormessage);
 
     var inputfilter = vn.attrs.inputfilter;
-    if (inputfilter) {
+    if ( inputfilter ) {
       setInputFilter(vn.state.native, inputfilter);
     }
   },
@@ -93,11 +93,13 @@ var TextField = {
       'aria-label': fullwidth?vn.attrs.label:undefined,
       'aria-controls': help_id,
       'aria-describedby': help_id,
+      'disabled': disabled 
     }, attrs, {
       // redefined
       oninput: function(ev) {
         var value = ev.target.value;
-        applyInputFilter(ev.target, inputfilter);
+        if(inputfilter !== undefined)
+          applyInputFilter(ev.target, inputfilter);
         ev.target.setCustomValidity('');
         if (attrs.oninput) attrs.oninput(ev);
         vn.state.errormessage = ev.target.validationMessage;
@@ -107,13 +109,13 @@ var TextField = {
     return m('', [
       m(''
         +'.mdc-text-field'
+        +(disabled?'.mdc-text-field--disabled':'')
         +(fullwidth?'.mdc-text-field--fullwidth':'')
         +(boxed?'.mdc-text-field--box':'')
         +(outlined?'.mdc-text-field--outlined':'')
         +(faicon||trailingicon?'.mdc-text-field--with-trailing-icon':'')
         +(leadingfaicon||leadingicon?'.mdc-text-field--with-leading-icon':'')
         +(dense?'.mdc-text-field--dense':'')
-        +(disabled?'.mdc-text-field--disabled':'')
       ,{
         style: { width: '100%'},
       },[

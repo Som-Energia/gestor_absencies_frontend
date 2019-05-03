@@ -4,12 +4,23 @@ import  '@material/select/dist/mdc.select.css'
 
 const MCWSelectmenu = {
     view: (vn) =>
-        m('.mdc-select', vn.attrs,
+        m('.mdc-select' + (vn.attrs.disabled?'.mdc-select--disabled':''), vn.attrs,
             m('i.mdc-select__dropdown-icon'),
             m('select.mdc-select__native-control', 
-                m('option'), 
+                //m('option'),
                     vn.attrs.elements_list.map(function(e){
-                        return m('option', {'value': e['value'], 'text': e['text']})
+                        return ( e['value'] === vn.attrs.default ?
+                            m('option', {
+                                'value': e['value'],
+                                'text': e['text'],
+                                'selected': 'selected'
+                            })
+                            :
+                            m('option', {
+                                'value': e['value'],
+                                'text': e['text'],
+                            })
+                        )
                     })
             )
         )

@@ -23,7 +23,7 @@ const Login = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
                                                 "label":"Usuari",
-                                                onblur: function (e){
+                                                oninput: function (e){
                                                     vn.state.auth.setUsername(e.target.value)
                                                 },
                                             })
@@ -36,7 +36,7 @@ const Login = {
                                             m(MCWTextField, {
                                                 "type":"password",
                                                 "label":"Password",
-                                                onblur: function (e){
+                                                oninput: function (e){
                                                     vn.state.auth.setPassword(e.target.value)
                                                 },
                                             })
