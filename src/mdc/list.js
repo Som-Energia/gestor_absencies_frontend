@@ -4,7 +4,11 @@ import '@material/list/dist/mdc.list.css'
 
 const MCWList = {
     view: (vn) =>
-        m('.mdc-list', vn.attrs, [
+        m('.mdc-list', vn.attrs, 
+            vn.attrs.elements_list === [] ?
+                [vn.children]
+            :
+            [
             m('ul', vn.attrs.elements_list.map(function(e){
                 return m('li.mdc-list-item', 
                     !e.link ? 

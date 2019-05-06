@@ -6,12 +6,13 @@ import MCWList from './mdc/list'
 import MWCFab from './mdc/fab'
 import Layout from './mdc/layout'
 import MCWCard from './mdc/card'
-
+import MCWTextField from './mdc/textfield'
 
 const ET = {
     oninit: function(vn) {
         vn.state.members = [];
-        vn.state.teams = []; 
+        vn.state.teams = [];
+        vn.state.selected_members = [];
         if(Auth.token === false){
             m.route.set('/login');
             return false;
@@ -26,8 +27,15 @@ const ET = {
         }).
         then(function(result) {
             vn.state.members = result.results.map(function(e){
-                return {'name': e.username, 'link': '/member/' + e.id};
+                return {
+                    'name': e.username,
+                    'link': '/member/' + e.id,
+                    'full_name': e.first_name + ' ' + e.last_name,
+                };
             })
+            vn.state.selected_members = vn.state.members;
+            console.log('list ', vn.state.members);
+            console.log('selected list ', vn.state.selected_members);
         }).
         catch(function(error){
             console.log(error);
@@ -85,7 +93,23 @@ const ET = {
                                     ])
                                 ),
                                 m('hr'),
-                                m(MCWList, {elements_list: vn.state.members},
+                                m(MCWTextField, {
+                                    oninput: function(ev) {
+                                        if (ev.target.value !== ''){
+                                            vn.state.selected_members = 
+                                            vn.state.members.filter(x => (x.full_name).includes(ev.target.value)) === undefined ?
+                                                []
+                                            :
+                                                vn.state.members.filter(x => (x.full_name).includes(ev.target.value))
+                                            console.log('post filtered ', vn.state.selected_members);
+                                            console.log('post filtered ', vn.state.members);
+                                        }
+                                        else {
+                                            vn.state.selected_members = vn.state.members;    
+                                        }
+                                    }
+                                }),
+                                m(MCWList, {elements_list: vn.state.selected_members},
                                     (vn.state.can_edit === true) ?
                                         m(MWCFab, {
                                             value: 'person_add',

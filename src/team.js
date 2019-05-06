@@ -22,9 +22,19 @@ const Team = {
         vn.state.workers_info = [];
         vn.state.members_list = [];
         vn.state.possibles_referents = [];
+        vn.state.possibles_members = [];
         vn.state.actual_representant = '';
         vn.state.actual_referent = '';
-        vn.state.dialog = {};
+        vn.state.dialog_add_member = {
+            backdrop: true,
+            outer: {},
+            inner: {},
+        };
+        vn.state.dialog_remove_team = {
+            backdrop: true,
+            outer: {},
+            inner: {},
+        };
 
         m.request({
             method: 'GET',
@@ -53,6 +63,13 @@ const Team = {
             vn.state.workers_info = result.results;
             m.redraw();
             console.log('worker info', vn.state.workers_info);
+            vn.state.workers_info.map(function(e){
+                // TODO: estructurar-ho diferent
+                vn.state.possibles_members.push({
+                    'text': e.first_name + ' ' + e.last_name,
+                    'value': e.id,
+                });
+            });
             vn.state.editing = true; // TODO: Check user permission
         }).
         catch(function(error){
@@ -94,7 +111,8 @@ const Team = {
                         'link': '/member/' + presunto_worker.id,
                         'button': m(MCWButton, {
                             onclick: function(ev) {
-                                vn.state.dialog.open();
+                                console.log('Remove member');
+                                //vn.state.dialog.open();
                             }
                         })
                     })
@@ -190,14 +208,14 @@ const Team = {
                                                 m(Layout.Cell,
                                                     m(MCWButton, {
                                                         onclick: function(){
-                                                            console.log('AD ME!');
+                                                            vn.state.dialog_add_member.outer.open();
                                                         }
                                                     }),                                           
                                                 ),
                                                 m(Layout.Cell,
                                                     m(MCWButton, {
                                                         onclick: function(){
-                                                            console.log('REMOVE TEAM!!');
+                                                            vn.state.dialog_remove_team.outer.open();
                                                         }
                                                     }),                                           
                                                 )
@@ -212,6 +230,7 @@ const Team = {
                 m(MWCFab, {
                     value: (vn.state.editing)?'edit':'save',
                     onclick: function() {
+
                         if (vn.state.editing === false) {
                             // Es pot enviat el metode put!
                             m.request({
@@ -260,20 +279,77 @@ const Team = {
                     }
                 }),
                 m(Dialog, {
-                    id: 'random',
-                    headers: 'Header',
-                    model: vn.state.dialog,
+                    id: 'add_member',
+                    header: 'Add member',
+                    model: vn.state.dialog_add_member.outer,
+                    buttons: [{
+                        text: 'Sub dialog',
+                        onclick: function(){
+                            console.log('sub dialog');
+                            vn.state.dialog_add_member.outer.close();
+                        }
+                    },{
+                        text: 'Cancel dialog',
+                        onclick: function(){
+                            console.log('cancel dialog');
+                            vn.state.dialog_add_member.outer.close();
+                        }
+                    }],
                     onaccept: function(ev) {
                         ev.cancelBubble = true;
-                        vn.state.dialog.innerexit = 'Accepted';
+                        vn.state.dialog_add_member.innerexit = 'Accepted';
                         m.redraw();
                     },
                     onclose: function(ev) {
                         vn.state.self.dialog.innerexit = 'Rejected';
                         m.redraw();
                     },
-                    backdrop: false,
-                }),
+                    backdrop: vn.state.dialog_add_member.backdrop,
+                }, [
+                    m(MCWSelectmenu, {
+                        // si no es admin default: /* jo mateix */,
+                        // si no es admin value: /* jo mateix */,
+                        elements_list: vn.state.possibles_members,
+                        // si no es admin disabled: vn.state.editing,
+                        onchange: function(ev){
+                            //vn.state.request_body_referent['worker'] = parseInt(ev.target.value);
+
+                        }
+                    }),
+                ]),
+                m(Dialog, {
+                    id: 'remove_team',
+                    header: 'Remove Team',
+                    model: vn.state.dialog_remove_team.outer,
+                    content: 'Estas segur?',
+                    buttons: [{
+                        text: 'Sub dialog',
+                        onclick: function(){
+                            console.log('sub dialog');
+                            // TODO: DELETE REQUEST
+                            vn.state.dialog_remove_team.outer.close();
+                        }
+                    },{
+                        text: 'Cancel dialog',
+                        onclick: function(){
+                            console.log('cancel dialog');
+                            vn.state.dialog_remove_team.outer.close();
+                        }
+                    }],
+                    onaccept: function(ev) {
+                        ev.cancelBubble = true;
+                        vn.state.dialog_remove_team.innerexit = 'Accepted';
+                        m.redraw();
+                    },
+                    onclose: function(ev) {
+                        vn.state.self.dialog_remove_team.innerexit = 'Rejected';
+                        m.redraw();
+                    },
+                    backdrop: vn.state.dialog_remove_team.backdrop,
+                }, [
+                    m('.', 'Estas segur que vols eliminar aquest equip?')
+
+                ]),
             ],
             )
         }
