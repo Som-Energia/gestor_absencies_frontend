@@ -44,7 +44,7 @@ const WorkerForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
-                                                "placeholder":"Username",
+                                                label : "Username",
                                                 onblur: function (e){
                                                     vn.state.worker['username'] = e.target.value
                                                 },
@@ -56,7 +56,7 @@ const WorkerForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
-                                                "placeholder":'Password',
+                                                label: 'Password',
                                                 onblur: function (e){
                                                     vn.state.worker['password'] = e.target.value
                                                 },
@@ -68,7 +68,7 @@ const WorkerForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
-                                                "placeholder":"First Name",
+                                                label: "First Name",
                                                 onblur: function (e){
                                                     vn.state.worker['first_name'] = e.target.value
                                                 },
@@ -80,7 +80,7 @@ const WorkerForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
-                                                "placeholder":"Last Name",
+                                                label: "Last Name",
                                                 onblur: function (e){
                                                     vn.state.worker['last_name'] = e.target.value
                                                 },
@@ -92,7 +92,7 @@ const WorkerForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
-                                                "placeholder":"Gender",
+                                                label: "Gender",
                                                 onblur: function (e){
                                                     vn.state.worker['gender'] = e.target.value
                                                 },
@@ -104,7 +104,7 @@ const WorkerForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
-                                                "placeholder":"Category",
+                                                label: "Category",
                                                 onblur: function (e){
                                                     vn.state.worker['category'] = e.target.value
                                                 },

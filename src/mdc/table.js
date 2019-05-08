@@ -28,7 +28,6 @@ const Table = {
         else {
             vn.state.absences = [];
         }
-        console.log('ABSENCES ', vn.state.absences);
     },
     view: (vn) =>
         m('table',

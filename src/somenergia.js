@@ -6,12 +6,15 @@ import MCWButton from './mdc/button'
 import MCWList from './mdc/list'
 import Layout from './mdc/layout'
 import MCWCard from './mdc/card'
-
+import MCWTextField from './mdc/textfield'
 
 const SomEnergia = {
     oninit: function(vn) {
         vn.state.vacation_policies = [];
-        vn.state.som_energia_absence_types = []; 
+        vn.state.absence_types = []; 
+        vn.state.selected_vacationpolicy = [];
+        vn.state.selected_absencetype = [];
+        
         if(Auth.token === false){
             m.route.set('/login');
             return false;
@@ -28,6 +31,7 @@ const SomEnergia = {
             vn.state.vacation_policies = result.results.map(function(e){
                 return {'name': e.name, 'link': '/vacationpolicy/' + e.id};
             })
+            vn.state.selected_vacationpolicy = vn.state.vacation_policies;
         }).
         catch(function(error){
             console.log(error);
@@ -40,9 +44,11 @@ const SomEnergia = {
             }
         }).
         then(function(result) {
-            vn.state.teams = result.results.map(function(e){
+            vn.state.absence_type = result.results.map(function(e){
                 return {'name': e.name, 'link': '/absencetype/' + e.id};
             });
+            console.log('vn.state.absence_type ', vn.state.absence_type);
+            vn.state.selected_absencetype = vn.state.absence_type;
             vn.state.can_edit = true;
         }).
         catch(function(error){
@@ -85,13 +91,28 @@ const SomEnergia = {
                                     ])
                                 ),
                                 m('hr'),
-                                m(MCWList, {elements_list: vn.state.vacation_policies},
+                                m(MCWTextField, {
+                                    label: 'Nom de l\'equip a cercar',
+                                    outlined: true,
+                                    oninput: function(ev) {
+                                        if (ev.target.value !== ''){
+                                            vn.state.selected_vacationpolicy = 
+                                            vn.state.vacation_policy.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase())) === undefined ?
+                                                []
+                                            :
+                                                vn.state.vacation_policy.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase()))
+                                        }
+                                        else {
+                                            vn.state.selected_vacationpolicy = vn.state.vacation_policy;    
+                                        }
+                                    }
+                                }),
+                                m(MCWList, {elements_list: vn.state.selected_vacationpolicy},
                                     (vn.state.can_edit === true) ?
                                         m(MWCFab, {
                                             value: 'beach_access',
                                             onclick: function() {
-                                                    // FORMULARI CREATE TEAM
-                                                    console.log('CREATE VACATION POLICY!');
+                                                m.route.set('/vacationpolicy_form');
                                             }
                                         })
                                     :
@@ -136,7 +157,23 @@ const SomEnergia = {
                                     ])
                                 ),
                                 m('hr'),
-                                m(MCWList, {elements_list: vn.state.som_energia_absence_types},
+                                m(MCWTextField, {
+                                    label: 'Nom de l\'equip a cercar',
+                                    outlined: true,
+                                    oninput: function(ev) {
+                                        if (ev.target.value !== ''){
+                                            vn.state.selected_absencetype = 
+                                            vn.state.absence_type.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase())) === undefined ?
+                                                []
+                                            :
+                                                vn.state.absence_type.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase()))
+                                        }
+                                        else {
+                                            vn.state.selected_absencetype = vn.state.absence_type;    
+                                        }
+                                    }
+                                }),
+                                m(MCWList, {elements_list: vn.state.selected_absencetype},
                                     (vn.state.can_edit === true) ?
                                         m(MWCFab, {
                                             value: 'assignment_late',

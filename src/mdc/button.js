@@ -12,7 +12,9 @@ const MCWButton = {
         }
     },
     view: (vn) =>
-        m('button.mdc-button', vn.attrs, [
+        m('button.mdc-button' +
+            (vn.attrs.shaped ? '.mdc-button-shape-' + vn.attrs.radius : ''), 
+            vn.attrs, [
             m('span.mdc-button__label', vn.state.name),
         ])
 };

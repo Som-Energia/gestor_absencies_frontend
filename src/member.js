@@ -51,10 +51,10 @@ const Member = {
                                                                 m(Layout.Row,
                                                                     m(Layout.Cell, {span:12},
                                                                         m(MCWTextField, {
-                                                                            'value': vn.state.member_info[key],
-                                                                            'placeholder': key,
-                                                                            'disabled' : vn.state.editing ,
-                                                                            onblur: function (e){
+                                                                            label: key,
+                                                                            value: vn.state.member_info[key],
+                                                                            disabled: vn.state.editing,
+                                                                            oninput: function (e){
                                                                                 vn.state.member_info[key] = e.target.value;
                                                                             },
                                                                         })

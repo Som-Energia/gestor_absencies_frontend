@@ -26,8 +26,8 @@ var Auth = {
             if(result.token !== undefined){
                 Auth.token = 'JWT ' +  result.token;
                 Auth.user_id = result.user_id;
-                m.route.set('/');
-            }else {
+                m.route.set('/member/' + Auth.user_id);
+            } else {
                 Auth.token = false;
                 Auth.user_id = false;
             }

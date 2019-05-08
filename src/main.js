@@ -12,7 +12,9 @@ import MCWDrawer from './mdc/drawer'
 import MWCFab from './mdc/fab'
 import MWCSnackbar from './mdc/snackbar'
 import MCWSelectmenu from './mdc/selectmenu'
+import MCWCheckbox from './mdc/checkbox'
 import Table from './mdc/table'
+import DatePicker from './mdc/datepicker'
 import './style.styl';
 import Login from './login'
 import ET from './et'
@@ -22,22 +24,16 @@ import SomEnergia from './somenergia'
 import AbsenceType from './absencetype'
 import VacationPolicy from './vacationpolicy'
 import WorkerForm from './worker_form'
-import DatePicker from './mdc/datepicker'
-import MCWCheckbox from './mdc/checkbox'
+import VacationPolicyForm from './vacationpolicy_form'
+import TeamForm from './team_form'
+import Calendar from './calendar'
 
-
-const Main = {
-	view: function() {
-		return m('div.main',
-            [
-                m('h1', 'Gestor d\'Absències'),
-                m(Menu)
-            ]);    
-	} 
-}
 
 const Absences = {
-    view: function() {
+    oninit: function(vn) {
+        vn.state.year = (new Date()).getFullYear();
+    },
+    view: function(vn) {
         return m('.absences', [
                 m(Layout,
                     m(Layout.Row, [
@@ -50,9 +46,33 @@ const Absences = {
                                 m('hr'),
                                 m(Layout,
                                     m(Layout.Row, [
-                                        m(Layout.Cell, {span:12},
-                                            m('h3', {align: 'center'}, '2019')
-                                        )
+                                        m(Layout.Cell, {span:5, align: 'right'},
+                                            m(MCWButton, {
+                                                align: 'right',
+                                                name: '<',
+                                                shaped: true,
+                                                radius: 50,
+                                                rtl: true,
+                                                onclick: function(ev) {
+                                                    vn.state.year --;
+                                                },
+                                            })
+                                        ),
+                                        m(Layout.Cell, {span:2},
+                                            m('h3', {align: 'center'}, vn.state.year)
+                                        ),
+                                        m(Layout.Cell, {span:5},
+                                            m(MCWButton, {
+                                                align: 'left',
+                                                name: '>',
+                                                shaped: true,
+                                                radius: 50,
+                                                rtl: true,
+                                                onclick: function(ev) {
+                                                    vn.state.year ++;
+                                                },
+                                            })
+                                        ),
                                     ]),
                                     m(Layout.Row, [
                                         m(Layout.Cell, {span:6},
@@ -88,140 +108,8 @@ const Absences = {
     }
 }
 
-function find_row(object_list, workers_dicts, worker_id) {
-    console.log('workers_dicts ', workers_dicts);
-    console.log('object_list ', object_list);
-    var worker = workers_dicts.find(function(e) {
-        return e.id === worker_id;
-    });
-    console.log('worker ', worker);
-    var row = object_list.find(function(e) {
-        return e['name'] === (worker.name);
-    });
-    console.log('row', row);
-    return row;
-};
 
-const Calendar = {
-    oninit: function(vn){
-        if(Auth.token === false){
-            m.route.set('/login');
-            return false;
-        }
-        var date = new Date();
-        const token = Auth.token;
-        vn.state.same_month_dates = [];
-        vn.state.table = [];
-        vn.state.object_list = [];
-        vn.state.workers = [];
-                m.request({
-            method: 'GET',
-            url: 'http://localhost:8000/absencies/workers',
-            headers: {
-                'Authorization': token
-            }
-        }).
-        then(function(result) {
-            result.results.map(function(e) {
-                var morning_row = new Array(31);
-                morning_row.fill(0);
-                var afternoon_row = new Array(31);
-                afternoon_row.fill(0);
-                var occurrense_entity = {};
-                occurrense_entity['name'] = e.first_name + e.last_name;
-                occurrense_entity['mornings'] = morning_row;
-                occurrense_entity['afternoon'] = afternoon_row;
-                vn.state.object_list.push(occurrense_entity);
-                vn.state.workers.push({
-                    'name': e.first_name + e.last_name,
-                    'id': e.id
-                });
-            });
-        }).
-        catch(function(error){
-            console.log(error);
-        });        m.request({
-            method: 'GET',
-            url: 'http://localhost:8000/absencies/absences',
-            headers: {
-                'Authorization': token
-            }
-        }).
-        then(function(result) {
 
-            var list = result.results
-            vn.state.same_month_dates = list.filter(
-                list => (list.end_time.includes("2019-04-", 0) || 
-                    list.start_time.includes("2019-04-", 0))
-            );
-            vn.state.same_month_dates.map( function(e) {
-                var start_day = '';
-                var end_day = '';
-                var actual_object = find_row(vn.state.object_list, vn.state.workers, e.worker); // donarà el numero de la row de que és l'occurrencia
-                if (e.start_time.includes("2019-04-", 0) && e.end_time.includes("2019-04-", 0)) {
-                    start_day = new Date(e.start_time).getDate();
-                    end_day = new Date(e.end_time).getDate();
-                    for (var i = start_day; i <= end_day; i++){
-                        actual_object['mornings'][i+1] = e.absence_type;
-                        actual_object['afternoon'][i] = e.absence_type;
-                    }
-                }
-                if (e.start_time.includes("2019-04-", 0)) {
-                    start_day = new Date(e.start_time).getDate();
-                    end_day = 31;
-                    for (var i = start_day; i < end_day; i++){
-                        actual_object['mornings'][i+1] = e.absence_type;
-                        actual_object['afternoon'][i] = e.absence_type;
-                    }
-                }
-                if (e.end_time.includes("2019-04-", 0)) {
-                    start_day = 1;
-                    end_day = new Date(e.end_time).getDate();
-                    for (var i = start_day; i <= end_day; i++){
-                        actual_object['mornings'][i+1] = e.absence_type;
-                        actual_object['afternoon'][i] = e.absence_type;
-                    }
-                }
-            });
-
-            m.redraw();
-        }).
-        catch(function(error){
-            console.log(error);
-        });
-    },
-    view: function(vn) {
-        return m('.calendar', [
-                m(Layout,
-                    m(Layout.Row, [
-                        m(Layout.Cell, {span:2},
-                            m(Menu)
-                        ),
-                        m(Layout.Cell, {span:9},
-                            m(MCWCard, [
-                                m('h2', {align: 'center'}, 'Calendari'),
-                                m('hr'),
-                                m(Layout,
-                                    m(Layout.Row, [
-                                        m(Layout.Cell, {span:12},
-                                            m('h3', {align: 'center'}, 'Març 2019')
-                                        ),
-                                        m(Layout.Cell, {span:12},
-                                            m(Table, {
-                                                'absences': vn.state.object_list
-                                            }),
-                                        ),
-                                    ]),
-                                )
-                            ]),
-                        )
-
-                    ])
-                ),
-                
-        ]);    
-    }
-}
 
 const Menu = {
     oninit: function(vn){
@@ -410,7 +298,6 @@ const AbsenceForm = {
 
 
 m.route(document.getElementById('app'), "/login", {
-    "/": Main,
     "/login": Login,
     "/member/:memberid": Member,
     '/et': ET,
@@ -420,7 +307,9 @@ m.route(document.getElementById('app'), "/login", {
     '/somenergia': SomEnergia,
     '/absencetype/:absenceid': AbsenceType,
     '/vacationpolicy/:vacationpolicyid': VacationPolicy,
-    '/worker/form': WorkerForm,
+    '/worker_form': WorkerForm,
+    '/team_form': TeamForm,
+    '/vacationpolicy_form': VacationPolicyForm,
     '/occurrence/form': AbsenceForm,
 });
 

@@ -13,6 +13,7 @@ const ET = {
         vn.state.members = [];
         vn.state.teams = [];
         vn.state.selected_members = [];
+        vn.state.selected_teams = [];
         if(Auth.token === false){
             m.route.set('/login');
             return false;
@@ -28,9 +29,8 @@ const ET = {
         then(function(result) {
             vn.state.members = result.results.map(function(e){
                 return {
-                    'name': e.username,
+                    'name': e.first_name + ' ' + e.last_name,
                     'link': '/member/' + e.id,
-                    'full_name': e.first_name + ' ' + e.last_name,
                 };
             })
             vn.state.selected_members = vn.state.members;
@@ -51,6 +51,7 @@ const ET = {
             vn.state.teams = result.results.map(function(e){
                 return {'name': e.name, 'link': '/team/' + e.id};
             });
+            vn.state.selected_teams = vn.state.teams;
             vn.state.can_edit = true;
         }).
         catch(function(error){
@@ -94,15 +95,15 @@ const ET = {
                                 ),
                                 m('hr'),
                                 m(MCWTextField, {
+                                    label: 'Nom de la persona a cercar',
+                                    outlined: true,
                                     oninput: function(ev) {
                                         if (ev.target.value !== ''){
                                             vn.state.selected_members = 
-                                            vn.state.members.filter(x => (x.full_name).includes(ev.target.value)) === undefined ?
+                                            vn.state.members.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase())) === undefined ?
                                                 []
                                             :
-                                                vn.state.members.filter(x => (x.full_name).includes(ev.target.value))
-                                            console.log('post filtered ', vn.state.selected_members);
-                                            console.log('post filtered ', vn.state.members);
+                                                vn.state.members.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase()))
                                         }
                                         else {
                                             vn.state.selected_members = vn.state.members;    
@@ -114,9 +115,9 @@ const ET = {
                                         m(MWCFab, {
                                             value: 'person_add',
                                             onclick: function() {
-                                                    // FORMULARI CREATE TEAM
-                                                    console.log('CREATE PERSON!');
-                                                    m.route.set('/worker/form');
+                                                // FORMULARI CREATE TEAM
+                                                console.log('CREATE PERSON!');
+                                                m.route.set('/worker_form');
                                             }
                                         })
                                     :
@@ -160,12 +161,29 @@ const ET = {
                                     ])
                                 ),
                                 m('hr'),
-                                m(MCWList, {elements_list: vn.state.teams},
+                                m(MCWTextField, {
+                                    label: 'Nom de l\'equip a cercar',
+                                    outlined: true,
+                                    oninput: function(ev) {
+                                        if (ev.target.value !== ''){
+                                            vn.state.selected_teams = 
+                                            vn.state.teams.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase())) === undefined ?
+                                                []
+                                            :
+                                                vn.state.teams.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase()))
+                                        }
+                                        else {
+                                            vn.state.selected_teams = vn.state.teams;    
+                                        }
+                                    }
+                                }),
+                                m(MCWList, {elements_list: vn.state.selected_teams},
                                     (vn.state.can_edit === true) ?
                                         m(MWCFab, {
                                             value: 'group_add',
                                             onclick: function() {
-                                                    console.log('CREATE TEAM!');
+                                                console.log('CREATE TEAM!');
+                                                m.route.set('/team_form');
                                             }
                                         })
                                     :
