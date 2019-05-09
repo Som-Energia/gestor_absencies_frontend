@@ -110,6 +110,7 @@ const Team = {
                             (presunto_worker.last_name !== undefined) ? presunto_worker.last_name : ''),
                         'link': '/member/' + presunto_worker.id,
                         'button': m(MCWButton, {
+                            icon: 'delete',
                             onclick: function(ev) {
                                 console.log('Remove member');
                                 //vn.state.dialog.open();
@@ -207,6 +208,7 @@ const Team = {
                                             m(Layout.Row,
                                                 m(Layout.Cell,
                                                     m(MCWButton, {
+                                                        name: 'add member',
                                                         onclick: function(){
                                                             vn.state.dialog_add_member.outer.open();
                                                         }
@@ -214,6 +216,7 @@ const Team = {
                                                 ),
                                                 m(Layout.Cell,
                                                     m(MCWButton, {
+                                                        name: 'remove team',
                                                         onclick: function(){
                                                             vn.state.dialog_remove_team.outer.open();
                                                         }
