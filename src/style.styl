@@ -1,23 +1,109 @@
-.mdc-card
-    padding: 15px
-
-.mdc-button
-    margin: 15px
+// Theming
+:root {
+    --mdc-theme-primary: #aec122;
+    --mdc-theme-secondary: #aec122;
+    --mdc-theme-error: #dd4433;
+    --mdc-theme-on-error: #ffa;
+}
 
 .mdc-fab {
-    position: fixed;
-    bottom: 1rem;
-    right: 1rem;
+position: fixed;
+bottom: 1rem;
+right: 1rem;
 }
 
 hr {
-    margin-left: 0px;
-    margin-right: 0px;
+margin-left: 0px;
+margin-right: 0px;
 }
 
 .mdc-layout-grid {
-    margin-left: 0px;
-    margin-right: 0px;
-    padding-left: 0px;
-    padding-right: 0px;
+margin-left: 0px;
+margin-right: 0px;
+padding-left: 0px;
+padding-right: 0px;
+}
+
+body {
+background-color: #f4f4f4;
+font-family: Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+font-size: 14px;
+min-height: 100%;
+display: flex;
+flex-direction: column;
+margin: 0;
+}
+
+.mdc-card {
+padding: 24px; 
+position: relative;
+margin: .5rem 0 1rem 0;
+background-color: #fff;
+transition: box-shadow .25s;
+border-radius: 2px;
+margin-top: 0;
+margin-bottom: 20px;
+box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+}
+
+.btn, .btn-large, .btn-small, .mdc-button {
+text-decoration: none;
+color: #fff !important;
+background-color: #96b633 !important;
+text-align: center;
+transition: background-color .2s ease-out;
+cursor: pointer;
+}
+
+.btn, .btn-large, .btn-small, .btn-flat, .mdc-button {
+border: none;
+border-radius: 2px;
+display: inline-block;
+height: 36px;
+line-height: 36px;
+padding: 0 16px;
+text-transform: uppercase;
+vertical-align: middle;
+-webkit-tap-highlight-color: transparent;
+box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+}
+
+.drawer-frame-root {
+display: -ms-flexbox;
+display: flex;
+height: 100vh;
+}
+
+.drawer-main-content {
+overflow: auto;
+height: 100%;
+padding: 0 18px;
+width: 100%;
+}
+
+.mdc-drawer .mdc-list-item {
+font-family: Roboto,sans-serif;
+-moz-osx-font-smoothing: grayscale;
+-webkit-font-smoothing: antialiased;
+font-size: .875rem;
+line-height: 1.375rem;
+font-weight: 500;
+letter-spacing: .0071428571em;
+text-decoration: inherit;
+text-transform: inherit;
+height: 40px;
+margin: 8px;
+padding: 0 8px;
+}
+
+.mdc-drawer .mdc-list-item--activated {
+color: rgba(98,0,238,.87);
+}
+
+.right {
+    text-align: right;
+}
+
+.left {
+    text-align: left;
 }

@@ -48,10 +48,9 @@ const Login = {
                                     name: 'Login'
 
                                 }),
-                                m(MCWCard),
                             ] : [
                                 m('h1', 'Logout'),
-                                m("button", {
+                                m(MCWButton, {
                                     onclick: vn.state.auth.logout,
                                     name: 'Logout'
                                 })

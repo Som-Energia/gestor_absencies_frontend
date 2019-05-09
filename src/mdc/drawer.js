@@ -8,6 +8,9 @@ import '@material/list/dist/mdc.list.css'
 const MCWDrawer = {
     view: (vn) =>
         m('aside.mdc-drawer',
+            m('.mdc-drawer__header',  
+                ( vn.attrs.title !== undefined ? m('h3', vn.attrs.title) : '' )
+            ),
             m('.mdc-drawer__content',    
                 m('nav.mdc-list', vn.attrs.elements_list.map(function(e){
                         return m('a.mdc-list-item',

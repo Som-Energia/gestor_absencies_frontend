@@ -173,35 +173,3 @@ var TextField = {
 
 
 module.exports = TextField
-
-
-
-/*
-import m from 'mithril';
-import { MDCTextField } from "@material/textfield";
-import "@material/textfield/dist/mdc.textfield.css";
-
-const MCWTextField = {
-  oninit: function(vn){
-    if (vn.attrs.type === 'password') {
-      vn.state.type = vn.attrs.type;
-    }
-    else {
-      vn.state.type = 'text';
-    }
-  },
-  oncreate: function(vn) { 
-    new MDCTextField(vn.dom);
-  },
-  view: (vn) => 
-    m(".mdc-text-field", [
-      m("input.mdc-text-field__input[type='"+ vn.state.type +"']", vn.attrs),
-      m("label.mdc-floating-label[for='my-text-field']",
-        vn.attrs.placeholder
-      ),
-      m(".mdc-line-ripple")
-    ])
-};
-
-export default MCWTextField
-*/

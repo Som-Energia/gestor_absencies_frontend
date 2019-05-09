@@ -178,7 +178,7 @@ const SomEnergia = {
                                         m(MWCFab, {
                                             value: 'assignment_late',
                                             onclick: function() {
-                                                    console.log('CREATE SOM ENERGIA ABSENCE TYPE!');
+                                                m.route.set('/absencetype_form');
                                             }
                                         })
                                     :

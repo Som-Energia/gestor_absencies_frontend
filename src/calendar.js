@@ -202,9 +202,8 @@ const Calendar = {
                                 m('hr'),
                                 m(Layout,
                                     m(Layout.Row, [
-                                        m(Layout.Cell, {span:5, align: 'right'},
-                                            m(MCWButton, {
-                                                align: 'right',
+                                        m(Layout.Cell, {span:5, class: 'right'},
+                                            m(MCWButton, {                                                
                                                 name: '<',
                                                 shaped: true,
                                                 radius: 50,
@@ -218,9 +217,8 @@ const Calendar = {
                                         m(Layout.Cell, {span:2},
                                             m('h3', {align: 'center'}, vn.state.month_seen.substring(0,7))
                                         ),
-                                        m(Layout.Cell, {span:5},
-                                            m(MCWButton, {
-                                                align: 'left',
+                                        m(Layout.Cell, {span:5, class: 'left'},
+                                            m(MCWButton, {                                                
                                                 name: '>',
                                                 shaped: true,
                                                 radius: 50,
