@@ -51,10 +51,10 @@ const AbsenceType = {
                                                                 m(Layout.Row,
                                                                     m(Layout.Cell, {span:12},
                                                                         m(MCWTextField, {
-                                                                            'value': vn.state.absence_info[key],
-                                                                            'placeholder': key,
-                                                                            'disabled' : vn.state.can_edit ,
-                                                                            onblur: function (e){
+                                                                            label: key,
+                                                                            value: vn.state.absence_info[key],
+                                                                            disabled : vn.state.can_edit,
+                                                                            oninput: function (e){
                                                                                 vn.state.absence_info[key] = e.target.value;
                                                                             },
                                                                         })
