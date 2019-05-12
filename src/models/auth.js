@@ -16,7 +16,6 @@ var Auth = {
         return Auth.username !== "" && Auth.password !== ""
     },
     login: function() {
-        // post backend
         m.request({
             method: 'POST',
             url: 'http://localhost:8000/login/',

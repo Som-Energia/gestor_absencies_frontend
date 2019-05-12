@@ -41,15 +41,15 @@ const TeamForm = {
                                     onclick: function(){
                                         m.request({
                                         method: 'POST',
-                                        url: 'http://localhost:8000/absencies/workers',
+                                        url: 'http://localhost:8000/absencies/teams',
                                         headers: {
                                             'Authorization': Auth.token,
                                             'Content-type': 'application/json',
                                         },
-                                        data: vn.state.worker
+                                        data: vn.state.team
                                         }).
                                         then(function(result) {
-                                            console.log('Worker created');
+                                            console.log('Team created');
                                             m.route.set('/et');
                                         }).
                                         catch(function(error){

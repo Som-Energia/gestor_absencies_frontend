@@ -62,16 +62,16 @@ const VacationPolicyForm = {
                                     onclick: function(){
                                         m.request({
                                         method: 'POST',
-                                        url: 'http://localhost:8000/absencies/workers',
+                                        url: 'http://localhost:8000/absencies/vacationpolicy',
                                         headers: {
                                             'Authorization': Auth.token,
                                             'Content-type': 'application/json',
                                         },
-                                        data: vn.state.worker
+                                        data: vn.state.vacation_policy
                                         }).
                                         then(function(result) {
-                                            console.log('Worker created');
-                                            m.route.set('/et');
+                                            console.log('Vacation Policy created');
+                                            m.route.set('/somenergia');
                                         }).
                                         catch(function(error){
                                         console.log(error);

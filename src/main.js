@@ -25,6 +25,7 @@ import AbsenceType from './absencetype'
 import VacationPolicy from './vacationpolicy'
 import WorkerForm from './worker_form'
 import VacationPolicyForm from './vacationpolicy_form'
+import OccurrenceForm from './occurrence_form'
 import TeamForm from './team_form'
 import AbsenceTypeForm from './absencetype_form'
 import Calendar from './calendar'
@@ -133,169 +134,7 @@ const Menu = {
 
 
 
-const AbsenceForm = {
-    oninit: function(vn){
-        vn.state.worker = {};
-        vn.state.elements_list = [];
-        if(Auth.token === false){
-            m.route.set('/login');
-            return false;
-        }
-        const token = Auth.token;
-        m.request({
-            method: 'GET',
-            url: 'http://localhost:8000/absencies/absencetype',
-            headers: {
-                'Authorization': token
-            }
-        }).
-        then(function(result) {
-            vn.state.elements_list = result.results.map(function(e){
-                return {'value': e.id, 'text': e.name};
-            })
-            console.log('ABSENCE TYPE ', vn.state.elements_list);
-        }).
-        catch(function(error){
-            console.log(error);
-        });
-        vn.state.absence_info = {};
-        vn.state.absence_info['start_morning'] = true;
-        vn.state.absence_info['start_afternoon'] = true;
-        vn.state.absence_info['end_morning'] = true;
-        vn.state.absence_info['end_afternoon'] = true;  
-    },
-    view: function(vn) {
-        return m('.worker_form', [
-                m(Layout,
-                    m(Layout.Row, {align: 'center'}, [
-                        m(Layout.Cell,  {span:4}),
-                        m(Layout.Cell,  {span:4}, 
-                            m(MCWCard,
-                                m('h1', 'Formulari de creació d\'Absència'),
-                                m(Layout,
-                                    m(Layout.Row,
-                                        m(Layout.Cell, {span:12},
-                                           m(DatePicker, 
-                                                {id: 'start_date',
-                                                label: 'Start',
-                                                help: 'First day that will be included',
-                                                value: undefined,
-                                                future: moment().add(20,'years'),
-                                                onchange: function(newvalue) {
-                                                    console.log("changin from ", newvalue.format("YYYY-MM-DD HH:mm:ss"));
 
-                                                    //DatePicker.Example.fromdate=newvalue;
-                                                    vn.state.absence_info['start_time'] = newvalue.format("YYYY-MM-DD HH:mm:ss");
-                                                },
-                                                boxed: true,
-                                                autoclose: true,}
-                                            )
-                                       )
-                                    )
-                                ),
-                                m(Layout,
-                                    m(Layout.Row,
-                                        m(Layout.Cell, {span:12},
-                                            m(DatePicker, 
-                                                {id: 'end_date',
-                                                label: 'End',
-                                                help: 'Last day that will be included',
-                                                value: undefined,
-                                                future: moment().add(20,'years'),
-                                                onchange: function(newvalue) {
-                                                    console.log("changin from ", newvalue.format("YYYY-MM-DD HH:mm:ss"));
-
-                                                    //DatePicker.Example.fromdate=newvalue;
-                                                    vn.state.absence_info['end_time'] = newvalue.format("YYYY-MM-DD HH:mm:ss");
-                                                },
-                                                boxed: true,
-                                                autoclose: true,}
-                                            )
-                                            /*m(MCWTextField, {
-                                                "placeholder":'Password',
-                                                onblur: function (e){
-                                                    vn.state.worker['password'] = e.target.value
-                                                },
-                                            })*/
-                                        )
-                                    )
-                                ),
-                                m(Layout,
-                                    m(Layout.Row,
-                                        m(Layout.Cell, {span:12},
-                                            m(MCWCheckbox, {
-                                                'label': 'Start morning',
-                                                'checked': (vn.state.absence_info['start_morning'] !== undefined) ?
-                                                    vn.state.absence_info['start_morning']
-                                                    :
-                                                    false,
-                                                onchange: function(ev){
-                                                    vn.state.absence_info['start_morning'] = ev.target.checked;
-                                                    console.log('checkbox onchange ', vn.state.absence_info['start_morning']);
-                                                },
-                                            })
-                                        )
-                                    )
-                                ),
-                                m(Layout,
-                                    m(Layout.Row,
-                                        m(Layout.Cell, {span:12},
-                                            m(MCWCheckbox, {
-                                                'label': 'End afternoon',
-                                                'checked': (vn.state.absence_info['end_afternoon'] !== undefined) ?
-                                                    vn.state.absence_info['end_afternoon']
-                                                    :
-                                                    false,                                                
-                                                onchange: function(ev){
-                                                    vn.state.absence_info['end_afternoon'] = ev.target.checked;
-                                                    console.log('checkbox onchange ', vn.state.absence_info['end_afternoon']);
-                                                },
-                                            })
-                                        )
-                                    )
-                                ),
-                                m(Layout,
-                                    m(Layout.Row,
-                                        m(Layout.Cell, {span:12},
-                                            m(MCWSelectmenu, {
-                                                elements_list: vn.state.elements_list,
-                                                onchange: function(ev){
-                                                    vn.state.absence_info['absence_type'] = parseInt(ev.target.value);
-                                                }
-                                            })
-                                        )
-                                    )
-                                ),
-                                m(MCWButton, {
-                                    onclick: function(){
-                                        console.log('Ready to posted ', vn.state.absence_info);
-                                        // TODO: SOLVE BACKEND
-                                        /*m.request({
-                                        method: 'POST',
-                                        url: 'http://localhost:8000/absencies/workers',
-                                        headers: {
-                                            'Authorization': Auth.token,
-                                            'Content-type': 'application/json',
-                                        },
-                                        data: vn.state.worker
-                                        }).
-                                        then(function(result) {
-                                            console.log('Worker created');
-                                            m.route.set('/et');
-                                        }).
-                                        catch(function(error){
-                                        console.log(error);
-                                        });*/
-                                    },
-                                    name: 'Create'
-                                }),
-                            )
-                        )
-                    ])
-                )
-        ]);
-    }
-}
 
 
 m.route(document.getElementById('app'), "/login", {
@@ -312,7 +151,7 @@ m.route(document.getElementById('app'), "/login", {
     '/team_form': TeamForm,
     '/vacationpolicy_form': VacationPolicyForm,
     '/absencetype_form': AbsenceTypeForm,
-    '/occurrence/form': AbsenceForm,
+    '/occurrence/form': OccurrenceForm,
 });
 
 export default Menu

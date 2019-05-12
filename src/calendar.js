@@ -66,87 +66,47 @@ const Calendar = {
             }
         }).
         then(function(result) {
-
             vn.state.workers_result = result.results;
+            
+            vn.state.workers = vn.state.workers_result.map(function(e){
+                return {
+                    'name': e.first_name + e.last_name,
+                    'id': e.id
+                }
+            });
 
-            //m.redraw();
+            m.request({
+                method: 'GET',
+                url: 'http://localhost:8000/absencies/absences',
+                headers: {
+                    'Authorization': token
+                }
+            }).
+            then(function(result) {
+                vn.state.list = result.results;
+            }).
+            catch(function(error) {
+                console.log(error);
+            });
+
         }).
         catch(function(error){
             console.log(error);
-        });        m.request({
-            method: 'GET',
-            url: 'http://localhost:8000/absencies/absences',
-            headers: {
-                'Authorization': token
-            }
-        }).
-        then(function(result) {
-
-            vn.state.list = result.results;
-
-
-            /*
-            vn.state.same_month_dates = list.filter(
-                list => (list.end_time.includes(vn.state.month_seen.substring(0,7), 0) || 
-                    list.start_time.includes(vn.state.month_seen.substring(0,7), 0))
-            );
-            console.log('same_month_dates ', vn.state.same_month_dates);
-            vn.state.same_month_dates.map( function(e) {
-                var start_day = '';
-                var end_day = '';
-                var actual_object = find_row(vn.state.object_list, vn.state.workers, e.worker); // donarà el numero de la row de que és l'occurrencia
-                if (e.start_time.includes(vn.state.month_seen.substring(0,7), 0) && e.end_time.includes(vn.state.month_seen.substring(0,7), 0)) {
-                    start_day = new Date(e.start_time).getDate();
-                    end_day = new Date(e.end_time).getDate();
-                    for (var i = start_day; i <= end_day; i++){
-                        actual_object['mornings'][i+1] = e.absence_type;
-                        actual_object['afternoon'][i] = e.absence_type;
-                    }
-                }
-                if (e.start_time.includes(vn.state.month_seen.substring(0,7), 0)) {
-                    start_day = new Date(e.start_time).getDate();
-                    end_day = 31;
-                    for (var i = start_day; i < end_day; i++){
-                        actual_object['mornings'][i+1] = e.absence_type;
-                        actual_object['afternoon'][i] = e.absence_type;
-                    }
-                }
-                if (e.end_time.includes(vn.state.month_seen.substring(0,7), 0)) {
-                    start_day = 1;
-                    end_day = new Date(e.end_time).getDate();
-                    for (var i = start_day; i <= end_day; i++){
-                        actual_object['mornings'][i+1] = e.absence_type;
-                        actual_object['afternoon'][i] = e.absence_type;
-                    }
-                }
-            });
-*/
-            //m.redraw();
-        }).
-        catch(function(error) {
-            console.log(error);
-        });
+        });        
     },
     onupdate: function(vn){
 
-            if (vn.state.workers_result !== []) {
-
                 vn.state.object_list = [];
-                vn.state.workers = [];
-                vn.state.workers_result.map(function(e) {
+                vn.state.workers.map(function(e) {
                     var morning_row = new Array(31);
                     morning_row.fill(0);
                     var afternoon_row = new Array(31);
                     afternoon_row.fill(0);
-                    var occurrense_entity = {};
-                    occurrense_entity['name'] = e.first_name + e.last_name;
+                    var occurrense_entity = new Object();
+                    occurrense_entity['name'] = e.name;
                     occurrense_entity['mornings'] = morning_row;
                     occurrense_entity['afternoon'] = afternoon_row;
                     vn.state.object_list.push(occurrense_entity);
-                    vn.state.workers.push({
-                        'name': e.first_name + e.last_name,
-                        'id': e.id
-                    });
                 });
 
                 console.log('es prepararà ', vn.state.object_list);
@@ -156,6 +116,7 @@ const Calendar = {
                         list.start_time.includes(vn.state.month_seen.substring(0,7), 0))
                 );
                 console.log('same_month_dates ', vn.state.same_month_dates);
+
                 vn.state.same_month_dates.map( function(e) {
                     var start_day = '';
                     var end_day = '';
@@ -163,30 +124,56 @@ const Calendar = {
                     if (e.start_time.includes(vn.state.month_seen.substring(0,7), 0) && e.end_time.includes(vn.state.month_seen.substring(0,7), 0)) {
                         start_day = new Date(e.start_time).getDate();
                         end_day = new Date(e.end_time).getDate();
-                        for (var i = start_day; i <= end_day; i++){
-                            actual_object['mornings'][i+1] = e.absence_type;
+                        if (new Date(e.start_time).getHours() == 9) {
+                            actual_object['mornings'][start_day] = e.absence_type;
+                        }
+                        actual_object['afternoon'][start_day] = e.absence_type;
+                        for (var i = start_day+1; i < end_day; i++){
+                            console.log('dins 1er if ', i);
+                            actual_object['mornings'][i] = e.absence_type;
                             actual_object['afternoon'][i] = e.absence_type;
                         }
+                        actual_object['mornings'][end_day] = e.absence_type;
+                        if (new Date(e.end_time).getHours() == 17) {
+                            actual_object['afternoon'][end_day] = e.absence_type;
+                        }
                     }
-                    if (e.start_time.includes(vn.state.month_seen.substring(0,7), 0)) {
+                    else if (e.start_time.includes(vn.state.month_seen.substring(0,7), 0)) {
                         start_day = new Date(e.start_time).getDate();
                         end_day = 31;
-                        for (var i = start_day; i < end_day; i++){
-                            actual_object['mornings'][i+1] = e.absence_type;
+                        if (new Date(e.start_time).getHours() == 9) {
+                            actual_object['mornings'][start_day] = e.absence_type;
+                        }
+                        actual_object['afternoon'][start_day] = e.absence_type;
+                        for (var i = start_day+1; i < end_day; i++){
+                            console.log('dins 2n if ', i);
+                            actual_object['mornings'][i] = e.absence_type;
                             actual_object['afternoon'][i] = e.absence_type;
                         }
+                        actual_object['mornings'][end_day] = e.absence_type;
+                        if (new Date(e.end_time).getHours() == 17) {
+                            actual_object['afternoon'][end_day] = e.absence_type;
+                        }
                     }
-                    if (e.end_time.includes(vn.state.month_seen.substring(0,7), 0)) {
+                    else if (e.end_time.includes(vn.state.month_seen.substring(0,7), 0)) {
                         start_day = 1;
                         end_day = new Date(e.end_time).getDate();
-                        for (var i = start_day; i <= end_day; i++){
-                            actual_object['mornings'][i+1] = e.absence_type;
+                        if (new Date(e.start_time).getHours() == 9) {
+                            actual_object['mornings'][start_day] = e.absence_type;
+                        }
+                        actual_object['afternoon'][start_day] = e.absence_type;
+                        for (var i = start_day+1; i < end_day; i++){
+                            console.log('dins 3er if ', i);
+                            actual_object['mornings'][i] = e.absence_type;
                             actual_object['afternoon'][i] = e.absence_type;
+                        }
+                        actual_object['mornings'][end_day] = e.absence_type;
+                        if (new Date(e.end_time).getHours() == 17) {
+                            actual_object['afternoon'][end_day] = e.absence_type;
                         }
                     }
                 });
-                console.log('es printarà ', vn.state.object_list);
-            }
+            
             console.log('es printarà ', vn.state.object_list);
     },
     view: function(vn) {

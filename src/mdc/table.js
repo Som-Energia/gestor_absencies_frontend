@@ -53,13 +53,12 @@ const Row = {
     oninit: function(vn) {
         vn.state.data = [];
     },
-    onupdate: function(vn){
+    onupdate: function(vn) {
         vn.state.data = (vn.attrs.data !== undefined) ? vn.attrs.data : [];
     },
     view: (vn) =>
         m('tr',
             m(vn.attrs.tr_style, {'rowspan': vn.attrs.rowspan}, vn.attrs.data[0]),
-        //    m(vn.attrs.tr_style, {'colspan': 2}, vn.attrs.first_cell),
             vn.attrs.data.map(function(e, index){
                 if (index > 0) {
                     return m(vn.attrs.tr_style, e)
