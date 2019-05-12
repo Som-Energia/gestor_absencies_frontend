@@ -33,72 +33,70 @@ const Member = {
         });    
     },
     view: function(vn) {
-        return m('.member', [
-                m(Layout,
-                    m(Layout.Row, [
-                        m(Layout.Cell, {span:2},
-                            m(Menu)
-                        ),
-                        m(Layout.Cell, {span:9},
-                            m(MCWCard, [
-                                m('h2', 'Dades personals'),
-                                    m(Layout,
-                                        m(Layout.Row,
-                                            m(Layout.Cell, {span:8},
-                                                m('.personal_info', [
-                                                    Object.keys(vn.state.member_info).map(function(key){
-                                                        return m(Layout,
-                                                                m(Layout.Row,
-                                                                    m(Layout.Cell, {span:12},
-                                                                        m(MCWTextField, {
-                                                                            label: key,
-                                                                            value: vn.state.member_info[key],
-                                                                            disabled: vn.state.editing,
-                                                                            oninput: function (e){
-                                                                                vn.state.member_info[key] = e.target.value;
-                                                                            },
-                                                                        })
-                                                                    )
+        return m('.member.drawer-frame-root', [
+                m(Menu),
+                    m('.drawer-main-content', [
+                        m(Layout,
+                            m(Layout.Row, [
+                                m(Layout.Cell, {span:12},
+                                    m(MCWCard, [
+                                        m('h2', 'Dades personals'),
+                                            m(Layout,
+                                                m(Layout.Row,
+                                                    m(Layout.Cell, {span:8},
+                                                        m('.personal_info', [
+                                                            Object.keys(vn.state.member_info).map(function(key){
+                                                                return m(Layout,
+                                                                        m(Layout.Row,
+                                                                            m(Layout.Cell, {span:12},
+                                                                                m(MCWTextField, {
+                                                                                    label: key,
+                                                                                    value: vn.state.member_info[key],
+                                                                                    disabled: vn.state.editing,
+                                                                                    oninput: function (e){
+                                                                                        vn.state.member_info[key] = e.target.value;
+                                                                                    },
+                                                                                })
+                                                                            )
+                                                                        )
                                                                 )
-                                                        )
-                                                    })
-                                                ])
+                                                            })
+                                                        ])
+                                                    )
+                                                )
                                             )
-                                        )
-                                    )
-                            ]),
+                                    ]),
+                                ),
+                            ])                            
                         ),
-                                //m(MWCSnackbar),
+                        m(MWCFab, {
+                            value: (vn.state.editing)?'edit':'save',
+                            onclick: function() {
+                                if (vn.state.editing === false) {
+                                    // Es pot enviat el metode put!
+                                    m.request({
+                                        method: 'PUT',
+                                        url: ('http://localhost:8000/absencies/workers/' + vn.attrs.memberid),
+                                        headers: {
+                                            'Authorization': Auth.token,
+                                            'Content-type': 'application/json',
+                                        },
+                                        data: vn.state.member_info
+                                    }).
+                                    then(function(result) {
+                                        vn.state.member_info = result;
+                                        m.redraw();
+                                        vn.state.editing = true;
+                                    }).
+                                    catch(function(error){
+                                        console.log(error);
+                                    });
+                                }
+                                vn.state.editing = !vn.state.editing;
+                            }
+                        }),
                     ])
-                ),
-                m(MWCFab, {
-                    value: (vn.state.editing)?'edit':'save',
-                    onclick: function() {
-                        if (vn.state.editing === false) {
-                            // Es pot enviat el metode put!
-                            m.request({
-                                method: 'PUT',
-                                url: ('http://localhost:8000/absencies/workers/' + vn.attrs.memberid),
-                                headers: {
-                                    'Authorization': Auth.token,
-                                    'Content-type': 'application/json',
-                                },
-                                data: vn.state.member_info
-                            }).
-                            then(function(result) {
-                                vn.state.member_info = result;
-                                m.redraw();
-                                vn.state.editing = true;
-                            }).
-                            catch(function(error){
-                                console.log(error);
-                            });
-                        }
-                        vn.state.editing = !vn.state.editing;
-                    }
-                }),
-            ],
-            )
+                ])
         }
 }
 

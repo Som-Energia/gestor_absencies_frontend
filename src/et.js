@@ -60,141 +60,132 @@ const ET = {
         vn.state.option = 'members';
     },
     view: function(vn) {
-        return m('.et', (vn.state.option == 'members') ? [
-                m(Layout,
-                    m(Layout.Row, [
-                        m(Layout.Cell, {span:2},
-                            m(Menu)
-                        ),
-                        m(Layout.Cell, {span:9},
-                            m(MCWCard, [
-                                m(Layout,
-                                    m(Layout.Row, [
-                                        m(Layout.Cell, {span:6},
-                                            m(MCWButton,
-                                                {
-                                                    name: 'Members',
-                                                    onclick: function() {
-                                                        vn.state.option = 'members';
-                                                    }
-                                                }
-                                            ),
-                                        ),
-                                        m(Layout.Cell, {span:6},
-                                            m(MCWButton,
-                                                {
-                                                    name: 'Teams',
-                                                    onclick: function() {
-                                                        vn.state.option = 'teams';
-                                                    }
-                                                }
-                                            ),
-                                        )
+        return m('.et.drawer-frame-root', [
+                m(Menu),
+                m('.drawer-main-content', [
+                    m(Layout,
+                        m(Layout.Row, [
+                            m(Layout.Cell, {span:12},
+                                m(MCWCard,
+                                    (vn.state.option == 'members') ? 
+                                        [
+                                            m(Layout,
+                                                m(Layout.Row, [
+                                                    m(Layout.Cell, {span:6},
+                                                        m(MCWButton,
+                                                            {
+                                                                name: 'Members',
+                                                                onclick: function() {
+                                                                    vn.state.option = 'members';
+                                                                }
+                                                            }
+                                                        ),
+                                                    ),
+                                                    m(Layout.Cell, {span:6},
+                                                        m(MCWButton,
+                                                            {
+                                                                name: 'Teams',
+                                                                onclick: function() {
+                                                                    vn.state.option = 'teams';
+                                                                }
+                                                            }
+                                                        ),
+                                                    )
 
-                                    ])
-                                ),
-                                m('hr'),
-                                m(MCWTextField, {
-                                    label: 'Nom de la persona a cercar',
-                                    outlined: true,
-                                    oninput: function(ev) {
-                                        if (ev.target.value !== ''){
-                                            vn.state.selected_members = 
-                                            vn.state.members.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase())) === undefined ?
-                                                []
-                                            :
-                                                vn.state.members.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase()))
-                                        }
-                                        else {
-                                            vn.state.selected_members = vn.state.members;    
-                                        }
-                                    }
-                                }),
-                                m(MCWList, {elements_list: vn.state.selected_members},
-                                    (vn.state.can_edit === true) ?
-                                        m(MWCFab, {
-                                            value: 'person_add',
-                                            onclick: function() {
-                                                // FORMULARI CREATE TEAM
-                                                console.log('CREATE PERSON!');
-                                                m.route.set('/worker_form');
-                                            }
-                                        })
-                                    :
-                                        ''
-                                ),
-                            ])
-                        )
-                    ])
-                )
-            ]
-            :
-            [
-                m(Layout,
-                    m(Layout.Row, [
-                        m(Layout.Cell, {span:2},
-                            m(Menu)
-                        ),
-                        m(Layout.Cell, {span:9},
-                            m(MCWCard, [
-                                m(Layout,
-                                    m(Layout.Row, [
-                                        m(Layout.Cell, {span:6},
-                                            m(MCWButton, {
-                                                    name: 'Members',
-                                                    onclick: function() {
-                                                        vn.state.option = 'members';
+                                                ])
+                                            ),
+                                            m('hr'),
+                                            m(MCWTextField, {
+                                                label: 'Nom de la persona a cercar',
+                                                outlined: true,
+                                                oninput: function(ev) {
+                                                    if (ev.target.value !== ''){
+                                                        vn.state.selected_members = 
+                                                        vn.state.members.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase())) === undefined ?
+                                                            []
+                                                        :
+                                                            vn.state.members.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase()))
+                                                    }
+                                                    else {
+                                                        vn.state.selected_members = vn.state.members;    
+                                                    }
                                                 }
                                             }),
-                                        ),
-                                        m(Layout.Cell, {span:6},
-                                            m(MCWButton,
-                                                {
-                                                    name: 'Teams',
-                                                    onclick: function() {
-                                                        vn.state.option = 'teams';
-                                                }
-                                            }
+                                            m(MCWList, {elements_list: vn.state.selected_members},
+                                                (vn.state.can_edit === true) ?
+                                                    m(MWCFab, {
+                                                        value: 'person_add',
+                                                        onclick: function() {
+                                                            // FORMULARI CREATE TEAM
+                                                            console.log('CREATE PERSON!');
+                                                            m.route.set('/worker_form');
+                                                        }
+                                                    })
+                                                :
+                                                    ''
                                             ),
-                                        )
-
-                                    ])
-                                ),
-                                m('hr'),
-                                m(MCWTextField, {
-                                    label: 'Nom de l\'equip a cercar',
-                                    outlined: true,
-                                    oninput: function(ev) {
-                                        if (ev.target.value !== ''){
-                                            vn.state.selected_teams = 
-                                            vn.state.teams.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase())) === undefined ?
-                                                []
-                                            :
-                                                vn.state.teams.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase()))
-                                        }
-                                        else {
-                                            vn.state.selected_teams = vn.state.teams;    
-                                        }
-                                    }
-                                }),
-                                m(MCWList, {elements_list: vn.state.selected_teams},
-                                    (vn.state.can_edit === true) ?
-                                        m(MWCFab, {
-                                            value: 'group_add',
-                                            onclick: function() {
-                                                console.log('CREATE TEAM!');
-                                                m.route.set('/team_form');
-                                            }
-                                        })
+                                        ]
                                     :
-                                        ''
-                                ),
+                                        [
+                                                m(Layout,
+                                                    m(Layout.Row, [
+                                                        m(Layout.Cell, {span:6},
+                                                            m(MCWButton, {
+                                                                    name: 'Members',
+                                                                    onclick: function() {
+                                                                        vn.state.option = 'members';
+                                                                }
+                                                            }),
+                                                        ),
+                                                        m(Layout.Cell, {span:6},
+                                                            m(MCWButton,
+                                                                {
+                                                                    name: 'Teams',
+                                                                    onclick: function() {
+                                                                        vn.state.option = 'teams';
+                                                                }
+                                                            }
+                                                            ),
+                                                        )
+
+                                                    ])
+                                                ),
+                                                m('hr'),
+                                                m(MCWTextField, {
+                                                    label: 'Nom de l\'equip a cercar',
+                                                    outlined: true,
+                                                    oninput: function(ev) {
+                                                        if (ev.target.value !== ''){
+                                                            vn.state.selected_teams = 
+                                                            vn.state.teams.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase())) === undefined ?
+                                                                []
+                                                            :
+                                                                vn.state.teams.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase()))
+                                                        }
+                                                        else {
+                                                            vn.state.selected_teams = vn.state.teams;    
+                                                        }
+                                                    }
+                                                }),
+                                                m(MCWList, {elements_list: vn.state.selected_teams},
+                                                    (vn.state.can_edit === true) ?
+                                                        m(MWCFab, {
+                                                            value: 'group_add',
+                                                            onclick: function() {
+                                                                console.log('CREATE TEAM!');
+                                                                m.route.set('/team_form');
+                                                            }
+                                                        })
+                                                    :
+                                                        ''
+                                                ),
+                                        ]
+                                    )
+                                )
                             ])
                         )
                     ])
-                )
-            ]
-        )
+                ])
     }
 }
 

@@ -57,139 +57,129 @@ const SomEnergia = {
         vn.state.option = 'vacation_policy';
     },
     view: function(vn) {
-        return m('.et', (vn.state.option == 'vacation_policy') ? [
-                m(Layout,
-                    m(Layout.Row, [
-                        m(Layout.Cell, {span:2},
-                            m(Menu)
-                        ),
-                        m(Layout.Cell, {span:9},
-                            m(MCWCard, [
-                                m(Layout,
-                                    m(Layout.Row, [
-                                        m(Layout.Cell, {span:6},
-                                            m(MCWButton,
-                                                {
-                                                    name: 'Politica de Vacances',
-                                                    onclick: function() {
-                                                        vn.state.option = 'vacation_policy';
-                                                    }
-                                                }
-                                            )
-                                        ),
-                                        m(Layout.Cell, {span:6},
-                                            m(MCWButton,
-                                                {
-                                                    name: 'Tipus d\'absencies',
-                                                    onclick: function() {
-                                                        vn.state.option = 'absence_type';
-                                                    }
-                                                }
-                                            )
+        return m('.somenergia.drawer-frame-root', [
+                m(Menu),
+                m('.drawer-main-content', [
+                    m(Layout,
+                        m(Layout.Row, [
+                            m(Layout.Cell, {span:12},
+                                m(MCWCard,
+                                    (vn.state.option == 'vacation_policy') ? 
+                                        [
+                                            m(Layout,
+                                                m(Layout.Row, [
+                                                    m(Layout.Cell, {span:6},
+                                                        m(MCWButton,
+                                                            {
+                                                                name: 'Politica de Vacances',
+                                                                onclick: function() {
+                                                                    vn.state.option = 'vacation_policy';
+                                                                }
+                                                            }
+                                                        )
+                                                    ),
+                                                    m(Layout.Cell, {span:6},
+                                                        m(MCWButton,
+                                                            {
+                                                                name: 'Tipus d\'absencies',
+                                                                onclick: function() {
+                                                                    vn.state.option = 'absence_type';
+                                                                }
+                                                            }
+                                                        )
 
-                                        ),
-                                    ])
-                                ),
-                                m('hr'),
-                                m(MCWTextField, {
-                                    label: 'Nom de l\'equip a cercar',
-                                    outlined: true,
-                                    oninput: function(ev) {
-                                        if (ev.target.value !== ''){
-                                            vn.state.selected_vacationpolicy = 
-                                            vn.state.vacation_policy.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase())) === undefined ?
-                                                []
-                                            :
-                                                vn.state.vacation_policy.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase()))
-                                        }
-                                        else {
-                                            vn.state.selected_vacationpolicy = vn.state.vacation_policy;    
-                                        }
-                                    }
-                                }),
-                                m(MCWList, {elements_list: vn.state.selected_vacationpolicy},
-                                    (vn.state.can_edit === true) ?
-                                        m(MWCFab, {
-                                            value: 'beach_access',
-                                            onclick: function() {
-                                                m.route.set('/vacationpolicy_form');
-                                            }
-                                        })
-                                    :
-                                        ''
-                                ),
-                            ])
-                        )
-                    ])
-                )
-        ]
-        :
-            [
-                m(Layout,
-                    m(Layout.Row, [
-                        m(Layout.Cell, {span:2},
-                            m(Menu)
-                        ),
-                        m(Layout.Cell, {span:9},
-                            m(MCWCard, [
-                                m(Layout,
-                                    m(Layout.Row, [
-                                        m(Layout.Cell, {span:6},
-                                            m(MCWButton,
-                                                {
-                                                    name: 'Politica de Vacances',
-                                                    onclick: function() {
-                                                        vn.state.option = 'vacation_policy';
+                                                    ),
+                                                ])
+                                            ),
+                                            m('hr'),
+                                            m(MCWTextField, {
+                                                label: 'Nom de l\'equip a cercar',
+                                                outlined: true,
+                                                oninput: function(ev) {
+                                                    if (ev.target.value !== ''){
+                                                        vn.state.selected_vacationpolicy = 
+                                                        vn.state.vacation_policy.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase())) === undefined ?
+                                                            []
+                                                        :
+                                                            vn.state.vacation_policy.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase()))
+                                                    }
+                                                    else {
+                                                        vn.state.selected_vacationpolicy = vn.state.vacation_policy;    
+                                                    }
                                                 }
                                             }),
-                                        ),
-                                        m(Layout.Cell, {span:6},
-                                            m(MCWButton,
-                                                {
-                                                    name: 'Tipus d\'absencies',
-                                                    onclick: function() {
-                                                        vn.state.option = 'absence_type';
-                                                }
-                                            }
+                                            m(MCWList, {elements_list: vn.state.selected_vacationpolicy},
+                                                (vn.state.can_edit === true) ?
+                                                    m(MWCFab, {
+                                                        value: 'beach_access',
+                                                        onclick: function() {
+                                                            m.route.set('/vacationpolicy_form');
+                                                        }
+                                                    })
+                                                :
+                                                    ''
                                             ),
-                                        )
-
-                                    ])
-                                ),
-                                m('hr'),
-                                m(MCWTextField, {
-                                    label: 'Nom de l\'equip a cercar',
-                                    outlined: true,
-                                    oninput: function(ev) {
-                                        if (ev.target.value !== ''){
-                                            vn.state.selected_absencetype = 
-                                            vn.state.absence_type.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase())) === undefined ?
-                                                []
-                                            :
-                                                vn.state.absence_type.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase()))
-                                        }
-                                        else {
-                                            vn.state.selected_absencetype = vn.state.absence_type;    
-                                        }
-                                    }
-                                }),
-                                m(MCWList, {elements_list: vn.state.selected_absencetype},
-                                    (vn.state.can_edit === true) ?
-                                        m(MWCFab, {
-                                            value: 'assignment_late',
-                                            onclick: function() {
-                                                m.route.set('/absencetype_form');
-                                            }
-                                        })
+                                        ]
                                     :
-                                        ''
-                                ),
+                                        [
+                                            m(Layout,
+                                                m(Layout.Row, [
+                                                    m(Layout.Cell, {span:6},
+                                                        m(MCWButton, 
+                                                           {
+                                                                name: 'Politica de Vacances',
+                                                                onclick: function() {
+                                                                    vn.state.option = 'vacation_policy';
+                                                                }
+                                                        }),
+                                                    ),
+                                                    m(Layout.Cell, {span:6},
+                                                        m(MCWButton,
+                                                            {
+                                                                name: 'Tipus d\'absencies',
+                                                                onclick: function() {
+                                                                    vn.state.option = 'absence_type';
+                                                                }
+                                                            }
+                                                        ),
+                                                    )
+                                                ])
+                                            ),
+                                            m('hr'),
+                                            m(MCWTextField, {
+                                                label: 'Nom de l\'equip a cercar',
+                                                outlined: true,
+                                                oninput: function(ev) {
+                                                    if (ev.target.value !== ''){
+                                                        vn.state.selected_absencetype = 
+                                                        vn.state.absence_type.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase())) === undefined ?
+                                                            []
+                                                        :
+                                                            vn.state.absence_type.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase()))
+                                                    }
+                                                    else {
+                                                        vn.state.selected_absencetype = vn.state.absence_type;    
+                                                    }
+                                                }
+                                            }),
+                                            m(MCWList, {elements_list: vn.state.selected_absencetype},
+                                                (vn.state.can_edit === true) ?
+                                                    m(MWCFab, {
+                                                        value: 'assignment_late',
+                                                        onclick: function() {
+                                                            m.route.set('/absencetype_form');
+                                                        }
+                                                    })
+                                                :
+                                                    ''
+                                            ),
+                                        ]
+                                    )
+                                )
                             ])
                         )
                     ])
-                )
-            ]
-        )
+                ])
     }
 }
 

@@ -190,61 +190,59 @@ const Calendar = {
             console.log('es printarà ', vn.state.object_list);
     },
     view: function(vn) {
-        return m('.calendar', [
-                m(Layout,
-                    m(Layout.Row, [
-                        m(Layout.Cell, {span:2},
-                            m(Menu)
-                        ),
-                        m(Layout.Cell, {span:9},
-                            m(MCWCard, [
-                                m('h2', {align: 'center'}, 'Absències'),
-                                m('hr'),
-                                m(Layout,
-                                    m(Layout.Row, [
-                                        m(Layout.Cell, {span:5, class: 'right'},
-                                            m(MCWButton, {                                                
-                                                name: '<',
-                                                shaped: true,
-                                                radius: 50,
-                                                rtl: true,
-                                                onclick: function(ev) {
-                                                    var aux = new Date(vn.state.month_seen);
-                                                    vn.state.month_seen = formatDate(aux.setMonth(aux.getMonth()-1));
-                                                },
-                                            })
-                                        ),
-                                        m(Layout.Cell, {span:2},
-                                            m('h3', {align: 'center'}, vn.state.month_seen.substring(0,7))
-                                        ),
-                                        m(Layout.Cell, {span:5, class: 'left'},
-                                            m(MCWButton, {                                                
-                                                name: '>',
-                                                shaped: true,
-                                                radius: 50,
-                                                rtl: true,
-                                                onclick: function(ev) {
-                                                    var aux = new Date(vn.state.month_seen);
-                                                    vn.state.month_seen = formatDate(aux.setMonth(aux.getMonth()+1));
-                                                },
-                                            })
-                                        ),
-                                    ]),
-                                    m(Layout.Row, [
-                                        m(Layout.Cell, {span:12},
-                                            m(Table, {
-                                                'absences': vn.state.object_list
-                                            }),
-                                        ),
-                                    ]),
-                                )
-                            ]),
-                        )
-
-                    ])
-                ),
-                
-        ]);    
+        return m('.calendar.drawer-frame-root', [
+                m(Menu),
+                m('.drawer-main-content', [
+                    m(Layout,
+                        m(Layout.Row, [
+                            m(Layout.Cell, {span:12},
+                                m(MCWCard, [
+                                    m('h2', {align: 'center'}, 'Absències'),
+                                    m('hr'),
+                                    m(Layout,
+                                        m(Layout.Row, [
+                                            m(Layout.Cell, {span:5, class: 'right'},
+                                                m(MCWButton, {                                                
+                                                    name: '<',
+                                                    shaped: true,
+                                                    radius: 50,
+                                                    rtl: true,
+                                                    onclick: function(ev) {
+                                                        var aux = new Date(vn.state.month_seen);
+                                                        vn.state.month_seen = formatDate(aux.setMonth(aux.getMonth()-1));
+                                                    },
+                                                })
+                                            ),
+                                            m(Layout.Cell, {span:2},
+                                                m('h3', {align: 'center'}, vn.state.month_seen.substring(0,7))
+                                            ),
+                                            m(Layout.Cell, {span:5, class: 'left'},
+                                                m(MCWButton, {                                                
+                                                    name: '>',
+                                                    shaped: true,
+                                                    radius: 50,
+                                                    rtl: true,
+                                                    onclick: function(ev) {
+                                                        var aux = new Date(vn.state.month_seen);
+                                                        vn.state.month_seen = formatDate(aux.setMonth(aux.getMonth()+1));
+                                                    },
+                                                })
+                                            ),
+                                        ]),
+                                        m(Layout.Row, [
+                                            m(Layout.Cell, {span:12},
+                                                m(Table, {
+                                                    'absences': vn.state.object_list
+                                                }),
+                                            ),
+                                        ]),
+                                    )
+                                ]),
+                            )
+                        ])
+                    ),
+                ]),
+        ]);
     }
 }
 

@@ -19,7 +19,7 @@ var Auth = {
         // post backend
         m.request({
             method: 'POST',
-            url: 'http://localhost:8000/api-token-auth/',
+            url: 'http://localhost:8000/login/',
             data: {username: Auth.username, password: Auth.password}
         }).
         then(function(result){
