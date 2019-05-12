@@ -28,6 +28,7 @@ const Table = {
         else {
             vn.state.absences = [];
         }
+        console.log('in table ', vn.state.absences);
     },
     view: (vn) =>
         m('table',
