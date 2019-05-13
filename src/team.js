@@ -324,16 +324,27 @@ const Team = {
                             id: 'remove_team',
                             header: 'Remove Team',
                             model: vn.state.dialog_remove_team.outer,
-                            content: 'Estas segur?',
                             buttons: [{
-                                text: 'Sub dialog',
+                                text: 'Remove Team',
                                 onclick: function(){
-                                    console.log('sub dialog');
-                                    // TODO: DELETE REQUEST
+                                    m.request({
+                                        method: 'DELETE',
+                                        url: ('http://localhost:8000/absencies/teams/' + vn.attrs.teamid),
+                                        headers: {
+                                            'Authorization': Auth.token
+                                        }
+                                    }).
+                                    then(function(result) {
+                                        console.log('Team removed!');
+                                        m.route.set('/et');
+                                    }).
+                                    catch(function(error){
+                                        console.log(error);
+                                    });
                                     vn.state.dialog_remove_team.outer.close();
                                 }
                             },{
-                                text: 'Cancel dialog',
+                                text: 'Cancel',
                                 onclick: function(){
                                     console.log('cancel dialog');
                                     vn.state.dialog_remove_team.outer.close();

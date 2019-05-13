@@ -5,6 +5,8 @@ import Layout from './mdc/layout'
 import MCWCard from './mdc/card'
 import MCWTextField from './mdc/textfield'
 import MWCFab from './mdc/fab'
+import Dialog from './mdc/dialog'
+import MCWButton from './mdc/button'
 
 
 const AbsenceType = {
@@ -15,6 +17,11 @@ const AbsenceType = {
             return false;
         }
         const token = Auth.token;
+        vn.state.dialog_remove_absencetype = {
+            backdrop: true,
+            outer: {},
+            inner: {},
+        };
 
         m.request({
             method: 'GET',
@@ -63,7 +70,22 @@ const AbsenceType = {
                                                             })
                                                         ])
                                                     )
-                                                )
+                                                ),
+                                                !vn.state.editing ?
+                                                    m(Layout.Row,
+                                                        m(Layout.Cell, {span:5}),
+                                                        m(Layout.Cell, {span:2},
+                                                            m(MCWButton, {
+                                                                name: 'remove AbsenceType',
+                                                                onclick: function(){
+                                                                    vn.state.dialog_remove_absencetype.outer.open();
+                                                                }
+                                                            }),
+                                                        ),
+                                                        m(Layout.Cell, {span:5})
+                                                    )
+                                                :
+                                                    undefined
                                             )
                                     ]),
                                 ),
@@ -95,6 +117,50 @@ const AbsenceType = {
                                 vn.state.can_edit = !vn.state.can_edit;
                             }
                         }),
+                        m(Dialog, {
+                            id: 'remove_absencetype',
+                            header: 'Remove AbsenceType',
+                            model: vn.state.dialog_remove_absencetype.outer,
+                            content: 'Estas segur?',
+                            buttons: [{
+                                text: 'Eliminar l\'AbsenceType',
+                                onclick: function(){
+                                    m.request({
+                                        method: 'DELETE',
+                                        url: ('http://localhost:8000/absencies/absencetype/' + vn.attrs.absenceid),
+                                        headers: {
+                                            'Authorization': Auth.token
+                                        }
+                                    }).
+                                    then(function(result) {
+                                        console.log('AbsenceType removed!');
+                                        m.route.set('/somenergia');
+                                    }).
+                                    catch(function(error){
+                                        console.log(error);
+                                    });    
+                                    vn.state.dialog_remove_absencetype.outer.close();
+                                }
+                            },{
+                                text: 'Cancel',
+                                onclick: function(){
+                                    console.log('cancel dialog');
+                                    vn.state.dialog_remove_absencetype.outer.close();
+                                }
+                            }],
+                            onaccept: function(ev) {
+                                ev.cancelBubble = true;
+                                vn.state.dialog_remove_absencetype.innerexit = 'Accepted';
+                                m.redraw();
+                            },
+                            onclose: function(ev) {
+                                vn.state.self.dialog_remove_absencetype.innerexit = 'Rejected';
+                                m.redraw();
+                            },
+                            backdrop: vn.state.dialog_remove_absencetype.backdrop,
+                        }, [
+                            m('.', 'Estas segur que vols eliminar aquest tipus d\'absència?')
+                        ]),
                     ])
         ])
     }

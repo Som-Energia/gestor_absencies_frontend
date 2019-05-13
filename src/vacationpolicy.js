@@ -5,6 +5,8 @@ import Layout from './mdc/layout'
 import MCWCard from './mdc/card'
 import MCWTextField from './mdc/textfield'
 import MWCFab from './mdc/fab'
+import Dialog from './mdc/dialog'
+import MCWButton from './mdc/button'
 
 
 const VacationPolicy = {
@@ -15,6 +17,11 @@ const VacationPolicy = {
             return false;
         }
         const token = Auth.token;
+        vn.state.dialog_remove_vacationpolicy = {
+            backdrop: true,
+            outer: {},
+            inner: {},
+        };
 
         m.request({
             method: 'GET',
@@ -63,7 +70,22 @@ const VacationPolicy = {
                                                             })
                                                         ])
                                                     )
-                                                )
+                                                ),
+                                                !vn.state.editing ?
+                                                    m(Layout.Row,
+                                                        m(Layout.Cell, {span:5}),
+                                                        m(Layout.Cell, {span:2},
+                                                            m(MCWButton, {
+                                                                name: 'Remove VacationPolicy',
+                                                                onclick: function(){
+                                                                    vn.state.dialog_remove_vacationpolicy.outer.open();
+                                                                }
+                                                            }),
+                                                        ),
+                                                        m(Layout.Cell, {span:5})
+                                                    )
+                                                :
+                                                    undefined
                                             )
                                     ]),
                                 ),
@@ -95,6 +117,50 @@ const VacationPolicy = {
                                 vn.state.can_edit = !vn.state.can_edit;
                             }
                         }),
+                        m(Dialog, {
+                            id: 'remove_vacationpolicy',
+                            header: 'Remove VacationPolicy',
+                            model: vn.state.dialog_remove_vacationpolicy.outer,
+                            content: 'Estas segur?',
+                            buttons: [{
+                                text: 'Eliminar la VacationPolicy',
+                                onclick: function(){
+                                    m.request({
+                                        method: 'DELETE',
+                                        url: ('http://localhost:8000/absencies/vacationpolicy/' + vn.attrs.vacationpolicyid),
+                                        headers: {
+                                            'Authorization': Auth.token
+                                        }
+                                    }).
+                                    then(function(result) {
+                                        console.log('VacationPolicy removed!');
+                                        m.route.set('/somenergia');
+                                    }).
+                                    catch(function(error){
+                                        console.log(error);
+                                    });
+                                    vn.state.dialog_remove_vacationpolicy.outer.close();
+                                }
+                            },{
+                                text: 'Cancel',
+                                onclick: function(){
+                                    console.log('cancel dialog');
+                                    vn.state.dialog_remove_vacationpolicy.outer.close();
+                                }
+                            }],
+                            onaccept: function(ev) {
+                                ev.cancelBubble = true;
+                                vn.state.dialog_remove_vacationpolicy.innerexit = 'Accepted';
+                                m.redraw();
+                            },
+                            onclose: function(ev) {
+                                vn.state.self.dialog_remove_vacationpolicy.innerexit = 'Rejected';
+                                m.redraw();
+                            },
+                            backdrop: vn.state.dialog_remove_vacationpolicy.backdrop,
+                        }, [
+                            m('.', 'Estas segur que vols eliminar aquesta politica de vacances?')
+                        ]),
                     ])
         ])
     }
