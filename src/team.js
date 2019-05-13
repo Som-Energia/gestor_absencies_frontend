@@ -135,227 +135,227 @@ const Team = {
 
     },
     view: function(vn) {
-        return m('.team', [
-                m(Layout,
-                    m(Layout.Row, [
-                        m(Layout.Cell, {span:2},
-                            m(Menu)
-                        ),
-                        m(Layout.Cell, {span:9},
-                            m(MCWCard, [
-                                m('h2', 'Dades de l\'Equip'),
-                                    m(Layout,
-                                        m(Layout.Row,
-                                            m(Layout.Cell, {span:8},
-                                                m('.team_info', [
-                                                    Object.keys(vn.state.team_info).map(function(key){
-                                                        return m(Layout,
-                                                                m(Layout.Row,
-                                                                    m(Layout.Cell, {span:12},
-                                                                        m(MCWTextField, {
-                                                                            label: key,
-                                                                            value: vn.state.team_info[key],
-                                                                            disabled: vn.state.editing,
-                                                                            oninput: function(ev) {
-                                                                                vn.state.team_info[key]=ev.target.value;
-                                                                            }                                                                            
-                                                                        })
-                                                                    )
+        return m('.team.drawer-frame-root', [
+                m(Menu),
+                    m('.drawer-main-content', [
+                        m(Layout,
+                            m(Layout.Row, [
+                                m(Layout.Cell, {span:12},
+                                    m(MCWCard, [
+                                        m('h2', 'Dades de l\'Equip'),
+                                            m(Layout,
+                                                m(Layout.Row,
+                                                    m(Layout.Cell, {span:8},
+                                                        m('.team_info', [
+                                                            Object.keys(vn.state.team_info).map(function(key){
+                                                                return m(Layout,
+                                                                        m(Layout.Row,
+                                                                            m(Layout.Cell, {span:12},
+                                                                                m(MCWTextField, {
+                                                                                    label: key,
+                                                                                    value: vn.state.team_info[key],
+                                                                                    disabled: vn.state.editing,
+                                                                                    oninput: function(ev) {
+                                                                                        vn.state.team_info[key]=ev.target.value;
+                                                                                    },
+                                                                                })
+                                                                            )
+                                                                        )
                                                                 )
-                                                        )
-                                                    }),
-                                                    m(Layout,
-                                                        m(Layout.Row,
-                                                            m(Layout.Cell, {span:12},
-                                                                m(MCWSelectmenu, {
-                                                                    default: vn.state.actual_referent,
-                                                                    value: vn.state.actual_referent,
-                                                                    elements_list: vn.state.possibles_referents,
-                                                                    disabled: vn.state.editing,
-                                                                    onchange: function(ev){
-                                                                        vn.state.request_body_referent['worker'] = parseInt(ev.target.value);
-
-                                                                    }
-                                                                })
-                                                            )
-                                                        )
-                                                    ),
-                                                ])
-                                            )
-                                        ),
-                                        m(Layout.Row,
-                                            m(Layout.Cell, [
-                                                m('h2', 'Membres de l\'Equip'),
-                                            ])
-                                        ),
-                                        m(Layout.Row,
-                                            m(Layout.Cell, {span:8},
-                                                m('.members', [
-                                                    !vn.state.editing ?
-                                                        m(MCWList, {
-                                                            elements_list: vn.state.members_list
-                                                        })
-                                                    :
-                                                        m(MCWList, {
-                                                            elements_list: vn.state.members_list.map(function(e) {
-                                                                return {'name': e.name, 'link': e.link};
                                                             })
-                                                        })          
-                                                ])
-                                            )
-                                        ),
-                                        !vn.state.editing ?
-                                            m(Layout.Row,
-                                                m(Layout.Cell,
-                                                    m(MCWButton, {
-                                                        name: 'add member',
-                                                        onclick: function(){
-                                                            vn.state.dialog_add_member.outer.open();
-                                                        }
-                                                    }),                                           
-                                                ),
-                                                m(Layout.Cell,
-                                                    m(MCWButton, {
-                                                        name: 'remove team',
-                                                        onclick: function(){
-                                                            vn.state.dialog_remove_team.outer.open();
-                                                        }
-                                                    }),                                           
+                                                        ])
+                                                    )
                                                 )
-                                            )
-                                        :
-                                            undefined
-                                    )
+                                            ),
+                                            m(Layout,
+                                                m(Layout.Row,
+                                                    m(Layout.Cell, {span:12},
+                                                        m(MCWSelectmenu, {
+                                                            default: vn.state.actual_referent,
+                                                            value: vn.state.actual_referent,
+                                                            elements_list: vn.state.possibles_referents,
+                                                            disabled: vn.state.editing,
+                                                            onchange: function(ev){
+                                                                vn.state.request_body_referent['worker'] = parseInt(ev.target.value);
+                                                            }
+                                                        })
+                                                    )
+                                                )
+                                            ),
+                                            m(Layout, 
+                                                m(Layout.Row,
+                                                    m(Layout.Cell, [
+                                                        m('h2', 'Membres de l\'Equip'),
+                                                    ])
+                                                ),
+                                                m(Layout.Row,
+                                                    m(Layout.Cell, {span:8},
+                                                        m('.members', [
+                                                            !vn.state.editing ?
+                                                                m(MCWList, {
+                                                                    elements_list: vn.state.members_list
+                                                                })
+                                                            :
+                                                                m(MCWList, {
+                                                                    elements_list: vn.state.members_list.map(function(e) {
+                                                                        return {'name': e.name, 'link': e.link};
+                                                                    })
+                                                                })          
+                                                        ])
+                                                    )
+                                                ),
+                                                !vn.state.editing ?
+                                                    m(Layout.Row,
+                                                        m(Layout.Cell,
+                                                            m(MCWButton, {
+                                                                name: 'add member',
+                                                                onclick: function(){
+                                                                    vn.state.dialog_add_member.outer.open();
+                                                                }
+                                                            }),                                           
+                                                        ),
+                                                        m(Layout.Cell,
+                                                            m(MCWButton, {
+                                                                name: 'remove team',
+                                                                onclick: function(){
+                                                                    vn.state.dialog_remove_team.outer.open();
+                                                                }
+                                                            }),                                           
+                                                        )
+                                                    )
+                                                :
+                                                    undefined
+                                            ),
+                                    ])
+                                )
                             ]),
                         ),
-                    ])
-                ),
-                m(MWCFab, {
-                    value: (vn.state.editing)?'edit':'save',
-                    onclick: function() {
+                        m(MWCFab, {
+                            value: (vn.state.editing)?'edit':'save',
+                            onclick: function() {
 
-                        if (vn.state.editing === false) {
-                            // Es pot enviat el metode put!
-                            m.request({
-                                method: 'PUT',
-                                url: ('http://localhost:8000/absencies/teams/' + vn.attrs.teamid),
-                                headers: {
-                                    'Authorization': Auth.token,
-                                    'Content-type': 'application/json',
-                                },
-                                data: vn.state.team_info
-                            }).
-                            then(function(result) {
-                                vn.state.team_info = result;
-                                vn.state.editing = true;
-                                m.redraw();
-                            }).
-                            catch(function(error){
-                                console.log(error);
-                            });
-                            if (vn.state.request_body_referent !== undefined) {
-                                console.log('REQUEST PER CANVIAR REFERENT body ',
-                                    vn.state.request_body_referent
-                                )
-                                m.request({
-                                    method: 'PUT',
-                                    url: ('http://localhost:8000/absencies/members/' + vn.state.request_body_referent.id),
-                                    headers: {
-                                        'Authorization': Auth.token,
-                                        'Content-type': 'application/json',
-                                    },
-                                    data: vn.state.request_body_referent
-                                }).
-                                then(function(result) {
-                                    vn.state.actual_referent = ((result.first_name !== undefined) ? result.first_name : '-' +
-                                        ' ' +
-                                        (result.last_name !== undefined) ? result.last_name : '')
-                                    m.redraw();
-                                }).
-                                catch(function(error){
-                                    console.log(error);
-                                });
+                                if (vn.state.editing === false) {
+                                    // Es pot enviat el metode put!
+                                    m.request({
+                                        method: 'PUT',
+                                        url: ('http://localhost:8000/absencies/teams/' + vn.attrs.teamid),
+                                        headers: {
+                                            'Authorization': Auth.token,
+                                            'Content-type': 'application/json',
+                                        },
+                                        data: vn.state.team_info
+                                    }).
+                                    then(function(result) {
+                                        vn.state.team_info = result;
+                                        vn.state.editing = true;
+                                        m.redraw();
+                                    }).
+                                    catch(function(error){
+                                        console.log(error);
+                                    });
+                                    if (vn.state.request_body_referent !== undefined) {
+                                        console.log('REQUEST PER CANVIAR REFERENT body ',
+                                            vn.state.request_body_referent
+                                        )
+                                        m.request({
+                                            method: 'PUT',
+                                            url: ('http://localhost:8000/absencies/members/' + vn.state.request_body_referent.id),
+                                            headers: {
+                                                'Authorization': Auth.token,
+                                                'Content-type': 'application/json',
+                                            },
+                                            data: vn.state.request_body_referent
+                                        }).
+                                        then(function(result) {
+                                            vn.state.actual_referent = ((result.first_name !== undefined) ? result.first_name : '-' +
+                                                ' ' +
+                                                (result.last_name !== undefined) ? result.last_name : '')
+                                            m.redraw();
+                                        }).
+                                        catch(function(error){
+                                            console.log(error);
+                                        });
+                                    }
+
+                                }
+                                vn.state.editing = !vn.state.editing;
                             }
+                        }),
+                        m(Dialog, {
+                            id: 'add_member',
+                            header: 'Add member',
+                            model: vn.state.dialog_add_member.outer,
+                            buttons: [{
+                                text: 'Sub dialog',
+                                onclick: function(){
+                                    console.log('sub dialog');
+                                    vn.state.dialog_add_member.outer.close();
+                                }
+                            },{
+                                text: 'Cancel dialog',
+                                onclick: function(){
+                                    console.log('cancel dialog');
+                                    vn.state.dialog_add_member.outer.close();
+                                }
+                            }],
+                            onaccept: function(ev) {
+                                ev.cancelBubble = true;
+                                vn.state.dialog_add_member.innerexit = 'Accepted';
+                                m.redraw();
+                            },
+                            onclose: function(ev) {
+                                vn.state.self.dialog.innerexit = 'Rejected';
+                                m.redraw();
+                            },
+                            backdrop: vn.state.dialog_add_member.backdrop,
+                        }, [
+                            m(MCWSelectmenu, {
+                                // si no es admin default: /* jo mateix */,
+                                // si no es admin value: /* jo mateix */,
+                                elements_list: vn.state.possibles_members,
+                                // si no es admin disabled: vn.state.editing,
+                                onchange: function(ev){
+                                    //vn.state.request_body_referent['worker'] = parseInt(ev.target.value);
 
-                        }
-                        vn.state.editing = !vn.state.editing;
-                    }
-                }),
-                m(Dialog, {
-                    id: 'add_member',
-                    header: 'Add member',
-                    model: vn.state.dialog_add_member.outer,
-                    buttons: [{
-                        text: 'Sub dialog',
-                        onclick: function(){
-                            console.log('sub dialog');
-                            vn.state.dialog_add_member.outer.close();
-                        }
-                    },{
-                        text: 'Cancel dialog',
-                        onclick: function(){
-                            console.log('cancel dialog');
-                            vn.state.dialog_add_member.outer.close();
-                        }
-                    }],
-                    onaccept: function(ev) {
-                        ev.cancelBubble = true;
-                        vn.state.dialog_add_member.innerexit = 'Accepted';
-                        m.redraw();
-                    },
-                    onclose: function(ev) {
-                        vn.state.self.dialog.innerexit = 'Rejected';
-                        m.redraw();
-                    },
-                    backdrop: vn.state.dialog_add_member.backdrop,
-                }, [
-                    m(MCWSelectmenu, {
-                        // si no es admin default: /* jo mateix */,
-                        // si no es admin value: /* jo mateix */,
-                        elements_list: vn.state.possibles_members,
-                        // si no es admin disabled: vn.state.editing,
-                        onchange: function(ev){
-                            //vn.state.request_body_referent['worker'] = parseInt(ev.target.value);
+                                }
+                            }),
+                        ]),
+                        m(Dialog, {
+                            id: 'remove_team',
+                            header: 'Remove Team',
+                            model: vn.state.dialog_remove_team.outer,
+                            content: 'Estas segur?',
+                            buttons: [{
+                                text: 'Sub dialog',
+                                onclick: function(){
+                                    console.log('sub dialog');
+                                    // TODO: DELETE REQUEST
+                                    vn.state.dialog_remove_team.outer.close();
+                                }
+                            },{
+                                text: 'Cancel dialog',
+                                onclick: function(){
+                                    console.log('cancel dialog');
+                                    vn.state.dialog_remove_team.outer.close();
+                                }
+                            }],
+                            onaccept: function(ev) {
+                                ev.cancelBubble = true;
+                                vn.state.dialog_remove_team.innerexit = 'Accepted';
+                                m.redraw();
+                            },
+                            onclose: function(ev) {
+                                vn.state.self.dialog_remove_team.innerexit = 'Rejected';
+                                m.redraw();
+                            },
+                            backdrop: vn.state.dialog_remove_team.backdrop,
+                        }, [
+                            m('.', 'Estas segur que vols eliminar aquest equip?')
 
-                        }
-                    }),
-                ]),
-                m(Dialog, {
-                    id: 'remove_team',
-                    header: 'Remove Team',
-                    model: vn.state.dialog_remove_team.outer,
-                    content: 'Estas segur?',
-                    buttons: [{
-                        text: 'Sub dialog',
-                        onclick: function(){
-                            console.log('sub dialog');
-                            // TODO: DELETE REQUEST
-                            vn.state.dialog_remove_team.outer.close();
-                        }
-                    },{
-                        text: 'Cancel dialog',
-                        onclick: function(){
-                            console.log('cancel dialog');
-                            vn.state.dialog_remove_team.outer.close();
-                        }
-                    }],
-                    onaccept: function(ev) {
-                        ev.cancelBubble = true;
-                        vn.state.dialog_remove_team.innerexit = 'Accepted';
-                        m.redraw();
-                    },
-                    onclose: function(ev) {
-                        vn.state.self.dialog_remove_team.innerexit = 'Rejected';
-                        m.redraw();
-                    },
-                    backdrop: vn.state.dialog_remove_team.backdrop,
-                }, [
-                    m('.', 'Estas segur que vols eliminar aquest equip?')
-
-                ]),
-            ],
-            )
-        }
+                        ]),
+                    ])
+        ])
+    }
 }
 
 export default Team

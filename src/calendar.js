@@ -16,8 +16,6 @@ import Table from './mdc/table'
 import Menu from './main'
 
 
-//function get_workers(team_id)
-
 function find_row(object_list, workers_dicts, worker_id) {
     var worker = workers_dicts.find(function(e) {
         return e.id === worker_id;
@@ -70,6 +68,7 @@ function get_occurrences(vn) {
     }).
     then(function(result) {
         
+        console.log('same month dates ---> ', result.results);
         vn.state.object_list = [];
         vn.state.workers.map(function(e) {
             var morning_row = new Array(31);
@@ -78,7 +77,7 @@ function get_occurrences(vn) {
             afternoon_row.fill(0);
             var occurrense_entity = new Object();
             occurrense_entity['name'] = e.name;
-            occurrense_entity['id'] = e.id;
+            occurrense_entity['worker_id'] = e.id;
             occurrense_entity['mornings'] = morning_row;
             occurrense_entity['afternoon'] = afternoon_row;
             vn.state.object_list.push(occurrense_entity);
@@ -90,61 +89,57 @@ function get_occurrences(vn) {
             var actual_object = find_row(vn.state.object_list, vn.state.workers, e.worker); // donarà el numero de la row de que és l'occurrencia
             console.log('actual_object ', actual_object);
             if (e.start_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0) && e.end_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
-                start_day = new Date(e.start_time).getDate();
+                start_day = new Date(e.start_time).getDate() - 1;
                 end_day = new Date(e.end_time).getDate();
                 if (new Date(e.start_time).getHours() == 9) {
                     actual_object['mornings'][start_day] = e.absence_type;
                 }
                 actual_object['afternoon'][start_day] = e.absence_type;
-                for (var i = start_day+1; i < end_day; i++){
+                for (var i = start_day+1; i < end_day-1; i++){
                     console.log('dins 1er if ', i);
                     actual_object['mornings'][i] = e.absence_type;
                     actual_object['afternoon'][i] = e.absence_type;
                 }
-                actual_object['mornings'][end_day] = e.absence_type;
+                actual_object['mornings'][end_day-1] = e.absence_type;
                 if (new Date(e.end_time).getHours() == 17) {
-                    actual_object['afternoon'][end_day] = e.absence_type;
+                    actual_object['afternoon'][end_day-1] = e.absence_type;
                 }
             }
             else if (e.start_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
-                start_day = new Date(e.start_time).getDate();
+                start_day = new Date(e.start_time).getDate() - 1;
                 end_day = 31;
                 if (new Date(e.start_time).getHours() == 9) {
                     actual_object['mornings'][start_day] = e.absence_type;
                 }
                 actual_object['afternoon'][start_day] = e.absence_type;
-                for (var i = start_day+1; i < end_day; i++){
+                for (var i = start_day+1; i < end_day-1; i++){
                     console.log('dins 2n if ', i);
                     actual_object['mornings'][i] = e.absence_type;
                     actual_object['afternoon'][i] = e.absence_type;
                 }
-                actual_object['mornings'][end_day] = e.absence_type;
-                if (new Date(e.end_time).getHours() == 17) {
-                    actual_object['afternoon'][end_day] = e.absence_type;
-                }
+                actual_object['mornings'][end_day-1] = e.absence_type;
+                actual_object['afternoon'][end_day-1] = e.absence_type;
             }
             else if (e.end_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
-                start_day = 1;
+                start_day = 0;
                 end_day = new Date(e.end_time).getDate();
-                if (new Date(e.start_time).getHours() == 9) {
-                    actual_object['mornings'][start_day] = e.absence_type;
-                }
+                actual_object['mornings'][start_day] = e.absence_type;
                 actual_object['afternoon'][start_day] = e.absence_type;
-                for (var i = start_day+1; i < end_day; i++){
+                for (var i = start_day+1; i < end_day-1; i++){
                     console.log('dins 3er if ', i);
                     actual_object['mornings'][i] = e.absence_type;
                     actual_object['afternoon'][i] = e.absence_type;
                 }
-                actual_object['mornings'][end_day] = e.absence_type;
+                actual_object['mornings'][end_day-1] = e.absence_type;
                 if (new Date(e.end_time).getHours() == 17) {
-                    actual_object['afternoon'][end_day] = e.absence_type;
+                    actual_object['afternoon'][end_day-1] = e.absence_type;
                 }
             }
         });
         vn.state.selected_object_list = vn.state.object_list;
         
         console.log('es printarà ', vn.state.selected_object_list);
-
+        m.redraw();
     }).
     catch(function(error){
         console.log(error);
@@ -230,7 +225,7 @@ const Calendar = {
         }).
         then(function(result) {
             vn.state.members = result.results.map(function(e){
-                return {'name': e.name, 'id': e.id};
+                return {'team': e.team, 'worker': e.worker};
             });
         }).
         catch(function(error){
@@ -311,22 +306,28 @@ const Calendar = {
                                                             }
                                                         }
                                                         else if (vn.state.type_filter === 'team') {
-                                                            console.error('need test');
-                                                            
                                                             if (ev.target.value != '') {
-                                                                var team_id = vn.state.teams.find(x => x.name.toLowerCase().includes(ev.target.value.toLowerCase()));
-                                                                var workers_ids = [];
-                                                                vn.state.members.map(function(e) {
-                                                                    if (e.team === team_id) {
-                                                                        workers_ids.push(e.worker);
-                                                                    }
-                                                                });
-                                                                vn.state.selected_object_list =
-                                                                    vn.state.object_list.filter
-                                                                        (x => x.id in workers_ids) === undefined ?
-                                                                            []
-                                                                        :
-                                                                            vn.state.object_list.filter(x => x.id in workers_ids)
+                                                                var team = vn.state.teams.find(x => x.name.toLowerCase().includes(ev.target.value.toLowerCase()));
+                                                                if (team) {
+                                                                    var workers_ids = [];
+                                                                    vn.state.members.map(function(e) {
+                                                                        if (e.team === team.id) {
+                                                                            workers_ids.push(e.worker);
+                                                                        }
+                                                                    });
+
+                                                                    vn.state.selected_object_list =
+                                                                        (vn.state.object_list.filter(
+                                                                            x => workers_ids.includes(x.worker_id))) === undefined ?
+                                                                                []
+                                                                            :
+                                                                                vn.state.object_list.filter(x => workers_ids.includes(x.worker_id))
+
+                                                                }
+                                                                else {
+                                                                    vn.state.selected_object_list = [];
+                                                                }
+                                                                console.log('filtered: ', vn.state.selected_object_list);
                                                             }
                                                             else {
                                                                 vn.state.selected_object_list = vn.state.object_list;
