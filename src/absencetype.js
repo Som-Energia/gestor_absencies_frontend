@@ -11,7 +11,7 @@ import MCWButton from './mdc/button'
 
 const AbsenceType = {
     oninit: function(vn) {
-        vn.state.absence_info = [];
+        vn.state.absence_info = {};
         if(Auth.token === false){
             m.route.set('/login');
             return false;
@@ -31,7 +31,12 @@ const AbsenceType = {
             }
         }).
         then(function(result) {
-            vn.state.absence_info = result;
+
+            Object.keys(result).map(function(key){
+                if (key !== 'id') {
+                    vn.state.absence_info[key] = result[key];   
+                }
+            });
             m.redraw();
             vn.state.can_edit = true; // TODO: Check user permission
         }).
@@ -106,7 +111,11 @@ const AbsenceType = {
                                         data: vn.state.absence_info
                                     }).
                                     then(function(result) {
-                                        vn.state.absence_info = result;
+                                        Object.keys(result).map(function(key){
+                                            if (key !== 'id') {
+                                                vn.state.absence_info[key] = result[key];   
+                                            }
+                                        });
                                         m.redraw();
                                         vn.state.can_edit = true;
                                     }).

@@ -11,7 +11,7 @@ import MCWButton from './mdc/button'
 
 const VacationPolicy = {
     oninit: function(vn) {
-        vn.state.vacationpolicy_info = [];
+        vn.state.vacationpolicy_info = {};
         if(Auth.token === false){
             m.route.set('/login');
             return false;
@@ -31,7 +31,12 @@ const VacationPolicy = {
             }
         }).
         then(function(result) {
-            vn.state.vacationpolicy_info = result;
+
+            Object.keys(result).map(function(key){
+                if (key !== 'id') {
+                    vn.state.vacationpolicy_info[key] = result[key];   
+                }
+            });
             m.redraw();
             vn.state.can_edit = true; // TODO: Check user permission
         }).
@@ -106,7 +111,11 @@ const VacationPolicy = {
                                         data: vn.state.vacationpolicy_info
                                     }).
                                     then(function(result) {
-                                        vn.state.vacationpolicy_info = result;
+                                        Object.keys(result).map(function(key){
+                                            if (key !== 'id') {
+                                                vn.state.vacationpolicy_info[key] = result[key];   
+                                            }
+                                        });
                                         m.redraw();
                                         vn.state.can_edit = true;
                                     }).

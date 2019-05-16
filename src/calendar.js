@@ -16,6 +16,18 @@ import Table from './mdc/table'
 import Menu from './main'
 
 
+function set_weekends(row, month, year) {
+    var day = 1
+    var date = new Date(year, month, day);
+    do {
+        if (date.getDay() === 5 || date.getDay() === 6) {
+            row[day] = 9;
+        }
+        day++;
+        date.setDate(day);
+    } while(day < 31);
+}
+
 function find_row(object_list, workers_dicts, worker_id) {
     var worker = workers_dicts.find(function(e) {
         return e.id === worker_id;
@@ -67,14 +79,17 @@ function get_occurrences(vn) {
         }
     }).
     then(function(result) {
-        
-        console.log('same month dates ---> ', result.results);
+        var row = new Array(31);
+        row.fill(0);
+        set_weekends(
+            row,
+            vn.state.start_period.getMonth(),
+            vn.state.start_period.getFullYear()
+        );
         vn.state.object_list = [];
         vn.state.workers.map(function(e) {
-            var morning_row = new Array(31);
-            morning_row.fill(0);
-            var afternoon_row = new Array(31);
-            afternoon_row.fill(0);
+            var morning_row = [... row];
+            var afternoon_row = [... row];
             var occurrense_entity = new Object();
             occurrense_entity['name'] = e.name;
             occurrense_entity['worker_id'] = e.id;

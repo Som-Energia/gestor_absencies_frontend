@@ -11,7 +11,7 @@ import MCWButton from './mdc/button'
 
 const Member = {
     oninit: function(vn) {
-        vn.state.member_info = [];
+        vn.state.member_info = {};
         if(Auth.token === false){
             m.route.set('/login');
             return false;
@@ -30,7 +30,12 @@ const Member = {
             }
         }).
         then(function(result) {
-            vn.state.member_info = result;
+
+            Object.keys(result).map(function(key){
+                if (key !== 'id') {
+                    vn.state.member_info[key] = result[key];   
+                }
+            });
             m.redraw();
             vn.state.editing = true;
         }).
@@ -105,7 +110,12 @@ const Member = {
                                         data: vn.state.member_info
                                     }).
                                     then(function(result) {
-                                        vn.state.member_info = result;
+
+                                        Object.keys(result).map(function(key){
+                                            if (key !== 'id') {
+                                                vn.state.member_info[key] = result[key];   
+                                            }
+                                        });
                                         m.redraw();
                                         vn.state.editing = true;
                                     }).

@@ -13,6 +13,7 @@ import MWCFab from './mdc/fab'
 import MWCSnackbar from './mdc/snackbar'
 import MCWSelectmenu from './mdc/selectmenu'
 import MCWCheckbox from './mdc/checkbox'
+import MCWMenuSurface from './mdc/menu-surface'
 import Table from './mdc/table'
 import DatePicker from './mdc/datepicker'
 import './style.styl';
@@ -41,6 +42,7 @@ const Menu = {
             { 'name': 'E.T', 'link': '/et' },
             { 'name': 'Som Energia', 'link': '/somenergia' },
             { 'name': 'Logout', 'link': '/login' },
+            //{ 'name': 'Options', 'component': m(MCWMenuSurface) },
         ];
         console.log('User id ', Auth.user_id);
     },

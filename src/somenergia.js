@@ -14,6 +14,7 @@ const SomEnergia = {
         vn.state.absence_types = []; 
         vn.state.selected_vacationpolicy = [];
         vn.state.selected_absencetype = [];
+        vn.state.vacation_policy = [];
         
         if(Auth.token === false){
             m.route.set('/login');
@@ -93,18 +94,18 @@ const SomEnergia = {
                                             ),
                                             m('hr'),
                                             m(MCWTextField, {
-                                                label: 'Nom de l\'equip a cercar',
+                                                label: 'Nom de la politica de vacances a cercar',
                                                 outlined: true,
                                                 oninput: function(ev) {
                                                     if (ev.target.value !== ''){
                                                         vn.state.selected_vacationpolicy = 
-                                                        vn.state.vacation_policy.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase())) === undefined ?
+                                                        vn.state.vacation_policies.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase())) === undefined ?
                                                             []
                                                         :
-                                                            vn.state.vacation_policy.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase()))
+                                                            vn.state.vacation_policies.filter(x => (x.name.toLowerCase()).includes(ev.target.value.toLowerCase()))
                                                     }
                                                     else {
-                                                        vn.state.selected_vacationpolicy = vn.state.vacation_policy;    
+                                                        vn.state.selected_vacationpolicy = vn.state.vacation_policies;    
                                                     }
                                                 }
                                             }),
@@ -147,7 +148,7 @@ const SomEnergia = {
                                             ),
                                             m('hr'),
                                             m(MCWTextField, {
-                                                label: 'Nom de l\'equip a cercar',
+                                                label: 'Nom del tipus d\'absencia a cercar',
                                                 outlined: true,
                                                 oninput: function(ev) {
                                                     if (ev.target.value !== ''){

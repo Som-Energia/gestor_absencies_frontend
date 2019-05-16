@@ -12,7 +12,7 @@ import MCWSelectmenu from './mdc/selectmenu'
 
 const Team = {
     oninit: function(vn) {
-        vn.state.team_info = [];
+        vn.state.team_info = {};
         if(Auth.token === false){
             m.route.set('/login');
             return false;
@@ -44,7 +44,12 @@ const Team = {
             }
         }).
         then(function(result) {
-            vn.state.team_info = result;
+
+            Object.keys(result).map(function(key){
+                if (key !== 'id') {
+                    vn.state.team_info[key] = result[key];   
+                }
+            });
             m.redraw();
             console.log('team info', vn.state.team_info);
             vn.state.editing = true; // TODO: Check user permission
@@ -246,7 +251,11 @@ const Team = {
                                         data: vn.state.team_info
                                     }).
                                     then(function(result) {
-                                        vn.state.team_info = result;
+                                        Object.keys(result).map(function(key){
+                                            if (key !== 'id') {
+                                                vn.state.team_info[key] = result[key];   
+                                            }
+                                        });
                                         vn.state.editing = true;
                                         m.redraw();
                                     }).
