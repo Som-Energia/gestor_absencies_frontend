@@ -31,6 +31,7 @@ const VacationPolicyForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
                                                 label : "Name",
+                                                outlined: true,
                                                 onblur: function (e){
                                                     vn.state.vacation_policy['name'] = e.target.value
                                                 },
@@ -41,6 +42,7 @@ const VacationPolicyForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
                                                 label : "Description",
+                                                outlined: true,
                                                 onblur: function (e){
                                                     vn.state.vacation_policy['description'] = e.target.value
                                                 },
@@ -51,6 +53,7 @@ const VacationPolicyForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
                                                 label : "Holidays",
+                                                outlined: true,
                                                 onblur: function (e){
                                                     vn.state.vacation_policy['holidays'] = e.target.value
                                                 },

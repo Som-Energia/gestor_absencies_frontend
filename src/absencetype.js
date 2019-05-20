@@ -51,47 +51,41 @@ const AbsenceType = {
                         m(Layout,
                             m(Layout.Row, [
                                 m(Layout.Cell, {span:12},
-                                    m(MCWCard, [
-                                        m('h2', 'Dades de l\'absències'),
-                                            m(Layout,
-                                                m(Layout.Row,
-                                                    m(Layout.Cell, {span:8},
-                                                        m('.absence_info', [
-                                                            Object.keys(vn.state.absence_info).map(function(key){
-                                                                return m(Layout,
-                                                                        m(Layout.Row,
-                                                                            m(Layout.Cell, {span:12},
-                                                                                m(MCWTextField, {
-                                                                                    label: key,
-                                                                                    value: vn.state.absence_info[key],
-                                                                                    disabled : vn.state.can_edit,
-                                                                                    oninput: function (e){
-                                                                                        vn.state.absence_info[key] = e.target.value;
-                                                                                    },
-                                                                                })
-                                                                            )
-                                                                        )
-                                                                )
-                                                            })
-                                                        ])
-                                                    )
+                                    m(MCWCard, { header: m('h2','Absence Type') }, [
+                                        m(Layout,
+                                            m('.absence_info', [
+                                                m(Layout.Row, [
+                                                    Object.keys(vn.state.absence_info).map(function(key){
+                                                        return m(Layout.Cell, {span:6},
+                                                                        m(MCWTextField, {
+                                                                            label: key,
+                                                                            outlined: true,
+                                                                            value: vn.state.absence_info[key],
+                                                                            disabled : vn.state.can_edit,
+                                                                            oninput: function (e){
+                                                                                vn.state.absence_info[key] = e.target.value;
+                                                                            },
+                                                                        })
+                                                                    )
+                                                    })
+                                                ])
+                                            ])
+                                        ),
+                                        !vn.state.editing ?
+                                            m(Layout.Row,
+                                                m(Layout.Cell, {span:5}),
+                                                m(Layout.Cell, {span:2},
+                                                    m(MCWButton, {
+                                                        name: 'remove AbsenceType',
+                                                        onclick: function(){
+                                                            vn.state.dialog_remove_absencetype.outer.open();
+                                                        }
+                                                    }),
                                                 ),
-                                                !vn.state.editing ?
-                                                    m(Layout.Row,
-                                                        m(Layout.Cell, {span:5}),
-                                                        m(Layout.Cell, {span:2},
-                                                            m(MCWButton, {
-                                                                name: 'remove AbsenceType',
-                                                                onclick: function(){
-                                                                    vn.state.dialog_remove_absencetype.outer.open();
-                                                                }
-                                                            }),
-                                                        ),
-                                                        m(Layout.Cell, {span:5})
-                                                    )
-                                                :
-                                                    undefined
+                                                m(Layout.Cell, {span:5})
                                             )
+                                        :
+                                            undefined
                                     ]),
                                 ),
                             ])

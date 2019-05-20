@@ -45,6 +45,7 @@ const WorkerForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
                                                 label : "Username",
+                                                outlined: true,
                                                 onblur: function (e){
                                                     vn.state.worker['username'] = e.target.value
                                                 },
@@ -57,6 +58,7 @@ const WorkerForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
                                                 label: 'Password',
+                                                outlined: true,
                                                 onblur: function (e){
                                                     vn.state.worker['password'] = e.target.value
                                                 },
@@ -69,6 +71,7 @@ const WorkerForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
                                                 label: "First Name",
+                                                outlined: true,
                                                 onblur: function (e){
                                                     vn.state.worker['first_name'] = e.target.value
                                                 },
@@ -81,6 +84,7 @@ const WorkerForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
                                                 label: "Last Name",
+                                                outlined: true,
                                                 onblur: function (e){
                                                     vn.state.worker['last_name'] = e.target.value
                                                 },
@@ -93,6 +97,7 @@ const WorkerForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
                                                 label: "Gender",
+                                                outlined: true,
                                                 onblur: function (e){
                                                     vn.state.worker['gender'] = e.target.value
                                                 },
@@ -105,6 +110,7 @@ const WorkerForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
                                                 label: "Category",
+                                                outlined: true,
                                                 onblur: function (e){
                                                     vn.state.worker['category'] = e.target.value
                                                 },

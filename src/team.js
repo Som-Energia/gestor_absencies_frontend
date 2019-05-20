@@ -131,7 +131,12 @@ const Team = {
 
                 })
                 console.log('LLISTA MEMBERS ', vn.state.members_list);
+                vn.state.possibles_referents.push({
+                    'text': '',
+                    'value': '',
+                })
             }
+            
         }).
         catch(function(error){
             console.log(error);
@@ -146,91 +151,100 @@ const Team = {
                         m(Layout,
                             m(Layout.Row, [
                                 m(Layout.Cell, {span:12},
-                                    m(MCWCard, [
-                                        m('h2', 'Dades de l\'Equip'),
-                                            m(Layout,
-                                                m(Layout.Row,
-                                                    m(Layout.Cell, {span:8},
-                                                        m('.team_info', [
-                                                            Object.keys(vn.state.team_info).map(function(key){
-                                                                return m(Layout,
-                                                                        m(Layout.Row,
-                                                                            m(Layout.Cell, {span:12},
-                                                                                m(MCWTextField, {
-                                                                                    label: key,
-                                                                                    value: vn.state.team_info[key],
-                                                                                    disabled: vn.state.editing,
-                                                                                    oninput: function(ev) {
-                                                                                        vn.state.team_info[key]=ev.target.value;
-                                                                                    },
-                                                                                })
-                                                                            )
-                                                                        )
-                                                                )
-                                                            })
-                                                        ])
-                                                    )
-                                                )
-                                            ),
-                                            m(Layout,
-                                                m(Layout.Row,
-                                                    m(Layout.Cell, {span:12},
-                                                        m(MCWSelectmenu, {
-                                                            default: vn.state.actual_referent,
-                                                            value: vn.state.actual_referent,
-                                                            elements_list: vn.state.possibles_referents,
-                                                            disabled: vn.state.editing,
-                                                            onchange: function(ev){
-                                                                vn.state.request_body_referent['worker'] = parseInt(ev.target.value);
-                                                            }
-                                                        })
-                                                    )
-                                                )
-                                            ),
-                                            m(Layout, 
-                                                m(Layout.Row,
-                                                    m(Layout.Cell, [
-                                                        m('h2', 'Membres de l\'Equip'),
-                                                    ])
-                                                ),
-                                                m(Layout.Row,
-                                                    m(Layout.Cell, {span:8},
-                                                        m('.members', [
-                                                            !vn.state.editing ?
-                                                                m(MCWList, {
-                                                                    elements_list: vn.state.members_list
-                                                                })
-                                                            :
-                                                                m(MCWList, {
-                                                                    elements_list: vn.state.members_list.map(function(e) {
-                                                                        return {'name': e.name, 'link': e.link};
+                                m(MCWCard, { header: m('h2','Team') }, [
+                                        m(Layout,
+                                            m('.team_info', [
+                                                m(Layout.Row, [
+                                                    Object.keys(vn.state.team_info).map(function(key){
+                                                        return m(Layout.Cell, {span:6},
+                                                                    m(MCWTextField, {
+                                                                        label: key,
+                                                                        value: vn.state.team_info[key],
+                                                                        outlined: true,
+                                                                        disabled: vn.state.editing,
+                                                                        oninput: function(ev) {
+                                                                            vn.state.team_info[key]=ev.target.value;
+                                                                        },
                                                                     })
-                                                                })          
-                                                        ])
-                                                    )
-                                                ),
-                                                !vn.state.editing ?
-                                                    m(Layout.Row,
-                                                        m(Layout.Cell,
-                                                            m(MCWButton, {
-                                                                name: 'add member',
-                                                                onclick: function(){
-                                                                    vn.state.dialog_add_member.outer.open();
-                                                                }
-                                                            }),                                           
-                                                        ),
-                                                        m(Layout.Cell,
-                                                            m(MCWButton, {
-                                                                name: 'remove team',
-                                                                onclick: function(){
-                                                                    vn.state.dialog_remove_team.outer.open();
-                                                                }
-                                                            }),                                           
-                                                        )
-                                                    )
-                                                :
-                                                    undefined
+                                                                )                                                        
+                                                    })
+                                                ])
+                                            ])
+                                        ),
+                                        m(Layout,
+                                            m(Layout.Row,
+                                                m(Layout.Cell, {span:12},
+                                                    m(MCWSelectmenu, {
+                                                        default: vn.state.actual_referent,
+                                                        value: vn.state.actual_referent,
+                                                        elements_list: vn.state.possibles_referents,
+                                                        disabled: vn.state.editing,
+                                                        onchange: function(ev){
+                                                            vn.state.request_body_referent['worker'] = parseInt(ev.target.value);
+                                                        }
+                                                    })
+                                                )
                                             ),
+                                            m(Layout.Row,
+                                                m(Layout.Cell, {span:12},
+                                                    m(MCWSelectmenu, {
+                                                        //default: vn.state.actual_representant,
+                                                        //value: vn.state.actual_representant,
+                                                        default: '',
+                                                        value: '',
+                                                        //elements_list: vn.state.possibles_referents,
+                                                        disabled: vn.state.editing,
+                                                        onchange: function(ev){
+                                                            vn.state.request_body_representant['worker'] = parseInt(ev.target.value);
+                                                        }
+                                                    })
+                                                )
+                                            )
+                                        ),
+                                        m(Layout, 
+                                            m(Layout.Row,
+                                                m(Layout.Cell, [
+                                                    m('h2', 'Membres de l\'Equip'),
+                                                ])
+                                            ),
+                                            m(Layout.Row,
+                                                m(Layout.Cell, {span:8},
+                                                    m('.members', [
+                                                        !vn.state.editing ?
+                                                            m(MCWList, {
+                                                                elements_list: vn.state.members_list
+                                                            })
+                                                        :
+                                                            m(MCWList, {
+                                                                elements_list: vn.state.members_list.map(function(e) {
+                                                                    return {'name': e.name, 'link': e.link};
+                                                                })
+                                                            })          
+                                                    ])
+                                                )
+                                            ),
+                                            !vn.state.editing ?
+                                                m(Layout.Row,
+                                                    m(Layout.Cell,
+                                                        m(MCWButton, {
+                                                            name: 'add member',
+                                                            onclick: function(){
+                                                                vn.state.dialog_add_member.outer.open();
+                                                            }
+                                                        }),                                           
+                                                    ),
+                                                    m(Layout.Cell,
+                                                        m(MCWButton, {
+                                                            name: 'remove team',
+                                                            onclick: function(){
+                                                                vn.state.dialog_remove_team.outer.open();
+                                                            }
+                                                        }),                                           
+                                                    )
+                                                )
+                                            :
+                                                undefined
+                                        ),
                                     ])
                                 )
                             ]),

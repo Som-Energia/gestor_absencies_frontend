@@ -30,6 +30,7 @@ const TeamForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
                                                 label : "Name",
+                                                outlined: true,
                                                 onblur: function (e){
                                                     vn.state.team['name'] = e.target.value
                                                 },

@@ -17,8 +17,6 @@ const AbsenceTypeForm = {
             return false;
         }
         const token = Auth.token;
-        
-
     },
     view: function(vn) {
         return m('.absencetype_form', [
@@ -33,6 +31,7 @@ const AbsenceTypeForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
                                                 label : 'Name',
+                                                outlined: true,
                                                 onchange: function (e){
                                                     vn.state.absencetype['name'] = e.target.value
                                                 },
@@ -45,6 +44,7 @@ const AbsenceTypeForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
                                                 label: 'Description',
+                                                outlined: true,
                                                 onchange: function (e){
                                                     vn.state.absencetype['description'] = e.target.value
                                                 },
@@ -75,6 +75,7 @@ const AbsenceTypeForm = {
                                                 m(Layout.Cell, {span:12},
                                                     m(MCWTextField, {
                                                         label: 'Min duration',
+                                                        outlined: true,
                                                         oninput: function(ev) {
                                                             vn.state.absencetype['min_duration'] = parseInt(ev.target.value);
                                                             vn.state.absencetype['min_spend'] = parseInt(ev.target.value);
@@ -109,6 +110,7 @@ const AbsenceTypeForm = {
                                                 m(Layout.Cell, {span:12},
                                                     m(MCWTextField, {
                                                         label: 'Max duration',
+                                                        outlined: true,
                                                         oninput: function(ev) {
                                                             vn.state.absencetype['max_duration'] = parseInt(ev.target.value);
                                                             vn.state.absencetype['max_spend'] = parseInt(ev.target.value);
@@ -137,6 +139,7 @@ const AbsenceTypeForm = {
                                     ),
                                 ),
                                 m(MCWButton, {
+                                    raised: true,
                                     onclick: function(){
 
                                         console.log('create ', vn.state.absencetype);
@@ -159,9 +162,8 @@ const AbsenceTypeForm = {
                                         });
                                         
                                     },
-                                    name: 'Create'
 
-                                }),
+                                }, 'Create'),
                             )
                         )
                     ])

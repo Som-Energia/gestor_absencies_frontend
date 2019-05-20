@@ -15,11 +15,11 @@ const MCWList = {
                         m('span.mdc-list-item__text', [
                             m('a',
                                 {'href': e.link, oncreate: m.route.link},
-                                e.name
+                                m('span.mdc-list-item__text-content',e.name)
                             ),
                         ])
                     :
-                        m('div', e.name),
+                        m('span.mdc-list-item__text', e.name),
                     e.button ?
                         e.button
                     :

@@ -8,8 +8,9 @@ const devMode = process.env.NODE_ENV !== 'production';
 module.exports = {
   entry: './src/main.js',
   output: {
-    filename: 'bundle.js',
+    filename: 'bundle-[name]-[chunkhash].js',
     path: path.resolve(__dirname, 'dist'),
+    chunkFilename: 'chunk-[name]-[chunkhash].js',
     publicPath: '/'
   },
   module: {
@@ -59,8 +60,8 @@ module.exports = {
       filename: 'index.html'
 	}),
 	new MiniCssExtractPlugin({
-		filename: devMode ? '[name].css' : '[name].[hash].css',
-		chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
+		filename: '[name].[hash].css',
+		chunkFilename: '[id].[hash].css',
 	})	
   ],  
   devServer: {

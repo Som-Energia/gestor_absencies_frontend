@@ -14,7 +14,11 @@ const MCWDrawer = {
             m('.mdc-drawer__content',    
                 m('nav.mdc-list', vn.attrs.elements_list.map(function(e){
                         return m('a.mdc-list-item',
-                            {'href': e.link, oncreate: m.route.link},
+                            {
+                                'href': e.link,
+                                oncreate: m.route.link,
+                                class: ( m.route.get() === e.link ? 'mdc-list-item--selected':'' )
+                            },
                             m('span.mdc-list-item__text',
                                 e.name
                             )

@@ -23,6 +23,7 @@ const Login = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
                                                 "label":"Usuari",
+                                                outlined: true,
                                                 oninput: function (e){
                                                     vn.state.auth.setUsername(e.target.value)
                                                 },
@@ -36,6 +37,7 @@ const Login = {
                                             m(MCWTextField, {
                                                 "type":"password",
                                                 "label":"Password",
+                                                outlined: true,
                                                 oninput: function (e){
                                                     vn.state.auth.setPassword(e.target.value)
                                                 },
@@ -45,15 +47,14 @@ const Login = {
                                 ),
                                 m(MCWButton, {
                                     onclick: vn.state.auth.login,
-                                    name: 'Login'
-
-                                }),
+                                    raised: true,
+                                }, 'Login'),
                             ] : [
                                 m('h1', 'Logout'),
                                 m(MCWButton, {
+                                    raised: true,
                                     onclick: vn.state.auth.logout,
-                                    name: 'Logout'
-                                })
+                                }, 'Logout')
                             ]
                         )
                     )

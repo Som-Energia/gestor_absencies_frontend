@@ -53,11 +53,6 @@ const Menu = {
     }
 }
 
-
-
-
-
-
 m.route(document.getElementById('app'), "/login", {
     "/login": Login,
     "/member/:memberid": Member,

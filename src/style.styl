@@ -12,40 +12,61 @@ bottom: 1rem;
 right: 1rem;
 }
 
+h2, h3 {
+    font-weight: 500;
+}
+
 hr {
 margin-left: 0px;
 margin-right: 0px;
 }
 
 .mdc-layout-grid {
-margin-left: 0px;
-margin-right: 0px;
-padding-left: 0px;
-padding-right: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 body {
-background-color: #f4f4f4;
-font-family: Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
-font-size: 14px;
-min-height: 100%;
-display: flex;
-flex-direction: column;
-margin: 0;
+    background-color: #f4f4f4;
+    font-family: Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+    font-size: 14px;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
 }
 
 .mdc-card {
-padding: 24px; 
-position: relative;
-margin: .5rem 0 1rem 0;
-background-color: #fff;
-transition: box-shadow .25s;
-border-radius: 2px;
-margin-top: 0;
-margin-bottom: 20px;
-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+    position: relative;
+    margin: .5rem 0 1rem 0;
+    background-color: #fff;
+    transition: box-shadow .25s;
+    border-radius: 5px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+    overflow: hidden;
 }
 
+.mdc-card__header {
+    padding: 24px;
+    background-color: var(--mdc-theme-primary);     
+    text-align: center;
+}
+
+.mdc-card__header h2 {
+    margin: 0;
+    line-height: 32px;
+    font-weight: 500;
+}
+
+.mdc-card__content {
+    padding: 0 24px 24px;    
+}
+
+/*
 .btn, .btn-large, .btn-small, .mdc-button {
 text-decoration: none;
 color: #fff !important;
@@ -67,6 +88,7 @@ vertical-align: middle;
 -webkit-tap-highlight-color: transparent;
 box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
 }
+*/
 
 .drawer-frame-root {
 display: -ms-flexbox;
@@ -81,23 +103,32 @@ padding: 0 18px;
 width: 100%;
 }
 
+.mdc-drawer {
+    background-color: #f4f4f4;
+    border: 0;
+}
+
 .mdc-drawer .mdc-list-item {
-font-family: Roboto,sans-serif;
--moz-osx-font-smoothing: grayscale;
--webkit-font-smoothing: antialiased;
-font-size: .875rem;
-line-height: 1.375rem;
-font-weight: 500;
-letter-spacing: .0071428571em;
-text-decoration: inherit;
-text-transform: inherit;
-height: 40px;
-margin: 8px;
-padding: 0 8px;
+    font-family: Roboto,sans-serif;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-size: .875rem;
+    line-height: 1.375rem;
+    font-weight: 500;
+    letter-spacing: .0071428571em;
+    text-decoration: inherit;
+    text-transform: inherit;
+    height: 40px;
+    margin: 8px;
+    padding: 0 8px;
+}
+
+.mdc-drawer .mdc-list-item--selected {
+    background-color: var(--mdc-theme-primary);
 }
 
 .mdc-drawer .mdc-list-item--activated {
-color: rgba(98,0,238,.87);
+    color: rgba(98,0,238,.87);
 }
 
 .right {
@@ -106,4 +137,178 @@ color: rgba(98,0,238,.87);
 
 .left {
     text-align: left;
+}
+
+.mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+    color: var(--mdc-theme-primary);
+}
+
+/* Members & Teams */
+
+.et__tabs {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    list-style: none;
+}
+
+.et__tab {
+    margin: 0 20px;
+    display: flex;
+    align-items: center;
+    height: 32px;
+    font-size: 21px;
+    line-height: 32px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.et__tab--selected {
+    color: #000;
+    box-shadow: inset 0 -2px 0 0 #000;
+}
+
+.members__list .mdc-list-item__text , .teams_list .mdc-list-item__text {
+    width: 100%;
+    height: 100%;
+}
+
+.members__list ul, .teams_list ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #dfe3e6;
+    border-radius: 5px;
+    overflow: hidden;    
+}
+
+.members__list li, .teams_list li {
+    box-sizing: border-box;
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    border-bottom: 1px solid #dfe3e6;
+}
+
+.members__list li a, .teams_list li a {
+    width: 100%;
+    height: 100%;
+    display: block;
+    text-decoration: none;
+}
+
+.mdc-list-item__text-content {
+    padding: 0 30px;
+    color: #1c242b;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 20px;
+    line-height: 45px;
+}
+
+/* Absence list items */
+
+.absences-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #dfe3e6;
+    border-radius: 5px;
+    overflow: hidden;    
+}
+
+.absences-list__item {
+    box-sizing: border-box;
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    border-bottom: 1px solid #dfe3e6;    
+}
+
+.absences-list__item-container {
+    width: 100%;
+    align-items: center;
+    padding: 25px 30px;    
+    display: flex;
+}    
+
+.absences-list__item-name {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+
+.start-time, .end-time {
+    width: 50px;
+    height: 55px;
+    background: #f2f4f5;
+    text-align: center;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.start-time .month,
+.end-time .month {
+    font-size: 8px;
+    height: 15px;
+    line-height: 15px;    
+    background: var(--mdc-theme-primary);
+    color: #fff;
+    font-weight: 600;
+    text-transform: uppercase;    
+}
+
+.start-time .day,
+.end-time .day {
+    font-size: 16px;
+    height: 28px;
+    line-height: 34px;
+    color: #1c242b;
+    font-weight: 500;    
+}
+
+.start-time .duration-container,
+.end-time .duration-container {
+    height: 10px;
+    font-size: 10px;
+    line-height: 10px;        
+}
+
+.time-separator {
+    padding: 0 4px;
+    color: #a8afb3;
+}
+
+.content {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin-left: 20px;
+}
+
+.type {
+    flex: 1 1 auto;
+    min-width: 0;
+    color: #1c242b;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 20px;
+    line-height: 25px;    
+}
+
+.num-days {
+    color: #a8afb3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 16px;
+    line-height: 25px;    
 }

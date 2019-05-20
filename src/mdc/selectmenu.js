@@ -6,8 +6,7 @@ const MCWSelectmenu = {
     view: (vn) =>
         m('.mdc-select' + (vn.attrs.disabled?'.mdc-select--disabled':''), vn.attrs,
             m('i.mdc-select__dropdown-icon'),
-            m('select.mdc-select__native-control', 
-                //m('option'),
+            m('select.mdc-select__native-control',
                     vn.attrs.elements_list.map(function(e){
                         return ( e['value'] === vn.attrs.default ?
                             m('option', {

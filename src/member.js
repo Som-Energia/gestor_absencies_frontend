@@ -50,50 +50,42 @@ const Member = {
                         m(Layout,
                             m(Layout.Row, [
                                 m(Layout.Cell, {span:12},
-                                    m(MCWCard, [
-                                        m('h2', 'Dades personals'),
-                                            m(Layout,
-                                                m(Layout.Row,
-                                                    m(Layout.Cell, {span:8},
-                                                        m('.personal_info', [
-                                                            Object.keys(vn.state.member_info).map(function(key){
-                                                                return m(Layout,
-                                                                        m(Layout.Row,
-                                                                            m(Layout.Cell, {span:12},
-                                                                                m(MCWTextField, {
-                                                                                    label: key,
-                                                                                    value: vn.state.member_info[key],
-                                                                                    disabled: vn.state.editing,
-                                                                                    oninput: function (e){
-                                                                                        vn.state.member_info[key] = e.target.value;
-                                                                                    },
-                                                                                })
-                                                                            )
-                                                                        )
-                                                                )
-                                                            })
-                                                        ])
-                                                    )
+                                m(MCWCard, { header: m('h2','Worker') }, [
+                                    m(Layout,
+                                        m('.personal_info', [
+                                                m(Layout.Row,[
+                                                    Object.keys(vn.state.member_info).map(function(key){
+                                                        return m(Layout.Cell, {span:6}, [
+                                                                m(MCWTextField, {
+                                                                    label: key,
+                                                                    value: vn.state.member_info[key],
+                                                                    outlined: true,
+                                                                    disabled: vn.state.editing,
+                                                                    oninput: function (e){
+                                                                        vn.state.member_info[key] = e.target.value;
+                                                                    },
+                                                                })]
+                                                            );
+                                                    }),
+                                                ])        
+                                            ])
+                                        ),
+                                        !vn.state.editing ?
+                                            m(Layout.Row,
+                                                m(Layout.Cell, {span:5}),
+                                                m(Layout.Cell, {span:2},
+                                                    m(MCWButton, {
+                                                        raised: true,
+                                                        onclick: function(){
+                                                            vn.state.dialog_remove_worker.outer.open();
+                                                        }
+                                                    }, 'Remove Worker'),
                                                 ),
-                                                !vn.state.editing ?
-                                                    m(Layout.Row,
-                                                        m(Layout.Cell, {span:5}),
-                                                        m(Layout.Cell, {span:2},
-                                                            m(MCWButton, {
-                                                                name: 'remove worker',
-                                                                onclick: function(){
-                                                                    vn.state.dialog_remove_worker.outer.open();
-                                                                }
-                                                            }),
-                                                        ),
-                                                        m(Layout.Cell, {span:5})
-                                                    )
-                                                :
-                                                    undefined
-                                            )
+                                                m(Layout.Cell, {span:5})
+                                            ) : ''
                                     ]),
                                 ),
-                            ])                            
+                            ])
                         ),
                         m(MWCFab, {
                             value: (vn.state.editing)?'edit':'save',

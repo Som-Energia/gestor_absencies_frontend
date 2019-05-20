@@ -62,7 +62,9 @@ const OccurrenceForm = {
                                                 label: 'Start',
                                                 help: 'First day that will be included',
                                                 value: undefined,
+                                                outlined: true,
                                                 future: moment().add(20,'years'),
+                                                past: moment(),
                                                 onchange: function(newvalue) {
                                                     console.log("changin from ", newvalue.format("YYYY-MM-DD HH:mm:ss"));
 
@@ -83,7 +85,9 @@ const OccurrenceForm = {
                                                 label: 'End',
                                                 help: 'Last day that will be included',
                                                 value: undefined,
+                                                outlined: true,
                                                 future: moment().add(20,'years'),
+                                                past: moment(),
                                                 onchange: function(newvalue) {
                                                     console.log("changin from ", newvalue.format("YYYY-MM-DD HH:mm:ss"));
 

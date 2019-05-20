@@ -12,6 +12,7 @@ import MCWButton from './mdc/button'
 const VacationPolicy = {
     oninit: function(vn) {
         vn.state.vacationpolicy_info = {};
+        vn.state.member_info = {};
         if(Auth.token === false){
             m.route.set('/login');
             return false;
@@ -51,47 +52,39 @@ const VacationPolicy = {
                         m(Layout,
                             m(Layout.Row, [
                                 m(Layout.Cell, {span:12},
-                                    m(MCWCard, [
-                                        m('h2', 'Dades de la Politica de Vacances'),
-                                            m(Layout,
-                                                m(Layout.Row,
-                                                    m(Layout.Cell, {span:8},
-                                                        m('.vacationpolicy_info', [
-                                                            Object.keys(vn.state.vacationpolicy_info).map(function(key){
-                                                                return m(Layout,
-                                                                        m(Layout.Row,
-                                                                            m(Layout.Cell, {span:12},
-                                                                                m(MCWTextField, {
-                                                                                    label: key,
-                                                                                    value: vn.state.vacationpolicy_info[key],
-                                                                                    disabled : vn.state.can_edit,
-                                                                                    oninput: function (e){
-                                                                                        vn.state.vacationpolicy_info[key] = e.target.value;
-                                                                                    },
-                                                                                })
-                                                                            )
-                                                                        )
-                                                                )
-                                                            })
-                                                        ])
-                                                    )
+                                m(MCWCard, { header: m('h2','Vacation Policy') }, [
+                                    m(Layout,
+                                        m('.vacation_policy', [
+                                                m(Layout.Row, [
+                                                    Object.keys(vn.state.vacationpolicy_info).map(function(key){
+                                                        return m(Layout.Cell, {span:6}, [
+                                                                m(MCWTextField, {
+                                                                    label: key,
+                                                                    value: vn.state.vacationpolicy_info[key],
+                                                                    outlined: true,
+                                                                    disabled: vn.state.can_edit,
+                                                                    oninput: function (e){
+                                                                        vn.state.vacationpolicy_info[key] = e.target.value;
+                                                                    },
+                                                                })]
+                                                            );
+                                                    }),
+                                                ])        
+                                            ])
+                                        ),
+                                        !vn.state.can_edit ?
+                                            m(Layout.Row,
+                                                m(Layout.Cell, {span:5}),
+                                                m(Layout.Cell, {span:2},
+                                                    m(MCWButton, {
+                                                        raised: true,
+                                                        onclick: function(){
+                                                            vn.state.dialog_remove_vacationpolicy.outer.open();
+                                                        }
+                                                    }, 'Remove Vacation Policy'),
                                                 ),
-                                                !vn.state.editing ?
-                                                    m(Layout.Row,
-                                                        m(Layout.Cell, {span:5}),
-                                                        m(Layout.Cell, {span:2},
-                                                            m(MCWButton, {
-                                                                name: 'Remove VacationPolicy',
-                                                                onclick: function(){
-                                                                    vn.state.dialog_remove_vacationpolicy.outer.open();
-                                                                }
-                                                            }),
-                                                        ),
-                                                        m(Layout.Cell, {span:5})
-                                                    )
-                                                :
-                                                    undefined
-                                            )
+                                                m(Layout.Cell, {span:5})
+                                            ) : ''
                                     ]),
                                 ),
                             ])
