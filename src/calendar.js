@@ -1,6 +1,6 @@
 'use strict';
 import m from 'mithril';
-
+import moment from 'moment';
 import Auth from './models/auth'
 import MCWTextField from './mdc/textfield'
 import MCWButton from './mdc/button'
@@ -16,7 +16,9 @@ import Table from './mdc/table'
 import Menu from './main'
 
 
-function set_weekends(row, month, year) {
+
+
+function set_weekends(vn, row, month, year) {
     var day = 1
     var date = new Date(year, month, day);
     do {
@@ -25,7 +27,7 @@ function set_weekends(row, month, year) {
         }
         day++;
         date.setDate(day);
-    } while(day < 31);
+    } while(day < moment(vn.state.month_seen).endOf('month').format('D'));
 }
 
 function find_row(object_list, workers_dicts, worker_id) {
@@ -62,7 +64,7 @@ function get_occurrences(vn) {
     vn.state.end_period = new Date(
         vn.state.month_seen.getFullYear(),
         vn.state.month_seen.getMonth(),
-        31
+        moment(vn.state.month_seen).endOf('month').format('D')
     )
     vn.state.object_list = [];
     console.log('periods ', 
@@ -79,9 +81,11 @@ function get_occurrences(vn) {
         }
     }).
     then(function(result) {
-        var row = new Array(31);
+        var row = new Array(moment(vn.state.month_seen).endOf('month').format('D'));
+        row.length = moment(vn.state.month_seen).endOf('month').format('D')
         row.fill(0);
         set_weekends(
+            vn,
             row,
             vn.state.start_period.getMonth(),
             vn.state.start_period.getFullYear()
@@ -122,7 +126,7 @@ function get_occurrences(vn) {
             }
             else if (e.start_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
                 start_day = new Date(e.start_time).getDate() - 1;
-                end_day = 31;
+                end_day = moment(vn.state.month_seen).endOf('month').format('D');
                 if (new Date(e.start_time).getHours() == 9) {
                     actual_object['mornings'][start_day] = e.absence_type;
                 }
@@ -256,6 +260,11 @@ const Calendar = {
             return false;
         }
         vn.state.token = Auth.token;
+        vn.state.month_seen = new Date(
+            ((new Date()).getFullYear()),
+            ((new Date()).getMonth()),
+            1
+        )
     },
     view: function(vn) {
         return m('.calendar.drawer-frame-root', [
@@ -375,6 +384,7 @@ const Calendar = {
                                         m(Layout.Row, [
                                             m(Layout.Cell, {span:12},
                                                 m(Table, {
+                                                    'date': vn.state.month_seen,
                                                     'absences': vn.state.selected_object_list
                                                 }),
                                             ),

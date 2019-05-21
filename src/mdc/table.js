@@ -1,10 +1,10 @@
 import m from 'mithril';
-
+import moment from 'moment';
 
 function range(start, stop) {
     var result = [];
     result.push('Noms');
-    for (var i = start; i <= stop + 0.5; i++) {
+    for (var i = start; i <= stop; i++) {
         result.push(i);
     }
     return result;
@@ -12,10 +12,17 @@ function range(start, stop) {
 
 const Table = {
     oninit: function(vn) {
-        vn.state.days = range(1, 31);
+        vn.state.days = range(
+            1,
+            moment().endOf('month').format('D')
+        );
         vn.state.absences = [];
     },
     onupdate: function(vn){
+        vn.state.days = range(
+            1,
+            moment(vn.attrs.date).endOf('month').format('D')
+        );
         if (vn.attrs.absences !== undefined) {
             vn.state.absences = vn.attrs.absences;
             vn.state.absences.map(function(e) {
@@ -28,7 +35,12 @@ const Table = {
         else {
             vn.state.absences = [];
         }
-        console.log('in table ', vn.state.absences);
+        console.log(
+            'in table ', 
+            vn.state.absences,
+            ' ',
+            vn.attrs.date
+        );
     },
     view: (vn) =>
         m('table',

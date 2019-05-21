@@ -6,6 +6,7 @@ var Auth = {
     password: "",
     token: false,
     user_id: false,
+    is_admin: false,
     setUsername: function(value) {
         Auth.username = value
     },
@@ -25,10 +26,12 @@ var Auth = {
             if(result.token !== undefined){
                 Auth.token = 'JWT ' +  result.token;
                 Auth.user_id = result.user_id;
+                Auth.is_admin = result.is_admin;
                 m.route.set('/member/' + Auth.user_id);
             } else {
                 Auth.token = false;
                 Auth.user_id = false;
+                Auth.is_admin = false;
             }
         }).
         catch(function(error){
@@ -40,6 +43,7 @@ var Auth = {
         Auth.token = false;
         Auth.username = '';
         Auth.password = '';
+        Auth.is_admin = false;
     }
 }
 

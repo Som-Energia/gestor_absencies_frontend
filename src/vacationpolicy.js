@@ -17,6 +17,7 @@ const VacationPolicy = {
             m.route.set('/login');
             return false;
         }
+        vn.state.auth = Auth;
         const token = Auth.token;
         vn.state.dialog_remove_vacationpolicy = {
             backdrop: true,
@@ -89,37 +90,40 @@ const VacationPolicy = {
                                 ),
                             ])
                         ),
-                        m(MWCFab, {
-                            value: (vn.state.can_edit)?'edit':'save',
-                            onclick: function() {
-                                if (vn.state.can_edit === false) {
-                                    // Es pot enviat el metode put!
-                                    m.request({
-                                        method: 'PUT',
-                                        url: ('http://localhost:8000/absencies/vacationpolicy/' + vn.attrs.vacationpolicyid),
-                                        headers: {
-                                            'Authorization': Auth.token,
-                                            'Content-type': 'application/json',
-                                        },
-                                        data: vn.state.vacationpolicy_info
-                                    }).
-                                    then(function(result) {
-                                        Object.keys(result).map(function(key){
-                                            if (key !== 'id') {
-                                                vn.state.vacationpolicy_info[key] = result[key];   
-                                            }
+                        ( vn.state.auth.is_admin  ?
+                            m(MWCFab, {
+                                value: (vn.state.can_edit)?'edit':'save',
+                                onclick: function() {
+                                    if (vn.state.can_edit === false) {
+                                        // Es pot enviat el metode put!
+                                        m.request({
+                                            method: 'PUT',
+                                            url: ('http://localhost:8000/absencies/vacationpolicy/' + vn.attrs.vacationpolicyid),
+                                            headers: {
+                                                'Authorization': Auth.token,
+                                                'Content-type': 'application/json',
+                                            },
+                                            data: vn.state.vacationpolicy_info
+                                        }).
+                                        then(function(result) {
+                                            Object.keys(result).map(function(key){
+                                                if (key !== 'id') {
+                                                    vn.state.vacationpolicy_info[key] = result[key];   
+                                                }
+                                            });
+                                            m.redraw();
+                                            vn.state.can_edit = true;
+                                        }).
+                                        catch(function(error){
+                                            console.log(error);
                                         });
-                                        m.redraw();
-                                        vn.state.can_edit = true;
-                                    }).
-                                    catch(function(error){
-                                        console.log(error);
-                                    });
+                                    }
+                                    vn.state.can_edit = !vn.state.can_edit;
                                 }
-                                vn.state.can_edit = !vn.state.can_edit;
-                            }
-                        }),
-                        m(Dialog, {
+                            })
+                        :
+                            ''),
+                            m(Dialog, {
                             id: 'remove_vacationpolicy',
                             header: 'Remove VacationPolicy',
                             model: vn.state.dialog_remove_vacationpolicy.outer,

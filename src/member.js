@@ -16,6 +16,7 @@ const Member = {
             m.route.set('/login');
             return false;
         }
+        vn.state.auth = Auth;
         const token = Auth.token;
         vn.state.dialog_remove_worker = {
             backdrop: true,
@@ -37,7 +38,8 @@ const Member = {
                 }
             });
             m.redraw();
-            vn.state.editing = true;
+            console.log('ADMIN? ', vn.state.auth.is_admin);
+            vn.state.can_edit = false;
         }).
         catch(function(error){
             console.log(error);
@@ -54,13 +56,17 @@ const Member = {
                                     m(Layout,
                                         m('.personal_info', [
                                                 m(Layout.Row,[
-                                                    Object.keys(vn.state.member_info).map(function(key){
+                                                    Object.keys(vn.state.member_info).map(function(key) {
                                                         return m(Layout.Cell, {span:6}, [
                                                                 m(MCWTextField, {
                                                                     label: key,
                                                                     value: vn.state.member_info[key],
                                                                     outlined: true,
-                                                                    disabled: vn.state.editing,
+                                                                    disabled: ( key === 'holidays' ?
+                                                                        !(vn.state.auth.is_admin && vn.state.can_edit)
+                                                                        :
+                                                                        !vn.state.can_edit
+                                                                    ),
                                                                     oninput: function (e){
                                                                         vn.state.member_info[key] = e.target.value;
                                                                     },
@@ -70,7 +76,7 @@ const Member = {
                                                 ])        
                                             ])
                                         ),
-                                        !vn.state.editing ?
+                                        vn.state.can_edit ?
                                             m(Layout.Row,
                                                 m(Layout.Cell, {span:5}),
                                                 m(Layout.Cell, {span:2},
@@ -88,9 +94,9 @@ const Member = {
                             ])
                         ),
                         m(MWCFab, {
-                            value: (vn.state.editing)?'edit':'save',
+                            value: (!vn.state.can_edit)?'edit':'save',
                             onclick: function() {
-                                if (vn.state.editing === false) {
+                                if (vn.state.can_edit) {
                                     // Es pot enviat el metode put!
                                     m.request({
                                         method: 'PUT',
@@ -109,13 +115,13 @@ const Member = {
                                             }
                                         });
                                         m.redraw();
-                                        vn.state.editing = true;
+                                        //vn.state.can_edit = true;
                                     }).
                                     catch(function(error){
                                         console.log(error);
                                     });
                                 }
-                                vn.state.editing = !vn.state.editing;
+                                vn.state.can_edit = !vn.state.can_edit;
                             }
                         }),
                         m(Dialog, {

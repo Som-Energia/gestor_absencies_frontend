@@ -18,6 +18,7 @@ const ET = {
             m.route.set('/login');
             return false;
         }
+        vn.state.auth = Auth;
         const token = Auth.token;
         m.request({
             method: 'GET',
@@ -52,7 +53,6 @@ const ET = {
                 return {'name': e.name, 'link': '/team/' + e.id};
             });
             vn.state.selected_teams = vn.state.teams;
-            vn.state.can_edit = true;
         }).
         catch(function(error){
             console.log(error);
@@ -116,7 +116,7 @@ const ET = {
                                                     }
                                                 }),
                                                 m(MCWList, { class:'members__list', elements_list: vn.state.selected_members},
-                                                    (vn.state.can_edit === true) ?
+                                                    (vn.state.auth.is_admin) ?
                                                         m(MWCFab, {
                                                             value: 'person_add',
                                                             onclick: function() {
@@ -149,7 +149,7 @@ const ET = {
                                                     }
                                                 }),
                                                 m(MCWList, { class:'members__list', elements_list: vn.state.selected_teams},
-                                                    (vn.state.can_edit === true) ?
+                                                    (vn.state.auth.is_admin) ?
                                                         m(MWCFab, {
                                                             value: 'group_add',
                                                             onclick: function() {
