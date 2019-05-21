@@ -62,6 +62,7 @@ const VacationPolicyForm = {
                                     )
                                 ),
                                 m(MCWButton, {
+                                    raised: true,
                                     onclick: function(){
                                         m.request({
                                         method: 'POST',
@@ -80,9 +81,7 @@ const VacationPolicyForm = {
                                         console.log(error);
                                         });
                                     },
-                                    name: 'Create'
-
-                                }),
+                                }, 'Create'),
                             )
                         )
                     ])

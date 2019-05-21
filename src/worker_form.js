@@ -122,6 +122,8 @@ const WorkerForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWSelectmenu, {elements_list: vn.state.elements_list,
+                                                outlined: true,
+                                                label: 'Plitica de Vacances',
                                                 onchange: function(ev){
                                                     vn.state.worker['vacation_policy'] = parseInt(ev.target.value);
                                                     console.log(vn.state.worker['vacation_policy']);
@@ -131,6 +133,7 @@ const WorkerForm = {
                                     )
                                 ),
                                 m(MCWButton, {
+                                    raised: true,
                                     onclick: function(){
                                         m.request({
                                         method: 'POST',
@@ -149,9 +152,7 @@ const WorkerForm = {
                                         console.log(error);
                                         });
                                     },
-                                    name: 'Create'
-
-                                }),
+                                }, 'Create'),
                             )
                         )
                     ])

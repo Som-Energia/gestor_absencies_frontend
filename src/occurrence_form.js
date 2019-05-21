@@ -138,8 +138,12 @@ const OccurrenceForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWSelectmenu, {
+                                                outlined: true,
+                                                value: ( vn.state.elements_list !== undefined ?
+                                                    vn.state.elements_list[0] : '' ),
+                                                label: 'Tipus d\'Absència',
                                                 elements_list: vn.state.elements_list,
-                                                onchange: function(ev){
+                                                oninput: function(ev){
                                                     vn.state.absence_info['absence_type'] = parseInt(ev.target.value);
                                                 }
                                             })
@@ -147,6 +151,7 @@ const OccurrenceForm = {
                                     )
                                 ),
                                 m(MCWButton, {
+                                    raised: true,
                                     onclick: function(){
                                         console.log('Ready to posted ', vn.state.absence_info);
 
@@ -167,8 +172,7 @@ const OccurrenceForm = {
                                         console.log(error);
                                         });
                                     },
-                                    name: 'Create'
-                                }),
+                                }, 'Create'),
                             )
                         )
                     ])

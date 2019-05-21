@@ -264,13 +264,12 @@ const Calendar = {
                     m(Layout,
                         m(Layout.Row, [
                             m(Layout.Cell, {span:12},
-                                m(MCWCard, [
-                                    m('h2', {align: 'center'}, 'Absències'),
-                                    m('hr'),
+                                m(MCWCard, { header: m('h2','Calendari') }, [
                                     m(Layout,
                                         m(Layout.Row, [
                                             m(Layout.Cell, {span:5, class: 'right'},
-                                                m(MCWButton, {                                                
+                                                m(MCWButton, {
+                                                    icon: 'chevron_left',
                                                     name: '<',
                                                     shaped: true,
                                                     radius: 50,
@@ -287,7 +286,8 @@ const Calendar = {
                                                 m('h3', {align: 'center'}, formatDate(vn.state.month_seen).substring(0,7))
                                             ),
                                             m(Layout.Cell, {span:5, class: 'left'},
-                                                m(MCWButton, {                                                
+                                                m(MCWButton, {
+                                                    icon: 'chevron_right',
                                                     name: '>',
                                                     shaped: true,
                                                     radius: 50,
@@ -353,6 +353,9 @@ const Calendar = {
                                             ),
                                             m(Layout.Cell, {span:3},
                                                 m(MCWSelectmenu, {
+                                                    value: 'worker',
+                                                    outlined: true,
+                                                    label: 'Filtre',
                                                     elements_list: [
                                                         {
                                                             'text': 'Team',
@@ -377,6 +380,7 @@ const Calendar = {
                                             ),
                                         ]),
                                     )
+                                
                                 ]),
                             )
                         ])

@@ -39,6 +39,7 @@ const TeamForm = {
                                     )
                                 ),
                                 m(MCWButton, {
+                                    raised: true,
                                     onclick: function(){
                                         m.request({
                                         method: 'POST',
@@ -57,9 +58,7 @@ const TeamForm = {
                                         console.log(error);
                                         });
                                     },
-                                    name: 'Create'
-
-                                }),
+                                }, 'Create'),
                             )
                         )
                     ])

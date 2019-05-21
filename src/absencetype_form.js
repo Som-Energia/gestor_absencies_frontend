@@ -56,6 +56,8 @@ const AbsenceTypeForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWSelectmenu, {
+                                                label: 'Minima duració',
+                                                outlined: true,
                                                 elements_list: [
                                                     {'value': 0.5, 'text': 'Migdia'},
                                                     {'value': -2, 'text': 'Per dies'},
@@ -91,6 +93,8 @@ const AbsenceTypeForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWSelectmenu, {
+                                                label: 'Màxima duració',
+                                                outlined: true,
                                                 elements_list: [
                                                     {'value': 0.5, 'text': 'Migdia'},
                                                     {'value': -2, 'text': 'Per dies'},
@@ -126,6 +130,8 @@ const AbsenceTypeForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWSelectmenu, {
+                                                label: 'Computació de dies de vacances',
+                                                outlined: true,
                                                 elements_list: [
                                                     {'value': -1, 'text': 'Descompta dies de vacances'},
                                                     {'value': 0, 'text': 'No descompta dies de vacances'},
