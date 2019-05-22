@@ -4,6 +4,7 @@ import Layout from './mdc/layout'
 import MCWCard from './mdc/card'
 import MCWButton from './mdc/button'
 import MCWTextField from './mdc/textfield'
+import cuca from './cuca.svg'
 
 const Login = {
     oninit: function(vn) {
@@ -15,9 +16,10 @@ const Login = {
                 m(Layout.Row, {align: 'center'}, [
                     m(Layout.Cell,  {span:4}),
                     m(Layout.Cell,  {span:4}, 
-                        m(MCWCard,
+                        m(MCWCard, { class: 'login' },
                             (vn.state.auth.token === false) ? [
-                                m('h1', 'Login'),
+                                m('img', { src: cuca, class:'login-cuca', title: 'Som Energia'}),
+                                m('h1', 'Gestor d\'absències'),                                
                                 m(Layout,
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},

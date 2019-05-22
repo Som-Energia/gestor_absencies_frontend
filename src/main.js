@@ -35,8 +35,14 @@ import Absences from './absences'
 
 const Menu = {
     oninit: function(vn){
+
+        if(Auth.token === false){
+            m.route.set('/login');
+            return false;
+        }
+
         vn.state.options = [
-            { 'name': 'El meu perfil', 'link': '/member/' + Auth.user_id },
+            { 'name': 'El meu perfil', 'link': '/member/' + (Auth.user_id !== undefined ? Auth.user_id : '') },
             { 'name': 'Absències', 'link': '/absences' },
             { 'name': 'Calendari', 'link': '/calendar' },
             { 'name': 'E.T', 'link': '/et' },

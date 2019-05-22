@@ -170,14 +170,43 @@ const Absences = {
                                                 )
                                             ),
                                             m(Layout.Cell, {span:6},
-                                                m('.', {align: 'center'}, 'Minicalendari'),
-                                                m('.', {align: 'center'}, 'Minicalendari'),
-                                                m('.', {align: 'center'}, 'Minicalendari'),
-                                                m('.', {align: 'center'}, 'Minicalendari'),
-                                                m('.', {align: 'center'}, 'Minicalendari'),
-                                                m('.', {align: 'center'}, 'Minicalendari'),
-                                                m('.', {align: 'center'}, 'Minicalendari'),
-                                                m('.', {align: 'center'}, 'Minicalendari'),
+                                                m('ul.total-absences',
+                                                    m('li.total-absences__item', [
+                                                        m('.num', '25'),
+                                                        m('.desc', 'Dies totals'),
+                                                    ]),
+                                                    m('li.total-absences__item', [
+                                                        m('.num', '13'),
+                                                        m('.desc', 'Dies disponibles'),
+                                                    ]),
+                                                    m('li.total-absences__item', [
+                                                        m('.num', '12'),
+                                                        m('.desc', 'Dies utilitzats'),
+                                                    ])
+                                                ),    
+                                                m('ul.mini-calendar', [
+
+                                                    [0,1,2,3,4,5,6,7,8,9,10,11].map(function(e){
+                                                        const first_day = moment().month(e).year(vn.state.year).startOf('month');
+                                                        const last_day = moment().month(e).year(vn.state.year).endOf('month');
+                                                        const num_first_day = first_day.isoWeekday();
+
+                                                        console.log(first_day);
+                                                        console.log(num_first_day);
+                                                        return m('li', [                                                        
+                                                            m('.month-title', moment().month(e).format('MMMM') ),
+                                                            m('.month-grid', [
+                                                                [...new Array(num_first_day-1).keys()].map(function(f){
+                                                                    return m('.month-day', m('.',''))
+                                                                }),
+                                                                [...new Array(last_day.date()).keys()].map(function(f){
+                                                                    return m('.month-day', m('.','•'))
+                                                                })
+                                                            ])
+                                                        ])
+
+                                                    })
+                                                ]),
                                             ),
                                         ]),
                                     )

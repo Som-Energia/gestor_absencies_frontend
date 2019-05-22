@@ -23,7 +23,8 @@ function set_weekends(vn, row, month, year) {
     var date = new Date(year, month, day);
     do {
         if (date.getDay() === 5 || date.getDay() === 6) {
-            row[day] = 9;
+            row[day]['id'] = 9;
+            row[day]['name'] = 'Finde';
         }
         day++;
         date.setDate(day);
@@ -32,13 +33,12 @@ function set_weekends(vn, row, month, year) {
 
 function find_row(object_list, workers_dicts, worker_id) {
     var worker = workers_dicts.find(function(e) {
-        return e.id === worker_id;
+        return e['id'] === worker_id;
     });
-    console.log('find_row', worker);
-    var row = object_list.find(function(e) {
+    var selected_row = object_list.find(function(e) {
         return e['name'] === (worker.name);
     });
-    return row;
+    return selected_row;
 };
 
 
@@ -67,9 +67,6 @@ function get_occurrences(vn) {
         moment(vn.state.month_seen).endOf('month').format('D')
     )
     vn.state.object_list = [];
-    console.log('periods ', 
-        formatDate(vn.state.start_period), ' ', formatDate(vn.state.end_period)
-    );
     m.request({
         method: 'GET',
         url: 'http://localhost:8000/absencies/absences?' +
@@ -83,7 +80,11 @@ function get_occurrences(vn) {
     then(function(result) {
         var row = new Array(moment(vn.state.month_seen).endOf('month').format('D'));
         row.length = moment(vn.state.month_seen).endOf('month').format('D')
-        row.fill(0);
+        row.fill(new Object());
+        row = row.map(function(e){
+            return {'id': 0, 'name': ''};
+        });
+        var a = JSON.parse(JSON.stringify(row));
         set_weekends(
             vn,
             row,
@@ -92,8 +93,14 @@ function get_occurrences(vn) {
         );
         vn.state.object_list = [];
         vn.state.workers.map(function(e) {
-            var morning_row = [... row];
-            var afternoon_row = [... row];
+            var morning_row = JSON.parse(JSON.stringify(row));
+            var afternoon_row = JSON.parse(JSON.stringify(row));
+            console.log(
+                'inside bucle ',
+                morning_row,
+                ' ',
+                afternoon_row
+            );
             var occurrense_entity = new Object();
             occurrense_entity['name'] = e.name;
             occurrense_entity['worker_id'] = e.id;
@@ -102,62 +109,78 @@ function get_occurrences(vn) {
             vn.state.object_list.push(occurrense_entity);
         });
 
+        console.log('DESPUES DE SETEJAR ', vn.state.object_list);
         result.results.map( function(e) {
             var start_day = '';
             var end_day = '';
-            var actual_object = find_row(vn.state.object_list, vn.state.workers, e.worker); // donarà el numero de la row de que és l'occurrencia
-            console.log('actual_object ', actual_object);
+            var actual_object = find_row(vn.state.object_list, vn.state.workers, e.worker);
             if (e.start_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0) && e.end_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
                 start_day = new Date(e.start_time).getDate() - 1;
                 end_day = new Date(e.end_time).getDate();
                 if (new Date(e.start_time).getHours() == 9) {
-                    actual_object['mornings'][start_day] = e.absence_type;
+                    actual_object['mornings'][start_day]['id'] = e.absence_type;
+                    actual_object['mornings'][start_day].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
                 }
-                actual_object['afternoon'][start_day] = e.absence_type;
+                actual_object['afternoon'][start_day]['id'] = e.absence_type;
                 for (var i = start_day+1; i < end_day-1; i++){
                     console.log('dins 1er if ', i);
-                    actual_object['mornings'][i] = e.absence_type;
-                    actual_object['afternoon'][i] = e.absence_type;
+                    actual_object['mornings'][i]['id'] = e.absence_type;
+                    actual_object['mornings'][i].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                    actual_object['afternoon'][i]['id'] = e.absence_type;
+                    actual_object['afternoon'][i].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
                 }
-                actual_object['mornings'][end_day-1] = e.absence_type;
+                actual_object['mornings'][end_day-1]['id'] = e.absence_type;
+                actual_object['mornings'][end_day-1].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
                 if (new Date(e.end_time).getHours() == 17) {
-                    actual_object['afternoon'][end_day-1] = e.absence_type;
+                    actual_object['afternoon'][end_day-1]['id'] = e.absence_type;
+                    actual_object['afternoon'][end_day-1].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
                 }
             }
             else if (e.start_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
                 start_day = new Date(e.start_time).getDate() - 1;
                 end_day = moment(vn.state.month_seen).endOf('month').format('D');
                 if (new Date(e.start_time).getHours() == 9) {
-                    actual_object['mornings'][start_day] = e.absence_type;
+                    actual_object['mornings'][start_day]['id'] = e.absence_type;
+                    actual_object['mornings'][start_day].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
                 }
-                actual_object['afternoon'][start_day] = e.absence_type;
+                actual_object['afternoon'][start_day]['id'] = e.absence_type;
+                actual_object['afternoon'][start_day].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
                 for (var i = start_day+1; i < end_day-1; i++){
                     console.log('dins 2n if ', i);
-                    actual_object['mornings'][i] = e.absence_type;
-                    actual_object['afternoon'][i] = e.absence_type;
+                    actual_object['mornings'][i]['id'] = e.absence_type;
+                    actual_object['mornings'][i].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                    actual_object['afternoon'][i]['id'] = e.absence_type;
+                    actual_object['afternoon'][i].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
                 }
-                actual_object['mornings'][end_day-1] = e.absence_type;
-                actual_object['afternoon'][end_day-1] = e.absence_type;
+                actual_object['mornings'][end_day-1]['id'] = e.absence_type;
+                actual_object['mornings'][end_day-1].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                actual_object['afternoon'][end_day-1]['id'] = e.absence_type;
+                actual_object['afternoon'][end_day-1].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
             }
             else if (e.end_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
                 start_day = 0;
                 end_day = new Date(e.end_time).getDate();
-                actual_object['mornings'][start_day] = e.absence_type;
-                actual_object['afternoon'][start_day] = e.absence_type;
+                actual_object['mornings'][start_day]['id'] = e.absence_type;
+                actual_object['mornings'][start_day].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                actual_object['afternoon'][start_day]['id'] = e.absence_type;
+                actual_object['afternoon'][start_day].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
                 for (var i = start_day+1; i < end_day-1; i++){
                     console.log('dins 3er if ', i);
-                    actual_object['mornings'][i] = e.absence_type;
-                    actual_object['afternoon'][i] = e.absence_type;
+                    actual_object['mornings'][i]['id'] = e.absence_type;
+                    actual_object['mornings'][i].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                    actual_object['afternoon'][i]['id'] = e.absence_type;
+                    actual_object['afternoon'][i].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
                 }
-                actual_object['mornings'][end_day-1] = e.absence_type;
+                actual_object['mornings'][end_day-1]['id'] = e.absence_type;
+                actual_object['mornings'][end_day-1].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
                 if (new Date(e.end_time).getHours() == 17) {
-                    actual_object['afternoon'][end_day-1] = e.absence_type;
+                    actual_object['afternoon'][end_day-1]['id'] = e.absence_type;
+                    actual_object['afternoon'][end_day-1].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
                 }
             }
         });
         vn.state.selected_object_list = vn.state.object_list;
         
-        console.log('es printarà ', vn.state.selected_object_list);
         m.redraw();
     }).
     catch(function(error){
@@ -202,16 +225,28 @@ const Calendar = {
             
             vn.state.workers = vn.state.workers_result.map(function(e){
                 return {
-                    'name': e.first_name + e.last_name,
+                    'name': e.first_name + ' ' + e.last_name,
                     'id': e.id
                 }
             });
 
-            
-            get_occurrences(vn);
-            console.log('es prepararà ', vn.state.object_list);
+                m.request({
+                    method: 'GET',
+                    url: 'http://localhost:8000/absencies/absencetype',
+                    headers: {
+                        'Authorization': vn.state.token
+                    }
+                }).
+                then(function(result) {
+                    vn.state.absencetype = result.results
 
-            console.log('same_month_dates ', vn.state.same_month_dates);
+
+                    get_occurrences(vn);
+                }).
+                catch(function(error){
+                    console.log(error);
+                });            
+
 
 
         }).
@@ -250,6 +285,7 @@ const Calendar = {
         catch(function(error){
             console.log(error);
         });
+
 
 
     },
@@ -351,7 +387,6 @@ const Calendar = {
                                                                 else {
                                                                     vn.state.selected_object_list = [];
                                                                 }
-                                                                console.log('filtered: ', vn.state.selected_object_list);
                                                             }
                                                             else {
                                                                 vn.state.selected_object_list = vn.state.object_list;
@@ -384,8 +419,10 @@ const Calendar = {
                                         m(Layout.Row, [
                                             m(Layout.Cell, {span:12},
                                                 m(Table, {
+                                                    'class': 'tbl-absences',
                                                     'date': vn.state.month_seen,
-                                                    'absences': vn.state.selected_object_list
+                                                    'absences': vn.state.selected_object_list,
+                                                    'today': ( moment(vn.state.month_seen).format('YYYY-MM') === moment().format('YYYY-MM') ? moment().format('D') : undefined)
                                                 }),
                                             ),
                                         ]),

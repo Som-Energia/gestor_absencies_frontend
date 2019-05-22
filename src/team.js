@@ -18,6 +18,7 @@ const Team = {
             return false;
         }
         const token = Auth.token;
+        vn.state.auth = Auth;
         vn.state.members_info = [];
         vn.state.workers_info = [];
         vn.state.members_list = [];
@@ -73,7 +74,9 @@ const Team = {
                 m.redraw();
                 console.log('worker info', vn.state.workers_info);
                 vn.state.workers_info.map(function(e){
-                    // TODO: estructurar-ho diferent
+                    if (e.id == vn.state.auth.user_id) {
+                        vn.state.my_name = e.first_name + ' ' + e.last_name;
+                    }
                     vn.state.possibles_members.push({
                         'text': e.first_name + ' ' + e.last_name,
                         'value': e.id,
@@ -95,6 +98,11 @@ const Team = {
                     vn.state.members_list = [];
                     if (vn.state.members_info !== undefined && vn.state.workers_info !== undefined) {
                         vn.state.members_info.map(function(e){
+                            if (e.worker == vn.state.auth.user_id) {
+                                console.log('Soc memeber');
+                                vn.state.im_member = true;
+                                vn.state.member_id = e.id;
+                            }
                             var presunto_worker = vn.state.workers_info.find(x => x.id === e.worker);
                             console.log('presunto_worker ', presunto_worker);
                             if (e.is_referent === true) {
@@ -289,76 +297,133 @@ const Team = {
                                 )
                             ]),
                         ),
-                        m(MWCFab, {
-                            value: (vn.state.editing)?'edit':'save',
-                            onclick: function() {
+                        ( vn.state.auth.is_admin ?
 
-                                if (vn.state.editing === false) {
-                                    // Es pot enviat el metode put!
-                                    m.request({
-                                        method: 'PUT',
-                                        url: ('http://localhost:8000/absencies/teams/' + vn.attrs.teamid),
-                                        headers: {
-                                            'Authorization': Auth.token,
-                                            'Content-type': 'application/json',
-                                        },
-                                        data: vn.state.team_info
-                                    }).
-                                    then(function(result) {
-                                        Object.keys(result).map(function(key){
-                                            if (key !== 'id') {
-                                                vn.state.team_info[key] = result[key];   
-                                            }
-                                        });
-                                        vn.state.editing = true;
-                                        m.redraw();
-                                    }).
-                                    catch(function(error){
-                                        console.log(error);
-                                    });
-                                    if (vn.state.request_body_referent.id !== undefined) {
-                                        console.log('REQUEST PER CANVIAR REFERENT body ',
-                                            vn.state.request_body_referent,
-                                            vn.state.request_body_referent.worker
-                                        )
+                            m(MWCFab, {
+                                value: (vn.state.editing)?'edit':'save',
+                                onclick: function() {
+                                    if (vn.state.editing === false) {
+                                        // Es pot enviat el metode put!
                                         m.request({
                                             method: 'PUT',
-                                            url: ('http://localhost:8000/absencies/members/' + vn.state.request_body_referent.id),
+                                            url: ('http://localhost:8000/absencies/teams/' + vn.attrs.teamid),
                                             headers: {
                                                 'Authorization': Auth.token,
                                                 'Content-type': 'application/json',
                                             },
-                                            data: vn.state.request_body_referent
+                                            data: vn.state.team_info
                                         }).
                                         then(function(result) {
-                                            console.log('NER REFERENT DONE!');
+                                            Object.keys(result).map(function(key){
+                                                if (key !== 'id') {
+                                                    vn.state.team_info[key] = result[key];   
+                                                }
+                                            });
+                                            vn.state.editing = true;
+                                            m.redraw();
                                         }).
                                         catch(function(error){
                                             console.log(error);
                                         });
-                                    }
-                                    if (vn.state.request_body_representant.id !== undefined) {
-                                        m.request({
-                                            method: 'PUT',
-                                            url: ('http://localhost:8000/absencies/members/' + vn.state.request_body_representant.id),
-                                            headers: {
-                                                'Authorization': Auth.token,
-                                                'Content-type': 'application/json',
-                                            },
-                                            data: vn.state.request_body_representant
-                                        }).
-                                        then(function(result) {
+                                        if (vn.state.request_body_referent.id !== undefined) {
+                                            console.log('REQUEST PER CANVIAR REFERENT body ',
+                                                vn.state.request_body_referent,
+                                                vn.state.request_body_referent.worker
+                                            )
+                                            m.request({
+                                                method: 'PUT',
+                                                url: ('http://localhost:8000/absencies/members/' + vn.state.request_body_referent.id),
+                                                headers: {
+                                                    'Authorization': Auth.token,
+                                                    'Content-type': 'application/json',
+                                                },
+                                                data: vn.state.request_body_referent
+                                            }).
+                                            then(function(result) {
+                                                console.log('NER REFERENT DONE!');
+                                            }).
+                                            catch(function(error){
+                                                console.log(error);
+                                            });
+                                        }
+                                        if (vn.state.request_body_representant.id !== undefined) {
+                                            m.request({
+                                                method: 'PUT',
+                                                url: ('http://localhost:8000/absencies/members/' + vn.state.request_body_representant.id),
+                                                headers: {
+                                                    'Authorization': Auth.token,
+                                                    'Content-type': 'application/json',
+                                                },
+                                                data: vn.state.request_body_representant
+                                            }).
+                                            then(function(result) {
 
-                                        }).
-                                        catch(function(error){
-                                            console.log(error);
-                                        });
+                                            }).
+                                            catch(function(error){
+                                                console.log(error);
+                                            });
+                                        }
                                     }
-
+                                    vn.state.editing = !vn.state.editing;
                                 }
-                                vn.state.editing = !vn.state.editing;
-                            }
-                        }),
+                            })
+                        :
+                            m(MWCFab, {
+                                value: (vn.state.im_member)?'-':'+',
+                                onclick: function() {
+                                    if (vn.state.im_member) {
+                                        m.request({
+                                            method: 'DELETE',
+                                            url: ('http://localhost:8000/absencies/members/' + vn.state.member_id),
+                                            headers: {
+                                                'Authorization': Auth.token,
+                                            },
+                                        }).
+                                        then(function(result) {
+                                            vn.state.im_member = !vn.state.im_member;
+                                            vn.state.members_list = vn.state.members_list.filter(
+                                                x => x.id != vn.state.member_id
+                                            );
+                                        }).
+                                        catch(function(error){
+                                            console.log(error);
+                                        });
+                                    }
+                                    else {
+                                        m.request({
+                                            method: 'POST',
+                                            url: ('http://localhost:8000/absencies/members'),
+                                            headers: {
+                                                'Authorization': Auth.token,
+                                                'Content-type': 'application/json',
+                                            },
+                                            data: {
+                                                'worker': vn.state.auth.user_id,
+                                                'team': vn.attrs.teamid
+                                            }
+                                        }).
+                                        then(function(result) {                                            
+                                            vn.state.im_member = !vn.state.im_member;
+                                            vn.state.member_id = result.id;
+                                            vn.state.members_list.push({
+                                                'id': result.id,
+                                                'name': vn.state.my_name,
+                                                'link': '/member/' + vn.state.auth.user_id,
+                                                'button': m(MCWButton, {
+                                                    icon: 'delete',
+                                                    onclick: function(ev) {
+                                                        console.log('Remove member');
+                                                    }
+                                                })
+                                            })
+                                        }).
+                                        catch(function(error){
+                                            console.log(error);
+                                        });                                    
+                                    }
+                                }
+                            })
+                        ),
                         m(Dialog, {
                             id: 'add_member',
                             header: 'Add member',

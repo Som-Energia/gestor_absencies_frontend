@@ -142,8 +142,9 @@ const OccurrenceForm = {
                                                 value: ( vn.state.elements_list !== undefined ?
                                                     vn.state.elements_list[0] : '' ),
                                                 label: 'Tipus d\'Absència',
+                                                boxed: true,
                                                 elements_list: vn.state.elements_list,
-                                                oninput: function(ev){
+                                                onchange: function(ev){
                                                     vn.state.absence_info['absence_type'] = parseInt(ev.target.value);
                                                 }
                                             })

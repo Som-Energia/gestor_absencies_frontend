@@ -3,7 +3,7 @@ import moment from 'moment';
 
 function range(start, stop) {
     var result = [];
-    result.push('Noms');
+    result.push('');
     for (var i = start; i <= stop; i++) {
         result.push(i);
     }
@@ -14,7 +14,7 @@ const Table = {
     oninit: function(vn) {
         vn.state.days = range(
             1,
-            moment().endOf('month').format('D')
+            moment(vn.attrs.date).endOf('month').format('D')
         );
         vn.state.absences = [];
     },
@@ -25,58 +25,49 @@ const Table = {
         );
         if (vn.attrs.absences !== undefined) {
             vn.state.absences = vn.attrs.absences;
-            vn.state.absences.map(function(e) {
-                if (e['mornings'] !== undefined && 
-                    typeof e['mornings'][0] !== "string") {
-                        e['mornings'].unshift(e['name']);
-                }
-            });
         }
         else {
             vn.state.absences = [];
         }
         console.log(
-            'in table ', 
-            vn.state.absences,
-            ' ',
-            vn.attrs.date
+            'PREPARAT PER PINTAR ',
+            vn.state.absences
         );
     },
     view: (vn) =>
-        m('table',
-            m(Row, {
-                'tr_style': 'th',
-                'data': vn.state.days,
-            }),
+        m('table', { class: vn.attrs.class },
+            m('tr',
+                vn.state.days.map(function(e){
+                    return ( vn.attrs.today == e  ?
+                        m('th', {class: 'today'} , e)
+                    :
+                        m('th', e)
+                    )
+                })
+            ),
             vn.state.absences.map(function(e) {
-                return [ m(Row, {
-                    'tr_style': 'td',
-                    'rowspan': 2,
-                    'data': e['mornings'],
-                }), 
-                m(Row, {
-                    'tr_style': 'td',
-                    'data': e['afternoon'],
-                })]
+                return [ m('tr.worker-item',
+                    m('td.worker', e['name']),
+                    e['mornings'].map(function(element, index) {
+                        return m('td', ( vn.attrs.today-1 == index ? {class: 'today'} : '' ),
+                            m('table.tbl-worker-item',
+                                m('tr',
+                                    m('td', {
+                                        class: 'absence-type absence-type-' + element.id,
+                                        title: 'Mati ' + vn.state.days[index+1] + ' ' + ( element.name !== undefined ? element.name : '' )
+                                    }, m.trust('&nbsp;'))
+                                ),
+                                m('tr',
+                                    m('td', {
+                                        class: 'absence-type absence-type-' + e['afternoon'][index].id,
+                                        title: 'Tarda ' + vn.state.days[index+1] + ' ' + ( e['afternoon'][index] !== undefined && e['afternoon'][index].name !== undefined ? e['afternoon'][index].name : '' )
+                                    }, m.trust('&nbsp;'))
+                                )
+                            )
+                        )
+                    })
+                )]
             }),
-        )
-};
-
-const Row = {
-    oninit: function(vn) {
-        vn.state.data = [];
-    },
-    onupdate: function(vn) {
-        vn.state.data = (vn.attrs.data !== undefined) ? vn.attrs.data : [];
-    },
-    view: (vn) =>
-        m('tr',
-            m(vn.attrs.tr_style, {'rowspan': vn.attrs.rowspan}, vn.attrs.data[0]),
-            vn.attrs.data.map(function(e, index){
-                if (index > 0) {
-                    return m(vn.attrs.tr_style, e)
-                }
-            })
         )
 };
 

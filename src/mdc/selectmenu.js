@@ -5,7 +5,8 @@ import '@material/select/dist/mdc.select.css'
 const MCWSelectmenu = {
     view: (vn) => 
         m('.mdc-select' + (vn.attrs.disabled?'.mdc-select--disabled':'')+
-            (vn.attrs.outlined?'.mdc-select--outlined':''), vn.attrs,
+            (vn.attrs.outlined?'.mdc-select--outlined':'')+
+            (vn.attrs.boxed?'.mdc-select--box':'') , vn.attrs,
             m('i.mdc-select__dropdown-icon'),
             m('select.mdc-select__native-control',
                 (vn.attrs.elements_list) ?
