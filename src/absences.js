@@ -13,6 +13,11 @@ import MCWSelectmenu from './mdc/selectmenu'
 import moment from 'moment'
 
 
+
+function arrayContains(needle, arrhaystack) {
+    return (arrhaystack.indexOf(needle) > -1);
+}
+
 function get_occurrences(vn) {
 
     vn.state.start_period = new Date(
@@ -26,6 +31,7 @@ function get_occurrences(vn) {
         31
     )
     vn.state.occurrences = [];
+    vn.state.occurrence_days = [];
     m.request({
         method: 'GET',
         url: 'http://localhost:8000/absencies/absences?' +
@@ -46,11 +52,26 @@ function get_occurrences(vn) {
                 'Authorization': vn.state.token
             }
         }).
-        then(function(abnsecetype_result) {
-            vn.state.absence_type = abnsecetype_result.results.map(function(e){
+        then(function(absencetype_result) {
+            vn.state.absence_type = absencetype_result.results.map(function(e){
                 return {'name': e.name, 'id': e.id};
             });
-            vn.state.occurrences = occurrence_result.results;            
+            vn.state.occurrences = occurrence_result.results;
+
+            vn.state.occurrences.map(function(e) {
+
+                var start_occurrence = moment(e.start_time);
+                var end_occurrence = moment(e.end_time);
+                for ( start_occurrence ; end_occurrence.isSameOrAfter(start_occurrence) ; start_occurrence.add(1, 'days') ) {
+                    var absencetype_name = absencetype_result.results.find( x => e.absence_type == x.id ).name;
+                    vn.state.occurrence_days.push({
+                        'absencetype_id': e.absence_type,
+                        'absencetype_name': absencetype_name,
+                        'day': start_occurrence.format('YYYY-MM-DD') 
+                    })
+                }
+                console.log(vn.state.occurrence_days);
+            })
         }).
         catch(function(error){
             console.log(error);
@@ -158,8 +179,6 @@ const Absences = {
                                                                     dense: true,
                                                                     onclick: function(ev) {
                                                                         vn.state.occurrence_to_remove = e
-                                                                        //vn.state.occurrence_to_remove = e.id
-                                                                        console.log('Remove member');
                                                                         vn.state.dialog_remove_occurrence.outer.open();
                                                                     }
                                                                 })
@@ -190,9 +209,6 @@ const Absences = {
                                                         const first_day = moment().month(e).year(vn.state.year).startOf('month');
                                                         const last_day = moment().month(e).year(vn.state.year).endOf('month');
                                                         const num_first_day = first_day.isoWeekday();
-
-                                                        console.log(first_day);
-                                                        console.log(num_first_day);
                                                         return m('li', [                                                        
                                                             m('.month-title', moment().month(e).format('MMMM') ),
                                                             m('.month-grid', [
@@ -200,7 +216,15 @@ const Absences = {
                                                                     return m('.month-day', m('.',''))
                                                                 }),
                                                                 [...new Array(last_day.date()).keys()].map(function(f){
-                                                                    return m('.month-day', m('.','•'))
+                                                                    const dies = vn.state.occurrence_days.map( x => x.day );
+                                                                    const noms = vn.state.occurrence_days.map( x => x.absencetype_name );
+                                                                    if (arrayContains(moment(vn.state.year+'-'+(e+1)+'-'+(f+1)).format('YYYY-MM-DD'), dies)) {
+                                                                        const index = (dies.indexOf(moment(vn.state.year+'-'+(e+1)+'-'+(f+1)).format('YYYY-MM-DD')));
+                                                                        return m('.month-day.month-day__selected', { title : moment(vn.state.year+'-'+(e+1)+'-'+(f+1)).format('DD/MM/YYYY')+' - '+noms[index] }, m('.','•'));
+                                                                    }
+                                                                    else {
+                                                                        return m('.month-day', { title : moment(vn.state.year+'-'+(e+1)+'-'+(f+1)).format('DD/MM/YYYY') }, m('.','•'));
+                                                                    }
                                                                 })
                                                             ])
                                                         ])
@@ -218,8 +242,6 @@ const Absences = {
                     m(MWCFab, {
                         value: 'add',
                         onclick: function() {
-                                // FORMULARI CREATE TEAM
-                                console.log('CREATE OCCURRENCE!');
                                 m.route.set('/occurrence/form');
                         }
                     }),
@@ -238,14 +260,10 @@ const Absences = {
                                         }
                                     }).
                                     then(function(result) {
-                                        console.log(vn.state.occurrence_to_remove);
-                                        console.log(vn.state.occurrences);
-                                        console.log(vn.state.occurrences.indexOf(vn.state.occurrence_to_remove));
                                         const idx = vn.state.occurrences.indexOf(vn.state.occurrence_to_remove);
                                         if( idx >= 0){
                                             vn.state.occurrences.splice(idx, 1);
                                         }
-                                        console.log('Occurrence removed!');
                                         m.redraw();
                                     }).
                                     catch(function(error){
@@ -256,7 +274,6 @@ const Absences = {
                             },{
                                 text: 'Cancel',
                                 onclick: function(){
-                                    console.log('cancel dialog');
                                     vn.state.dialog_remove_occurrence.outer.close();
                                 }
                             }],

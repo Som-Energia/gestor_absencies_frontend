@@ -27,6 +27,8 @@ const WorkerForm = {
             vn.state.elements_list = result.results.map(function(e){
                 return {'value': e.id, 'text': e.name};
             })
+
+            vn.state.worker['vacation_policy'] = vn.state.elements_list.length > 0 ? vn.state.elements_list[0] : '';
         }).
         catch(function(error){
             console.log(error);
@@ -121,9 +123,12 @@ const WorkerForm = {
                                 m(Layout,
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
-                                            m(MCWSelectmenu, {elements_list: vn.state.elements_list,
+                                            m(MCWSelectmenu, {
+                                                options: vn.state.elements_list,
                                                 outlined: true,
-                                                label: 'Plitica de Vacances',
+                                                label: 'Politica de Vacances',
+                                                id: 'vacation_policy',
+                                                value: vn.state.worker['vacation_policy'],
                                                 onchange: function(ev){
                                                     vn.state.worker['vacation_policy'] = parseInt(ev.target.value);
                                                     console.log(vn.state.worker['vacation_policy']);

@@ -72,16 +72,16 @@ const AbsenceType = {
                                                 ])
                                             ])
                                         ),
-                                        !vn.state.editing ?
+                                        !vn.state.can_edit ?
                                             m(Layout.Row,
                                                 m(Layout.Cell, {span:5}),
                                                 m(Layout.Cell, {span:2},
                                                     m(MCWButton, {
-                                                        name: 'remove AbsenceType',
+                                                        raised: true,
                                                         onclick: function(){
                                                             vn.state.dialog_remove_absencetype.outer.open();
                                                         }
-                                                    }),
+                                                    },'remove AbsenceType'),
                                                 ),
                                                 m(Layout.Cell, {span:5})
                                             )

@@ -32,9 +32,10 @@ import AbsenceTypeForm from './absencetype_form'
 import Calendar from './calendar'
 import Absences from './absences'
 
-
 const Menu = {
     oninit: function(vn){
+
+        moment.locale('ca');
 
         if(Auth.token === false){
             m.route.set('/login');

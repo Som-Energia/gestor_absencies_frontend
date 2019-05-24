@@ -22,6 +22,12 @@ const OccurrenceForm = {
             m.route.set('/login');
             return false;
         }
+        vn.state.absence_info = {};
+        vn.state.absence_info['start_morning'] = true;
+        vn.state.absence_info['start_afternoon'] = true;
+        vn.state.absence_info['end_morning'] = true;
+        vn.state.absence_info['end_afternoon'] = true;
+        vn.state.absence_info['worker'] = Auth.user_id;
         const token = Auth.token;
         m.request({
             method: 'GET',
@@ -34,17 +40,13 @@ const OccurrenceForm = {
             vn.state.elements_list = result.results.map(function(e){
                 return {'value': e.id, 'text': e.name};
             })
+            vn.state.absence_info['absence_type'] = vn.state.elements_list.length > 0 ? vn.state.elements_list[0] : '';
+
             console.log('ABSENCE TYPE ', vn.state.elements_list);
         }).
         catch(function(error){
             console.log(error);
         });
-        vn.state.absence_info = {};
-        vn.state.absence_info['start_morning'] = true;
-        vn.state.absence_info['start_afternoon'] = true;
-        vn.state.absence_info['end_morning'] = true;
-        vn.state.absence_info['end_afternoon'] = true;
-    	vn.state.absence_info['worker'] = Auth.user_id;
     },
     view: function(vn) {
         return m('.worker_form', [
@@ -139,11 +141,9 @@ const OccurrenceForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWSelectmenu, {
                                                 outlined: true,
-                                                value: ( vn.state.elements_list !== undefined ?
-                                                    vn.state.elements_list[0] : '' ),
+                                                value: vn.state.absence_info['absence_type'],
                                                 label: 'Tipus d\'Absència',
-                                                boxed: true,
-                                                elements_list: vn.state.elements_list,
+                                                options: vn.state.elements_list,
                                                 onchange: function(ev){
                                                     vn.state.absence_info['absence_type'] = parseInt(ev.target.value);
                                                 }

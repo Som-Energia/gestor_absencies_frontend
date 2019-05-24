@@ -28,6 +28,8 @@ const Team = {
         vn.state.actual_referent = '';
         vn.state.request_body_referent = {};
         vn.state.request_body_representant = {};
+        vn.state.request_body_old_referent = {}
+        vn.state.request_body_old_representant = {};
         vn.state.dialog_add_member = {
             backdrop: true,
             outer: {},
@@ -93,7 +95,6 @@ const Team = {
                 }).
                 then(function(result) {
                     vn.state.members_info = result.results;
-                    m.redraw();
                     console.log('members info', vn.state.members_info);
                     vn.state.members_list = [];
                     if (vn.state.members_info !== undefined && vn.state.workers_info !== undefined) {
@@ -106,13 +107,19 @@ const Team = {
                             var presunto_worker = vn.state.workers_info.find(x => x.id === e.worker);
                             console.log('presunto_worker ', presunto_worker);
                             if (e.is_referent === true) {
+                                console.log(`És referent!`);
                                 vn.state.request_body_referent = e;
+                                console.log(vn.state.request_body_referent);
+                                vn.state.request_body_old_referent = e;
+                                console.log('DEFERENT ----------------------------> ', e);
                                 vn.state.actual_referent = ((presunto_worker.first_name !== undefined) ? presunto_worker.first_name : '-' +
                                     ' ' +
                                     (presunto_worker.last_name !== undefined) ? presunto_worker.last_name : '')
                             }
                             if (e.is_representant === true) {
                                 vn.state.request_body_representant = e;
+                                vn.state.request_body_old_representant = e;
+                                console.log('REPRESENTANT ----------------------------> ', e);
                                 vn.state.actual_representant = ((presunto_worker.first_name !== undefined) ? presunto_worker.first_name : '-' +
                                     ' ' +
                                     (presunto_worker.last_name !== undefined) ? presunto_worker.last_name : '')
@@ -150,11 +157,12 @@ const Team = {
                             'LLISTA DE POSSIBLES REFERENTS / REPRESENTANTS ',
                             vn.state.possibles_referents,
                             'actual referent',
-                            vn.state.actual_referent,
+                            vn.state.request_body_representant,
                             'actual representant',
-                            vn.state.actual_representant
+                            vn.state.request_body_referent
                         );
                     }
+                    m.redraw();
                     
                 }).
                 catch(function(error){
@@ -188,7 +196,7 @@ const Team = {
                                             m('.team_info', [
                                                 m(Layout.Row, [
                                                     Object.keys(vn.state.team_info).map(function(key){
-                                                        return m(Layout.Cell, {span:6},
+                                                        return m(Layout.Cell, {span:12},
                                                                     m(MCWTextField, {
                                                                         label: key,
                                                                         value: vn.state.team_info[key],
@@ -209,20 +217,16 @@ const Team = {
                                                     m(MCWSelectmenu, {
                                                         outlined: true,
                                                         label: 'Referent',
-                                                        default: vn.state.request_body_referent['worker'],
-                                                        value: vn.state.request_body_referent['worker'],
-                                                        elements_list: vn.state.possibles_referents,
+                                                        id: 'referent_selectmenu',
+                                                        value: vn.state.request_body_referent.worker != undefined ? vn.state.request_body_referent.worker : '',
+                                                        options: vn.state.possibles_referents,
                                                         disabled: vn.state.editing,
                                                         onchange: function(ev){
                                                             vn.state.request_body_referent = vn.state.members_info.find(
                                                                 x => x.worker == parseInt(ev.target.value)
                                                             );
                                                             vn.state.request_body_referent['is_referent'] = true;
-                                                            console.log(
-                                                                vn.state.members_info,
-                                                                vn.state.request_body_referent,
-                                                                parseInt(ev.target.value)
-                                                            );
+                                                            vn.state.request_body_old_referent !== {} ? vn.state.request_body_old_referent['is_referent'] = false : '';
                                                         }
                                                     })
                                                 ),
@@ -230,20 +234,15 @@ const Team = {
                                                     m(MCWSelectmenu, {
                                                         outlined: true,
                                                         label: 'Representant',
-                                                        default: vn.state.request_body_representant['worker'],
-                                                        value: vn.state.request_body_representant['worker'],
-                                                        elements_list: vn.state.possibles_referents,
+                                                        value: vn.state.request_body_representant.worker != undefined ? vn.state.request_body_representant.worker : '',
+                                                        options: vn.state.possibles_referents,
                                                         disabled: vn.state.editing,
                                                         onchange: function(ev){
                                                             vn.state.request_body_representant = vn.state.members_info.find(
                                                                 x => x.worker == parseInt(ev.target.value)
                                                             );
                                                             vn.state.request_body_representant['is_representant'] = true;
-                                                            console.log(
-                                                                vn.state.members_info,
-                                                                vn.state.request_body_representant,
-                                                                parseInt(ev.target.value)
-                                                            );
+                                                            vn.state.request_body_old_representant !== {} ? vn.state.request_body_old_representant['is_representant'] = false : '';
                                                         }
                                                     })
                                                 ),
@@ -256,14 +255,16 @@ const Team = {
                                                 ])
                                             ),
                                             m(Layout.Row,
-                                                m(Layout.Cell, {span:8},
+                                                m(Layout.Cell, {span:12},
                                                     m('.members', [
                                                         !vn.state.editing ?
                                                             m(MCWList, {
+                                                                class:'members__list',
                                                                 elements_list: vn.state.members_list
                                                             })
                                                         :
                                                             m(MCWList, {
+                                                                class:'members__list',
                                                                 elements_list: vn.state.members_list.map(function(e) {
                                                                     return {'name': e.name, 'link': e.link};
                                                                 })
@@ -319,13 +320,13 @@ const Team = {
                                                     vn.state.team_info[key] = result[key];   
                                                 }
                                             });
-                                            vn.state.editing = true;
+                                            //vn.state.editing = true;
                                             m.redraw();
                                         }).
                                         catch(function(error){
                                             console.log(error);
                                         });
-                                        if (vn.state.request_body_referent.id !== undefined) {
+                                        if (vn.state.request_body_old_referent !== {} && vn.state.request_body_referent.id !== vn.state.request_body_old_referent.id) {
                                             console.log('REQUEST PER CANVIAR REFERENT body ',
                                                 vn.state.request_body_referent,
                                                 vn.state.request_body_referent.worker
@@ -340,13 +341,27 @@ const Team = {
                                                 data: vn.state.request_body_referent
                                             }).
                                             then(function(result) {
-                                                console.log('NER REFERENT DONE!');
+                                            }).
+                                            catch(function(error){
+                                                console.log(error);
+                                            });
+                                            m.request({
+                                                method: 'PUT',
+                                                url: ('http://localhost:8000/absencies/members/' + vn.state.request_body_old_referent.id),
+                                                headers: {
+                                                    'Authorization': Auth.token,
+                                                    'Content-type': 'application/json',
+                                                },
+                                                data: vn.state.request_body_old_referent
+                                            }).
+                                            then(function(result) {
+
                                             }).
                                             catch(function(error){
                                                 console.log(error);
                                             });
                                         }
-                                        if (vn.state.request_body_representant.id !== undefined) {
+                                        if (vn.state.request_body_old_representant !== {} && vn.state.request_body_representant.id !== vn.state.request_body_old_representant.id) {
                                             m.request({
                                                 method: 'PUT',
                                                 url: ('http://localhost:8000/absencies/members/' + vn.state.request_body_representant.id),
@@ -355,6 +370,21 @@ const Team = {
                                                     'Content-type': 'application/json',
                                                 },
                                                 data: vn.state.request_body_representant
+                                            }).
+                                            then(function(result) {
+
+                                            }).
+                                            catch(function(error){
+                                                console.log(error);
+                                            });
+                                            m.request({
+                                                method: 'PUT',
+                                                url: ('http://localhost:8000/absencies/members/' + vn.state.request_body_old_representant.id),
+                                                headers: {
+                                                    'Authorization': Auth.token,
+                                                    'Content-type': 'application/json',
+                                                },
+                                                data: vn.state.request_body_old_representant
                                             }).
                                             then(function(result) {
 
@@ -491,13 +521,9 @@ const Team = {
                             m(MCWSelectmenu, {
                                 outlined: true,
                                 label: 'Treballador',
-                                // si no es admin default: /* jo mateix */,
-                                // si no es admin value: /* jo mateix */,
-                                elements_list: vn.state.possibles_members,
-                                // si no es admin disabled: vn.state.editing,
+                                options: vn.state.possibles_members,
                                 onchange: function(ev){
                                     vn.state.new_member = ev.target.value;
-                                    //vn.state.request_body_referent['worker'] = parseInt(ev.target.value);
                                 }
                             }),
                         ]),

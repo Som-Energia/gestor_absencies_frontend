@@ -189,7 +189,6 @@ function get_occurrences(vn) {
 
 }
 
-
 const Calendar = {
     oncreate: function(vn){
         vn.state.year = (new Date()).getFullYear();
@@ -212,6 +211,7 @@ const Calendar = {
         )
         vn.state.list = [];
         vn.state.workers_result = [];
+        vn.state.type_filter = 'worker';
 
         m.request({
             method: 'GET',
@@ -397,10 +397,12 @@ const Calendar = {
                                             ),
                                             m(Layout.Cell, {span:3},
                                                 m(MCWSelectmenu, {
-                                                    value: 'worker',
+                                                    value: vn.state.type_filter,
                                                     outlined: true,
                                                     label: 'Filtre',
-                                                    elements_list: [
+                                                    id: 'type_filter',
+                                                    required: true,
+                                                    options: [
                                                         {
                                                             'text': 'Team',
                                                             'value': 'team'

@@ -17,6 +17,13 @@ const AbsenceTypeForm = {
             return false;
         }
         const token = Auth.token;
+        vn.state.min_duration = 0.5;
+        vn.state.absencetype['min_duration'] = 0.5;
+        vn.state.absencetype['min_spend'] = 0.5;
+        vn.state.max_duration = -1;
+        vn.state.absencetype['max_duration'] = -1;
+        vn.state.absencetype['max_spend'] = -1;
+        vn.state.absencetype['spend_days'] = 0;
     },
     view: function(vn) {
         return m('.absencetype_form', [
@@ -56,9 +63,11 @@ const AbsenceTypeForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWSelectmenu, {
+                                                value: vn.state.min_duration,
                                                 label: 'Minima duració',
+                                                id: 'min_duration',
                                                 outlined: true,
-                                                elements_list: [
+                                                options: [
                                                     {'value': 0.5, 'text': 'Migdia'},
                                                     {'value': -2, 'text': 'Per dies'},
                                                     {'value': -1, 'text': 'Indefinit'},
@@ -93,9 +102,11 @@ const AbsenceTypeForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWSelectmenu, {
+                                                value: vn.state.max_duration,
                                                 label: 'Màxima duració',
+                                                id: 'max_duration',
                                                 outlined: true,
-                                                elements_list: [
+                                                options: [
                                                     {'value': 0.5, 'text': 'Migdia'},
                                                     {'value': -2, 'text': 'Per dies'},
                                                     {'value': -1, 'text': 'Indefinit'},
@@ -130,9 +141,11 @@ const AbsenceTypeForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWSelectmenu, {
+                                                value: vn.state.absencetype['spend_days'],
                                                 label: 'Computació de dies de vacances',
+                                                id: 'spend_days',
                                                 outlined: true,
-                                                elements_list: [
+                                                options: [
                                                     {'value': -1, 'text': 'Descompta dies de vacances'},
                                                     {'value': 0, 'text': 'No descompta dies de vacances'},
                                                     {'value': 1, 'text': 'En cas de coincidir amb festes, genera dies de vacances'},
@@ -145,7 +158,6 @@ const AbsenceTypeForm = {
                                     ),
                                 ),
                                 m(MCWButton, {
-                                    raised: true,
                                     onclick: function(){
 
                                         console.log('create ', vn.state.absencetype);
@@ -163,11 +175,11 @@ const AbsenceTypeForm = {
                                             console.log('AbsenceType created');
                                             m.route.set('/somenergia');
                                         }).
-                                        catch(function(error){
-                                        console.log(error);
+                                            catch(function(error){
+                                            console.log(error);
                                         });
-                                        
                                     },
+                                    raised: true,
 
                                 }, 'Create'),
                             )

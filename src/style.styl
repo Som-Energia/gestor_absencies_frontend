@@ -67,29 +67,6 @@ body {
     padding: 0 24px 24px;    
 }
 
-/*
-.btn, .btn-large, .btn-small, .mdc-button {
-text-decoration: none;
-color: #fff !important;
-background-color: #96b633 !important;
-text-align: center;
-transition: background-color .2s ease-out;
-cursor: pointer;
-}
-
-.btn, .btn-large, .btn-small, .btn-flat, .mdc-button {
-border: none;
-border-radius: 2px;
-display: inline-block;
-height: 36px;
-line-height: 36px;
-padding: 0 16px;
-text-transform: uppercase;
-vertical-align: middle;
--webkit-tap-highlight-color: transparent;
-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
-}
-*/
 
 .drawer-frame-root {
 display: -ms-flexbox;
@@ -174,11 +151,12 @@ width: 100%;
     line-height: 32px;
     font-weight: 500;
     cursor: pointer;
+    color: #fff;
 }
 
 .et__tab--selected {
-    color: #000;
-    box-shadow: inset 0 -2px 0 0 #000;
+    box-shadow: inset 0 -2px 0 0 #fff;
+    color: #fff;
 }
 
 .members__list .mdc-list-item__text , .teams_list .mdc-list-item__text {
@@ -402,7 +380,7 @@ td.worker {
     width: 100%;    
 }
 
-.worker-item:hover {
+.worker-item:hover, .today {
     background-color: #aec1221a;
 }
 
