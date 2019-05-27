@@ -7,6 +7,8 @@ import MCWSelectmenu from './mdc/selectmenu'
 import MCWButton from './mdc/button'
 
 
+var apibase = process.env.APIBASE;
+
 const VacationPolicyForm = {
     oninit: function(vn){
         console.log('VacationPolicyForm');
@@ -66,7 +68,7 @@ const VacationPolicyForm = {
                                     onclick: function(){
                                         m.request({
                                         method: 'POST',
-                                        url: 'http://localhost:8000/absencies/vacationpolicy',
+                                        url: apibase+'/absencies/vacationpolicy',
                                         headers: {
                                             'Authorization': Auth.token,
                                             'Content-type': 'application/json',

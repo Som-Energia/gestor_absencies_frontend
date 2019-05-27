@@ -7,6 +7,8 @@ import MCWSelectmenu from './mdc/selectmenu'
 import MCWButton from './mdc/button'
 
 
+var apibase = process.env.APIBASE;
+
 const WorkerForm = {
     oninit: function(vn){
         vn.state.worker = {};
@@ -18,7 +20,7 @@ const WorkerForm = {
         const token = Auth.token;
         m.request({
             method: 'GET',
-            url: 'http://localhost:8000/absencies/vacationpolicy',
+            url: APIBASE+'/absencies/vacationpolicy',
             headers: {
                 'Authorization': token
             }
@@ -142,7 +144,7 @@ const WorkerForm = {
                                     onclick: function(){
                                         m.request({
                                         method: 'POST',
-                                        url: 'http://localhost:8000/absencies/workers',
+                                        url: apibase+'/absencies/workers',
                                         headers: {
                                             'Authorization': Auth.token,
                                             'Content-type': 'application/json',

@@ -8,6 +8,9 @@ import Layout from './mdc/layout'
 import MCWCard from './mdc/card'
 import MCWTextField from './mdc/textfield'
 
+
+var apibase = process.env.APIBASE;
+
 const ET = {
     oninit: function(vn) {
         vn.state.members = [];
@@ -22,7 +25,7 @@ const ET = {
         const token = Auth.token;
         m.request({
             method: 'GET',
-            url: 'http://localhost:8000/absencies/workers',
+            url: apibase+'/absencies/workers',
             headers: {
                 'Authorization': token
             }
@@ -43,7 +46,7 @@ const ET = {
         });
         m.request({
             method: 'GET',
-            url: 'http://localhost:8000/absencies/teams',
+            url: apibase+'/absencies/teams',
             headers: {
                 'Authorization': token
             }

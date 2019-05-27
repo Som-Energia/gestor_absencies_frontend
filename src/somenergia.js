@@ -8,6 +8,9 @@ import Layout from './mdc/layout'
 import MCWCard from './mdc/card'
 import MCWTextField from './mdc/textfield'
 
+
+var apibase = process.env.APIBASE;
+
 const SomEnergia = {
     oninit: function(vn) {
         vn.state.vacation_policies = [];
@@ -24,7 +27,7 @@ const SomEnergia = {
         const token = Auth.token;
         m.request({
             method: 'GET',
-            url: 'http://localhost:8000/absencies/vacationpolicy',
+            url: apibase+'/absencies/vacationpolicy',
             headers: {
                 'Authorization': token
             }
@@ -40,7 +43,7 @@ const SomEnergia = {
         });
         m.request({
             method: 'GET',
-            url: 'http://localhost:8000/absencies/absencetype',
+            url: apibase+'/absencies/absencetype',
             headers: {
                 'Authorization': token
             }

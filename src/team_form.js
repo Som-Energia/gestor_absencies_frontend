@@ -7,6 +7,8 @@ import MCWSelectmenu from './mdc/selectmenu'
 import MCWButton from './mdc/button'
 
 
+var apibase = process.env.APIBASE;
+
 const TeamForm = {
     oninit: function(vn){
         vn.state.team = {};
@@ -43,7 +45,7 @@ const TeamForm = {
                                     onclick: function(){
                                         m.request({
                                         method: 'POST',
-                                        url: 'http://localhost:8000/absencies/teams',
+                                        url: apibase+'/absencies/teams',
                                         headers: {
                                             'Authorization': Auth.token,
                                             'Content-type': 'application/json',

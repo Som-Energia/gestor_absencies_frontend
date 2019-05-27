@@ -1,5 +1,6 @@
 
 import m from 'mithril';
+var apibase = process.env.APIBASE;
 
 var Auth = {
     username: "",
@@ -9,6 +10,7 @@ var Auth = {
     is_admin: false,
     setUsername: function(value) {
         Auth.username = value
+        console.log(apibase);
     },
     setPassword: function(value) {
         Auth.password = value
@@ -19,7 +21,7 @@ var Auth = {
     login: function() {
         m.request({
             method: 'POST',
-            url: 'http://localhost:8000/login/',
+            url: apibase+'/login/',
             data: {username: Auth.username, password: Auth.password}
         }).
         then(function(result){

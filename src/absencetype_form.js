@@ -7,6 +7,8 @@ import MCWSelectmenu from './mdc/selectmenu'
 import MCWButton from './mdc/button'
 
 
+var apibase = process.env.APIBASE;
+
 const AbsenceTypeForm = {
     oninit: function(vn){
         vn.state.absencetype = {};
@@ -164,7 +166,7 @@ const AbsenceTypeForm = {
 
                                         m.request({
                                         method: 'POST',
-                                        url: 'http://localhost:8000/absencies/absencetype',
+                                        url: apibase+'/absencies/absencetype',
                                         headers: {
                                             'Authorization': Auth.token,
                                             'Content-type': 'application/json',

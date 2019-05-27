@@ -12,6 +12,7 @@ import Dialog from './mdc/dialog'
 import MCWSelectmenu from './mdc/selectmenu'
 import moment from 'moment'
 
+var apibase = process.env.APIBASE;
 
 
 function arrayContains(needle, arrhaystack) {
@@ -34,7 +35,7 @@ function get_occurrences(vn) {
     vn.state.occurrence_days = [];
     m.request({
         method: 'GET',
-        url: 'http://localhost:8000/absencies/absences?' +
+        url: apibase+'/absencies/absences?' +
             'worker=' + Auth.user_id +
             '&' +
             'start_period=' + moment(vn.state.start_period).format('YYYY-MM-DD') +
@@ -47,7 +48,7 @@ function get_occurrences(vn) {
     then(function(occurrence_result) {
         m.request({
             method: 'GET',
-            url: 'http://localhost:8000/absencies/absencetype',
+            url: apibase+'/absencies/absencetype',
             headers: {
                 'Authorization': vn.state.token
             }
@@ -254,7 +255,7 @@ const Absences = {
                                 onclick: function(){
                                     m.request({
                                         method: 'DELETE',
-                                        url: ('http://localhost:8000/absencies/absences/' + vn.state.occurrence_to_remove.id),
+                                        url: (apibase+'/absencies/absences/' + vn.state.occurrence_to_remove.id),
                                         headers: {
                                             'Authorization': Auth.token
                                         }

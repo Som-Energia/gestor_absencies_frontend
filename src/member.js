@@ -9,6 +9,8 @@ import Dialog from './mdc/dialog'
 import MCWButton from './mdc/button'
 
 
+var apibase = process.env.APIBASE;
+
 const Member = {
     oninit: function(vn) {
         vn.state.member_info = {};
@@ -25,7 +27,7 @@ const Member = {
         };
         m.request({
             method: 'GET',
-            url: ('http://localhost:8000/absencies/workers/' + vn.attrs.memberid),
+            url: (apibase+'/absencies/workers/' + vn.attrs.memberid),
             headers: {
                 'Authorization': token
             }
@@ -100,7 +102,7 @@ const Member = {
                                     // Es pot enviat el metode put!
                                     m.request({
                                         method: 'PUT',
-                                        url: ('http://localhost:8000/absencies/workers/' + vn.attrs.memberid),
+                                        url: (apibase+'/absencies/workers/' + vn.attrs.memberid),
                                         headers: {
                                             'Authorization': Auth.token,
                                             'Content-type': 'application/json',
@@ -134,7 +136,7 @@ const Member = {
                                 onclick: function(){
                                     m.request({
                                         method: 'DELETE',
-                                        url: ('http://localhost:8000/absencies/workers/' + vn.attrs.memberid),
+                                        url: (apibase+'/absencies/workers/' + vn.attrs.memberid),
                                         headers: {
                                             'Authorization': Auth.token
                                         }

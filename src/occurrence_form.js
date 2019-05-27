@@ -12,7 +12,7 @@ import DatePicker from './mdc/datepicker'
 import MCWSelectmenu from './mdc/selectmenu'
 
 
-
+var apibase = process.env.APIBASE;
 
 const OccurrenceForm = {
     oninit: function(vn){
@@ -31,7 +31,7 @@ const OccurrenceForm = {
         const token = Auth.token;
         m.request({
             method: 'GET',
-            url: 'http://localhost:8000/absencies/absencetype',
+            url: apibase+'/absencies/absencetype',
             headers: {
                 'Authorization': token
             }
@@ -158,7 +158,7 @@ const OccurrenceForm = {
 
                                         m.request({
                                         method: 'POST',
-                                        url: 'http://localhost:8000/absencies/absences',
+                                        url: apibase+'/absencies/absences',
                                         headers: {
                                             'Authorization': Auth.token,
                                             'Content-type': 'application/json',

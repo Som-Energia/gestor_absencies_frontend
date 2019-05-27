@@ -3,9 +3,18 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require('path');
 
-const devMode = process.env.NODE_ENV !== 'production';
+const mode = process.env.WEBPACK_MODE;
+const devMode = mode !== 'production';
 
-module.exports = {
+const api_urls = {
+    production: 'https://gestorabsencies-demo.somenergia.local:8000',
+    testing: 'https://gestorabsencies-demo.somenergia.local:8000',
+    development: 'http://localhost:8000',
+};
+
+module.exports = (env, argv) => {
+  
+  return {
   entry: './src/main.js',
   output: {
     filename: 'bundle-[name]-[chunkhash].js',
@@ -62,10 +71,10 @@ module.exports = {
 	new MiniCssExtractPlugin({
 		filename: '[name].[hash].css',
 		chunkFilename: '[id].[hash].css',
-	})	
-  ],  
-  devServer: {
-    contentBase: './dist',
-    port: 9000
-  }  
+	}),
+  new webpack.EnvironmentPlugin({
+    APIBASE: api_urls[argv.mode],
+  })
+  ],
+}
 };

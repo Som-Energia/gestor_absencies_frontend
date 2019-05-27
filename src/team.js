@@ -10,6 +10,9 @@ import MCWList from './mdc/list'
 import Dialog from './mdc/dialog'
 import MCWSelectmenu from './mdc/selectmenu'
 
+
+var apibase = process.env.APIBASE;
+
 const Team = {
     oninit: function(vn) {
         vn.state.team_info = {};
@@ -48,7 +51,7 @@ const Team = {
 
         m.request({
             method: 'GET',
-            url: ('http://localhost:8000/absencies/teams/' + vn.attrs.teamid),
+            url: (apibase+'/absencies/teams/' + vn.attrs.teamid),
             headers: {
                 'Authorization': token
             }
@@ -66,7 +69,7 @@ const Team = {
             
             m.request({
                 method: 'GET',
-                url: ('http://localhost:8000/absencies/workers'),
+                url: (apibase+'/absencies/workers'),
                 headers: {
                     'Authorization': token
                 }
@@ -88,7 +91,7 @@ const Team = {
 
                 m.request({
                     method: 'GET',
-                    url: ('http://localhost:8000/absencies/members?team=' + vn.attrs.teamid),
+                    url: (apibase+'/absencies/members?team=' + vn.attrs.teamid),
                     headers: {
                         'Authorization': token
                     }
@@ -307,7 +310,7 @@ const Team = {
                                         // Es pot enviat el metode put!
                                         m.request({
                                             method: 'PUT',
-                                            url: ('http://localhost:8000/absencies/teams/' + vn.attrs.teamid),
+                                            url: (apibase+'/absencies/teams/' + vn.attrs.teamid),
                                             headers: {
                                                 'Authorization': Auth.token,
                                                 'Content-type': 'application/json',
@@ -333,7 +336,7 @@ const Team = {
                                             )
                                             m.request({
                                                 method: 'PUT',
-                                                url: ('http://localhost:8000/absencies/members/' + vn.state.request_body_referent.id),
+                                                url: (apibase+'/absencies/members/' + vn.state.request_body_referent.id),
                                                 headers: {
                                                     'Authorization': Auth.token,
                                                     'Content-type': 'application/json',
@@ -347,7 +350,7 @@ const Team = {
                                             });
                                             m.request({
                                                 method: 'PUT',
-                                                url: ('http://localhost:8000/absencies/members/' + vn.state.request_body_old_referent.id),
+                                                url: (apibase+'/absencies/members/' + vn.state.request_body_old_referent.id),
                                                 headers: {
                                                     'Authorization': Auth.token,
                                                     'Content-type': 'application/json',
@@ -364,7 +367,7 @@ const Team = {
                                         if (vn.state.request_body_old_representant !== {} && vn.state.request_body_representant.id !== vn.state.request_body_old_representant.id) {
                                             m.request({
                                                 method: 'PUT',
-                                                url: ('http://localhost:8000/absencies/members/' + vn.state.request_body_representant.id),
+                                                url: (apibase+'/absencies/members/' + vn.state.request_body_representant.id),
                                                 headers: {
                                                     'Authorization': Auth.token,
                                                     'Content-type': 'application/json',
@@ -379,7 +382,7 @@ const Team = {
                                             });
                                             m.request({
                                                 method: 'PUT',
-                                                url: ('http://localhost:8000/absencies/members/' + vn.state.request_body_old_representant.id),
+                                                url: (apibase+'/absencies/members/' + vn.state.request_body_old_representant.id),
                                                 headers: {
                                                     'Authorization': Auth.token,
                                                     'Content-type': 'application/json',
@@ -404,7 +407,7 @@ const Team = {
                                     if (vn.state.im_member) {
                                         m.request({
                                             method: 'DELETE',
-                                            url: ('http://localhost:8000/absencies/members/' + vn.state.member_id),
+                                            url: (apibase+'/absencies/members/' + vn.state.member_id),
                                             headers: {
                                                 'Authorization': Auth.token,
                                             },
@@ -422,7 +425,7 @@ const Team = {
                                     else {
                                         m.request({
                                             method: 'POST',
-                                            url: ('http://localhost:8000/absencies/members'),
+                                            url: (apibase+'/absencies/members'),
                                             headers: {
                                                 'Authorization': Auth.token,
                                                 'Content-type': 'application/json',
@@ -463,7 +466,7 @@ const Team = {
                                 onclick: function(){
                                     m.request({
                                         method: 'POST',
-                                        url: ('http://localhost:8000/absencies/members'),
+                                        url: (apibase+'/absencies/members'),
                                         headers: {
                                             'Authorization': Auth.token,
                                             'Content-type': 'application/json',
@@ -536,7 +539,7 @@ const Team = {
                                 onclick: function(){
                                     m.request({
                                         method: 'DELETE',
-                                        url: ('http://localhost:8000/absencies/members/' + vn.state.member_to_remove),
+                                        url: (apibase+'/absencies/members/' + vn.state.member_to_remove),
                                         headers: {
                                             'Authorization': Auth.token,
                                         }
@@ -588,7 +591,7 @@ const Team = {
                                 onclick: function(){
                                     m.request({
                                         method: 'DELETE',
-                                        url: ('http://localhost:8000/absencies/teams/' + vn.attrs.teamid),
+                                        url: (apibase+'/absencies/teams/' + vn.attrs.teamid),
                                         headers: {
                                             'Authorization': Auth.token
                                         }

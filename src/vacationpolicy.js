@@ -9,6 +9,8 @@ import Dialog from './mdc/dialog'
 import MCWButton from './mdc/button'
 
 
+var apibase = process.env.APIBASE;
+
 const VacationPolicy = {
     oninit: function(vn) {
         vn.state.vacationpolicy_info = {};
@@ -27,7 +29,7 @@ const VacationPolicy = {
 
         m.request({
             method: 'GET',
-            url: ('http://localhost:8000/absencies/vacationpolicy/' + vn.attrs.vacationpolicyid),
+            url: (apibase+'/absencies/vacationpolicy/' + vn.attrs.vacationpolicyid),
             headers: {
                 'Authorization': token
             }
@@ -98,7 +100,7 @@ const VacationPolicy = {
                                         // Es pot enviat el metode put!
                                         m.request({
                                             method: 'PUT',
-                                            url: ('http://localhost:8000/absencies/vacationpolicy/' + vn.attrs.vacationpolicyid),
+                                            url: (apibase+'/absencies/vacationpolicy/' + vn.attrs.vacationpolicyid),
                                             headers: {
                                                 'Authorization': Auth.token,
                                                 'Content-type': 'application/json',
@@ -133,7 +135,7 @@ const VacationPolicy = {
                                 onclick: function(){
                                     m.request({
                                         method: 'DELETE',
-                                        url: ('http://localhost:8000/absencies/vacationpolicy/' + vn.attrs.vacationpolicyid),
+                                        url: (apibase+'/absencies/vacationpolicy/' + vn.attrs.vacationpolicyid),
                                         headers: {
                                             'Authorization': Auth.token
                                         }

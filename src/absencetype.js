@@ -9,6 +9,8 @@ import Dialog from './mdc/dialog'
 import MCWButton from './mdc/button'
 
 
+var apibase = process.env.APIBASE;
+
 const AbsenceType = {
     oninit: function(vn) {
         vn.state.absence_info = {};
@@ -26,7 +28,7 @@ const AbsenceType = {
 
         m.request({
             method: 'GET',
-            url: ('http://localhost:8000/absencies/absencetype/' + vn.attrs.absenceid),
+            url: (apibase+'/absencies/absencetype/' + vn.attrs.absenceid),
             headers: {
                 'Authorization': token
             }
@@ -99,7 +101,7 @@ const AbsenceType = {
                                         // Es pot enviat el metode put!
                                         m.request({
                                             method: 'PUT',
-                                            url: ('http://localhost:8000/absencies/absencetype/' + vn.attrs.absenceid),
+                                            url: (apibase+'/absencies/absencetype/' + vn.attrs.absenceid),
                                             headers: {
                                                 'Authorization': Auth.token,
                                                 'Content-type': 'application/json',
@@ -135,7 +137,7 @@ const AbsenceType = {
                                 onclick: function(){
                                     m.request({
                                         method: 'DELETE',
-                                        url: ('http://localhost:8000/absencies/absencetype/' + vn.attrs.absenceid),
+                                        url: (apibase+'/absencies/absencetype/' + vn.attrs.absenceid),
                                         headers: {
                                             'Authorization': Auth.token
                                         }

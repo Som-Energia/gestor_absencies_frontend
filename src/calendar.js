@@ -16,7 +16,7 @@ import Table from './mdc/table'
 import Menu from './main'
 
 
-
+var apibase = process.env.APIBASE;
 
 function set_weekends(vn, row, month, year) {
     var day = 1
@@ -69,7 +69,7 @@ function get_occurrences(vn) {
     vn.state.object_list = [];
     m.request({
         method: 'GET',
-        url: 'http://localhost:8000/absencies/absences?' +
+        url: apibase+'/absencies/absences?' +
             'start_period=' + formatDate(vn.state.start_period) +
             '&' +
             'end_period=' + formatDate(vn.state.end_period),
@@ -215,7 +215,7 @@ const Calendar = {
 
         m.request({
             method: 'GET',
-            url: 'http://localhost:8000/absencies/workers',
+            url: apibase+'/absencies/workers',
             headers: {
                 'Authorization': vn.state.token
             }
@@ -232,7 +232,7 @@ const Calendar = {
 
                 m.request({
                     method: 'GET',
-                    url: 'http://localhost:8000/absencies/absencetype',
+                    url: apibase+'/absencies/absencetype',
                     headers: {
                         'Authorization': vn.state.token
                     }
@@ -256,7 +256,7 @@ const Calendar = {
 
         m.request({
             method: 'GET',
-            url: 'http://localhost:8000/absencies/teams',
+            url: apibase+'/absencies/teams',
             headers: {
                 'Authorization': vn.state.token
             }
@@ -272,7 +272,7 @@ const Calendar = {
 
         m.request({
             method: 'GET',
-            url: 'http://localhost:8000/absencies/members',
+            url: apibase+'/absencies/members',
             headers: {
                 'Authorization': vn.state.token
             }
