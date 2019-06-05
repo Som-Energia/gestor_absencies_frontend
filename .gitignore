@@ -4,3 +4,5 @@ node_modules/
 # Text editor
 *sublime*
 
+# Scripts
+deploytest.sh

@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy-prod": "webpack --mode production --color --progress --optimize-minimize",
-    "deploy-test": "webpack --mode testing --color --progress --optimize-minimize",
-    "build": "webpack --mode development --color --progress",
+    "deploy-test": "webpack --color --progress --optimize-minimize",
+    "build": "webpack --mode development --color --progress --optimize-minimize",
     "server": "webpack-dev-server --mode development --open --watch -d"
   },
   "author": "",

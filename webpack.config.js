@@ -3,17 +3,16 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require('path');
 
-const mode = process.env.WEBPACK_MODE;
-const devMode = mode !== 'production';
 
 const api_urls = {
-    production: 'https://gestorabsencies-demo.somenergia.local:8000',
-    testing: 'https://gestorabsencies-demo.somenergia.local:8000',
+    production: 'https://gestorabsencies-demo.somenergia.local',
+    testing: 'https://gestorabsencies-demo.somenergia.local',
     development: 'http://localhost:8000',
 };
 
 module.exports = (env, argv) => {
-  
+
+  const mode = argv.mode || 'testing';
   return {
   entry: './src/main.js',
   output: {
@@ -70,10 +69,10 @@ module.exports = (env, argv) => {
 	}),
 	new MiniCssExtractPlugin({
 		filename: '[name].[hash].css',
-		chunkFilename: '[id].[hash].css',
+		chunkFilename: 'chunk-[name].[hash].css',
 	}),
   new webpack.EnvironmentPlugin({
-    APIBASE: api_urls[argv.mode],
+    APIBASE: api_urls[mode],
   })
   ],
 }
