@@ -60,7 +60,7 @@ const Table = {
                                 m('tr',
                                     m('td', {
                                         class: 'absence-type absence-type-' + e['afternoon'][index].id,
-                                        title: 'Tarda ' + vn.state.days[index+1] + ' ' + ( e['afternoon'][index] !== undefined && e['afternoon'][index].name !== undefined ? e['afternoon'][index].name : '' )
+                                        title: 'Tarda ' + vn.state.days[index+1] + ' ' + ( /*e['afternoon'][index] !== undefined && */e['afternoon'][index].name !== undefined ? e['afternoon'][index].name : '' )
                                     }, m.trust('&nbsp;'))
                                 )
                             )

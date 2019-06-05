@@ -22,13 +22,13 @@ function set_weekends(vn, row, month, year) {
     var day = 1
     var date = new Date(year, month, day);
     do {
-        if (date.getDay() === 5 || date.getDay() === 6) {
-            row[day]['id'] = 9;
-            row[day]['name'] = 'Finde';
+        if (date.getDay() === 6 || date.getDay() === 0) {
+            row[day-1]['id'] = 9;
+            row[day-1]['name'] = 'Finde';
         }
         day++;
         date.setDate(day);
-    } while(day < moment(vn.state.month_seen).endOf('month').format('D'));
+    } while(day <= moment(vn.state.month_seen).endOf('month').format('D'));
 }
 
 function find_row(object_list, workers_dicts, worker_id) {
@@ -114,7 +114,18 @@ function get_occurrences(vn) {
             var start_day = '';
             var end_day = '';
             var actual_object = find_row(vn.state.object_list, vn.state.workers, e.worker);
-            if (e.start_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0) && e.end_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
+            if (moment(e.start_time).format('D') == moment(e.end_time).format('D') && moment(e.start_time).format('M') == moment(e.end_time).format('M')) {
+                start_day = moment(e.start_time).format('D')-1;
+                if (new Date(e.start_time).getHours() == 9) {
+                    actual_object['mornings'][start_day]['id'] = e.absence_type;
+                    actual_object['mornings'][start_day].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                }
+                if (new Date(e.end_time).getHours() == 17) {
+                    actual_object['afternoon'][start_day]['id'] = e.absence_type;
+                    actual_object['afternoon'][start_day].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                }
+            }
+            else if (e.start_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0) && e.end_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
                 start_day = new Date(e.start_time).getDate() - 1;
                 end_day = new Date(e.end_time).getDate();
                 if (new Date(e.start_time).getHours() == 9) {
@@ -122,6 +133,7 @@ function get_occurrences(vn) {
                     actual_object['mornings'][start_day].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
                 }
                 actual_object['afternoon'][start_day]['id'] = e.absence_type;
+                actual_object['afternoon'][start_day].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
                 for (var i = start_day+1; i < end_day-1; i++){
                     console.log('dins 1er if ', i);
                     actual_object['mornings'][i]['id'] = e.absence_type;

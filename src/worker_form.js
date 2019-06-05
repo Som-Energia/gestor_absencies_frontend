@@ -20,7 +20,7 @@ const WorkerForm = {
         const token = Auth.token;
         m.request({
             method: 'GET',
-            url: APIBASE+'/absencies/vacationpolicy',
+            url: apibase+'/absencies/vacationpolicy',
             headers: {
                 'Authorization': token
             }
