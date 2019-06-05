@@ -33,6 +33,7 @@ function get_occurrences(vn) {
     )
     vn.state.occurrences = [];
     vn.state.occurrence_days = [];
+    vn.state.vacation_spend = 0;
     m.request({
         method: 'GET',
         url: apibase+'/absencies/absences?' +
@@ -54,25 +55,51 @@ function get_occurrences(vn) {
             }
         }).
         then(function(absencetype_result) {
-            vn.state.absence_type = absencetype_result.results.map(function(e){
-                return {'name': e.name, 'id': e.id};
-            });
-            vn.state.occurrences = occurrence_result.results;
-
-            vn.state.occurrences.map(function(e) {
-
-                var start_occurrence = moment(e.start_time);
-                var end_occurrence = moment(e.end_time);
-                for ( start_occurrence ; end_occurrence.isSameOrAfter(start_occurrence) ; start_occurrence.add(1, 'days') ) {
-                    var absencetype_name = absencetype_result.results.find( x => e.absence_type == x.id ).name;
-                    vn.state.occurrence_days.push({
-                        'absencetype_id': e.absence_type,
-                        'absencetype_name': absencetype_name,
-                        'day': start_occurrence.format('YYYY-MM-DD') 
-                    })
+            
+            m.request({
+                method: 'GET',
+                url: (apibase + '/absencies/workers/' + vn.state.auth.user_id),
+                headers: {
+                    'Authorization': vn.state.token
                 }
-                console.log(vn.state.occurrence_days);
-            })
+            }).
+            then(function(worker_result) {
+                vn.state.holidays = worker_result.holidays;
+
+                vn.state.absence_type = absencetype_result.results.map(function(e){
+                    return {'name': e.name, 'id': e.id};
+                });
+                vn.state.occurrences = occurrence_result.results;
+                console.log('occurrence___list', vn.state.occurrences, occurrence_result);
+
+                vn.state.occurrences.map(function(e) {
+
+                    var start_occurrence = moment(e.start_time);
+                    var end_occurrence = moment(e.end_time);
+                    vn.state.vacation_spend +=
+                        start_occurrence.format('H') == 9 && end_occurrence.format('H') == 17 ?
+                                moment.duration(end_occurrence.diff(start_occurrence)).days()+1
+                            :
+                                start_occurrence.format('H') == end_occurrence.format('H') ?
+                                    moment.duration(end_occurrence.diff(start_occurrence)).days()
+                                :
+                                    moment.duration(end_occurrence.diff(start_occurrence)).days()+0.5
+
+                    for ( start_occurrence ; end_occurrence.isSameOrAfter(start_occurrence) ; start_occurrence.add(1, 'days') ) {
+                        var absencetype_name = absencetype_result.results.find( x => e.absence_type == x.id ).name;
+                        vn.state.occurrence_days.push({
+                            'absencetype_id': e.absence_type,
+                            'absencetype_name': absencetype_name,
+                            'day': start_occurrence.format('YYYY-MM-DD')
+                        })
+                    }
+                    console.log(vn.state.occurrence_days);
+                })
+
+            }).
+            catch(function(error){
+                console.log(error);
+            });
         }).
         catch(function(error){
             console.log(error);
@@ -81,7 +108,6 @@ function get_occurrences(vn) {
     catch(function(error){
         console.log(error);
     });
-
 }
 
 
@@ -99,6 +125,8 @@ const Absences = {
             inner: {},
         };
         vn.state.token = Auth.token;
+        vn.state.auth = Auth;
+        vn.state.vacation_spend = 0;
         get_occurrences(vn);
     },
     view: function(vn) {
@@ -120,7 +148,8 @@ const Absences = {
                                                     rtl: true,
                                                     onclick: function(ev) {
                                                         vn.state.year --;
-                                                        get_occurrences(vn);                                                    },
+                                                        get_occurrences(vn);
+                                                    },
                                                 })
                                             ),
                                             m(Layout.Cell, {span:2},
@@ -167,8 +196,19 @@ const Absences = {
                                                                         vn.state.absence_type.find(x => x.id === e.absence_type).name
                                                                     ),
                                                                     m('.num-days',
-                                                                        //moment.duration(moment(e.end_time).diff(moment(e.start_time))).asDays()
-                                                                        moment(e.end_time).from(moment(e.start_time), true)
+                                                                        moment(e.end_time).format('D') == moment(e.start_time).format('D') ?
+                                                                            moment(e.start_time).format('H') == 13 || moment(e.end_time).format('H') == 13 ?
+                                                                                'mig dia'
+                                                                            :
+                                                                                'un dia'
+                                                                        :
+                                                                            moment(e.start_time).format('H') == 13 && moment(e.end_time).format('H') == 13 ?
+                                                                                moment(e.end_time).from(moment(e.start_time), true)
+                                                                            :
+                                                                                moment(e.start_time).format('H') == 13 || moment(e.end_time).format('H') == 13 ?
+                                                                                    moment(e.end_time).from(moment(e.start_time), true) + ' i mig'
+                                                                                :
+                                                                                    moment(e.end_time).add(1, 'days').from(moment(e.start_time), true)
                                                                     )
                                                                 ])
                                                             ]
@@ -196,11 +236,11 @@ const Absences = {
                                                         m('.desc', 'Dies totals'),
                                                     ]),
                                                     m('li.total-absences__item', [
-                                                        m('.num', '13'),
+                                                        m('.num', vn.state.holidays),
                                                         m('.desc', 'Dies disponibles'),
                                                     ]),
                                                     m('li.total-absences__item', [
-                                                        m('.num', '12'),
+                                                        m('.num', vn.state.vacation_spend),
                                                         m('.desc', 'Dies utilitzats'),
                                                     ])
                                                 ),    
