@@ -1,8 +1,9 @@
-import m from 'mithril';
-import '@material/checkbox/dist/mdc.checkbox.css'
-import '@material/form-field/dist/mdc.form-field.css'
-import { MDCCheckbox } from '@material/checkbox'
-import { MDCFormField } from '@material/form-field'
+var m = require('mithril');
+require('@material/checkbox/dist/mdc.checkbox.css');
+require('@material/form-field/dist/mdc.form-field.css');
+var MDCCheckbox = require('@material/checkbox').MDCCheckbox;
+var MDCFormField = require('@material/form-field').MDCFormField;
+
 
 const MCWCheckbox = {
     view: (vn) =>

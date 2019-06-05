@@ -1,8 +1,9 @@
-import m from 'mithril';
-import { MDCDrawer } from '@material/drawer'
-import '@material/drawer/dist/mdc.drawer.css'
-import '@material/list/dist/mdc.list.css'
-import cuca from '../cuca.svg'
+var m = require('mithril');
+require('@material/drawer/dist/mdc.drawer.css');
+require('@material/list/dist/mdc.list.css');
+var MDCDrawer = require('@material/drawer').MDCDrawer;
+var cuca = require('../cuca.svg');
+
 
 const MCWDrawer = {
     view: (vn) =>

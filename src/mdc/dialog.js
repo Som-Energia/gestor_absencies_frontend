@@ -1,6 +1,6 @@
-import m from 'mithril';
-import { MDCDialog } from '@material/dialog'
-import '@material/dialog/dist/mdc.dialog.css'
+var m = require('mithril');
+require('@material/dialog/dist/mdc.dialog.css');
+var MDCDialog = require('@material/dialog').MDCDialog;
 
 
 /**
@@ -116,17 +116,4 @@ Dialog.view = function(vn) {
     ]);
 };
 
-/*
-const MCWDialog = {
-    view: (nv) =>
-        m('.mdc-dialog', {'role': 'alertdialog'},
-            m('.mdc-dialog__container',
-                m('.mdc-dialog__surface',
-                    m('h2', vn.attrs.title),
-                    m('.mdc-dialog__content', vn.attrs.content),
-                )
-            )
-        )
-}
-*/
 export default Dialog

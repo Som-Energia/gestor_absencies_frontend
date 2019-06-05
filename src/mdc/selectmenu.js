@@ -1,8 +1,8 @@
 'use strict';
+var m = require('mithril');
+require('@material/select/dist/mdc.select.css');
+var MDCSelect = require('@material/select').MDCSelect;
 
-import m from 'mithril';
-import { MDCSelect } from '@material/select'
-import '@material/select/dist/mdc.select.css'
 
 /** @module */
 
