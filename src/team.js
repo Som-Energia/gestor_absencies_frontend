@@ -9,6 +9,7 @@ import MCWCard from './mdc/card'
 import MCWList from './mdc/list'
 import Dialog from './mdc/dialog'
 import MCWSelectmenu from './mdc/selectmenu'
+import Snackbar from './mdc/snackbar'
 
 
 var apibase = process.env.APIBASE;
@@ -20,6 +21,8 @@ const Team = {
             m.route.set('/login');
             return false;
         }
+        vn.state.snackbar = {};
+        vn.state.snackbar_message = '';
         const token = Auth.token;
         vn.state.auth = Auth;
         vn.state.members_info = [];
@@ -323,10 +326,13 @@ const Team = {
                                                     vn.state.team_info[key] = result[key];   
                                                 }
                                             });
+                                            vn.state.snackbar.close();
                                             //vn.state.editing = true;
                                             m.redraw();
                                         }).
                                         catch(function(error){
+                                            vn.state.snackbar_message = error.message;
+                                            vn.state.snackbar.open();
                                             console.log(error);
                                         });
                                         if (vn.state.request_body_old_referent !== {} && vn.state.request_body_referent.id !== vn.state.request_body_old_referent.id) {
@@ -344,8 +350,11 @@ const Team = {
                                                 data: vn.state.request_body_referent
                                             }).
                                             then(function(result) {
+                                                vn.state.snackbar.close();
                                             }).
                                             catch(function(error){
+                                                vn.state.snackbar_message = error.message;
+                                                vn.state.snackbar.open();
                                                 console.log(error);
                                             });
                                             m.request({
@@ -358,9 +367,11 @@ const Team = {
                                                 data: vn.state.request_body_old_referent
                                             }).
                                             then(function(result) {
-
+                                                vn.state.snackbar.close();
                                             }).
                                             catch(function(error){
+                                                vn.state.snackbar_message = error.message;
+                                                vn.state.snackbar.open();
                                                 console.log(error);
                                             });
                                         }
@@ -375,9 +386,11 @@ const Team = {
                                                 data: vn.state.request_body_representant
                                             }).
                                             then(function(result) {
-
+                                                vn.state.snackbar.close();
                                             }).
                                             catch(function(error){
+                                                vn.state.snackbar_message = error.message;
+                                                vn.state.snackbar.open();
                                                 console.log(error);
                                             });
                                             m.request({
@@ -390,9 +403,11 @@ const Team = {
                                                 data: vn.state.request_body_old_representant
                                             }).
                                             then(function(result) {
-
+                                                vn.state.snackbar.close();
                                             }).
                                             catch(function(error){
+                                                vn.state.snackbar_message = error.message;
+                                                vn.state.snackbar.open();
                                                 console.log(error);
                                             });
                                         }
@@ -417,8 +432,11 @@ const Team = {
                                             vn.state.members_list = vn.state.members_list.filter(
                                                 x => x.id != vn.state.member_id
                                             );
+                                            vn.state.snackbar.close();
                                         }).
                                         catch(function(error){
+                                            vn.state.snackbar_message = error.message;
+                                            vn.state.snackbar.open();
                                             console.log(error);
                                         });
                                     }
@@ -449,8 +467,11 @@ const Team = {
                                                     }
                                                 })
                                             })
+                                            vn.state.snackbar.close();
                                         }).
                                         catch(function(error){
+                                            vn.state.snackbar_message = error.message;
+                                            vn.state.snackbar.open();
                                             console.log(error);
                                         });                                    
                                     }
@@ -497,8 +518,11 @@ const Team = {
                                             })
                                         })
                                         vn.state.dialog_add_member.outer.close();
+                                        vn.state.snackbar.close();
                                     }).
                                     catch(function(error){
+                                        vn.state.snackbar.open();
+                                        console.log(error);
                                         console.log(error);
                                     });
                                     vn.state.dialog_add_member.outer.close();
@@ -548,17 +572,14 @@ const Team = {
                                         vn.state.members_list = vn.state.members_list.filter(
                                             x => x.id != vn.state.member_to_remove
                                         );
-                                        console.log(
-                                            'REMOVE MEMBER ',
-                                            vn.state.members_list,
-                                            ' ',
-                                            vn.state.member_to_remove
-                                        );
+                                        vn.state.snackbar.close();
                                         m.redraw();
                                         vn.state.dialog_remove_member.outer.close();
                                         
                                     }).
                                     catch(function(error){
+                                        vn.state.snackbar_message = error.message;
+                                        vn.state.snackbar.open();
                                         console.log(error);
                                     });
                                     vn.state.dialog_remove_member.outer.close();
@@ -597,10 +618,12 @@ const Team = {
                                         }
                                     }).
                                     then(function(result) {
-                                        console.log('Team removed!');
+                                        vn.state.snackbar.close();
                                         m.route.set('/et');
                                     }).
                                     catch(function(error){
+                                        vn.state.snackbar_message = error.message;
+                                        vn.state.snackbar.open();
                                         console.log(error);
                                     });
                                     vn.state.dialog_remove_team.outer.close();
@@ -626,7 +649,11 @@ const Team = {
                             m('.', 'Estas segur que vols eliminar aquest equip?')
 
                         ]),
-                    ])
+                    ]),
+                    m(Snackbar, {
+                        model: vn.state.snackbar,
+                        dismiss: true
+                    }, vn.state.snackbar_message),  
         ])
     }
 }

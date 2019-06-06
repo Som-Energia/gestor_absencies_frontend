@@ -5,10 +5,12 @@ import MCWCard from './mdc/card'
 import MCWButton from './mdc/button'
 import MCWTextField from './mdc/textfield'
 import cuca from './cuca.svg'
+import Snackbar from './mdc/snackbar'
 
 const Login = {
     oninit: function(vn) {
         vn.state.auth = Auth;
+        vn.state.snackbar = {};
     },
     view: function(vn) {
         return m('.main.form.mdc-typography',
@@ -48,9 +50,15 @@ const Login = {
                                     )
                                 ),
                                 m(MCWButton, {
-                                    onclick: vn.state.auth.login,
+                                    onclick: function(e) {
+                                        vn.state.auth.login(vn.state.snackbar);
+                                    },
                                     raised: true,
                                 }, 'Login'),
+                                m(Snackbar, {
+                                    model: vn.state.snackbar,
+                                    dismiss: true
+                                }, 'No te sabe tu credensiale o k ase?'),
                             ] : [
                                 m('h1', 'Logout'),
                                 m(MCWButton, {

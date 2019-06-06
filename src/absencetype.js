@@ -25,7 +25,8 @@ const AbsenceType = {
             outer: {},
             inner: {},
         };
-
+        vn.state.snackbar = {};
+        vn.state.snackbar_message = '';
         m.request({
             method: 'GET',
             url: (apibase+'/absencies/absencetype/' + vn.attrs.absenceid),
@@ -114,10 +115,13 @@ const AbsenceType = {
                                                     vn.state.absence_info[key] = result[key];   
                                                 }
                                             });
+                                            vn.state.snackbar.close();
                                             m.redraw();
                                             vn.state.can_edit = true;
                                         }).
                                         catch(function(error){
+                                            vn.state.snackbar_message = error.message;
+                                            vn.state.snackbar.open();
                                             console.log(error);
                                         });
                                     }
@@ -143,10 +147,12 @@ const AbsenceType = {
                                         }
                                     }).
                                     then(function(result) {
-                                        console.log('AbsenceType removed!');
+                                        vn.state.snackbar.close();
                                         m.route.set('/somenergia');
                                     }).
                                     catch(function(error){
+                                        vn.state.snackbar_message = error.message;
+                                        vn.state.snackbar.open();
                                         console.log(error);
                                     });    
                                     vn.state.dialog_remove_absencetype.outer.close();
@@ -171,6 +177,10 @@ const AbsenceType = {
                         }, [
                             m('.', 'Estas segur que vols eliminar aquest tipus d\'absència?')
                         ]),
+                        m(Snackbar, {
+                            model: vn.state.snackbar,
+                            dismiss: true
+                        }, vn.state.snackbar_message),
                     ])
         ])
     }

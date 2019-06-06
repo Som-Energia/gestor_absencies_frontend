@@ -5,7 +5,7 @@ import MCWCard from './mdc/card'
 import MCWTextField from './mdc/textfield'
 import MCWSelectmenu from './mdc/selectmenu'
 import MCWButton from './mdc/button'
-
+import Snackbar from './mdc/snackbar'
 
 var apibase = process.env.APIBASE;
 
@@ -17,6 +17,8 @@ const TeamForm = {
             m.route.set('/login');
             return false;
         }
+        vn.state.snackbar = {};
+        vn.state.snackbar_message = '';
         const token = Auth.token;
     },
     view: function(vn) {
@@ -53,14 +55,20 @@ const TeamForm = {
                                         data: vn.state.team
                                         }).
                                         then(function(result) {
-                                            console.log('Team created');
+                                            vn.state.snackbar.close();
                                             m.route.set('/et');
                                         }).
                                         catch(function(error){
-                                        console.log(error);
+                                            vn.state.snackbar.open();
+                                            vn.state.snackbar_message = error.message;
+                                            console.log(error);
                                         });
                                     },
                                 }, 'Create'),
+                                m(Snackbar, {
+                                    model: vn.state.snackbar,
+                                    dismiss: true
+                                }, vn.state.snackbar_message),
                             )
                         )
                     ])

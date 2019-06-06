@@ -8,6 +8,7 @@ var Auth = {
     token: false,
     user_id: false,
     is_admin: false,
+    error: '',
     setUsername: function(value) {
         Auth.username = value
         console.log(apibase);
@@ -18,7 +19,7 @@ var Auth = {
     canSubmit: function() {
         return Auth.username !== "" && Auth.password !== ""
     },
-    login: function() {
+    login: function(snackbar) {
         m.request({
             method: 'POST',
             url: apibase+'/login/',
@@ -26,6 +27,7 @@ var Auth = {
         }).
         then(function(result){
             if(result.token !== undefined){
+                snackbar.close();
                 Auth.token = 'JWT ' +  result.token;
                 Auth.user_id = result.user_id;
                 Auth.is_admin = result.is_admin;
@@ -38,6 +40,8 @@ var Auth = {
         }).
         catch(function(error){
             console.log(error);
+            Auth.error = error.message;
+            snackbar.open();
             Auth.token = false;
         });
     },

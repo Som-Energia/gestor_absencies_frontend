@@ -7,6 +7,7 @@ import MCWTextField from './mdc/textfield'
 import MWCFab from './mdc/fab'
 import Dialog from './mdc/dialog'
 import MCWButton from './mdc/button'
+import Snackbar from './mdc/snackbar'
 
 
 var apibase = process.env.APIBASE;
@@ -19,6 +20,8 @@ const VacationPolicy = {
             m.route.set('/login');
             return false;
         }
+        vn.state.snackbar = {};
+        vn.state.snackbar_message = '';
         vn.state.auth = Auth;
         const token = Auth.token;
         vn.state.dialog_remove_vacationpolicy = {
@@ -97,7 +100,6 @@ const VacationPolicy = {
                                 value: (vn.state.can_edit)?'edit':'save',
                                 onclick: function() {
                                     if (vn.state.can_edit === false) {
-                                        // Es pot enviat el metode put!
                                         m.request({
                                             method: 'PUT',
                                             url: (apibase+'/absencies/vacationpolicy/' + vn.attrs.vacationpolicyid),
@@ -113,10 +115,13 @@ const VacationPolicy = {
                                                     vn.state.vacationpolicy_info[key] = result[key];   
                                                 }
                                             });
+                                            vn.state.snackbar.close();
                                             m.redraw();
                                             vn.state.can_edit = true;
                                         }).
                                         catch(function(error){
+                                            vn.state.snackbar.open();
+                                            vn.state.snackbar_message = error.message;
                                             console.log(error);
                                         });
                                     }
@@ -141,10 +146,12 @@ const VacationPolicy = {
                                         }
                                     }).
                                     then(function(result) {
-                                        console.log('VacationPolicy removed!');
+                                        vn.state.snackbar.close();
                                         m.route.set('/somenergia');
                                     }).
                                     catch(function(error){
+                                        vn.state.snackbar_message = error.message;
+                                        vn.state.snackbar.open();
                                         console.log(error);
                                     });
                                     vn.state.dialog_remove_vacationpolicy.outer.close();
@@ -169,7 +176,11 @@ const VacationPolicy = {
                         }, [
                             m('.', 'Estas segur que vols eliminar aquesta politica de vacances?')
                         ]),
-                    ])
+                    ]),
+                    m(Snackbar, {
+                        model: vn.state.snackbar,
+                        dismiss: true
+                    }, vn.state.snackbar_message),
         ])
     }
 }

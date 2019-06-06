@@ -10,6 +10,7 @@ import MCWDrawer from './mdc/drawer'
 import MWCFab from './mdc/fab'
 import Dialog from './mdc/dialog'
 import MCWSelectmenu from './mdc/selectmenu'
+import Snackbar from './mdc/snackbar'
 import moment from 'moment'
 
 var apibase = process.env.APIBASE;
@@ -124,6 +125,8 @@ const Absences = {
             outer: {},
             inner: {},
         };
+        vn.state.snackbar = {};
+        vn.state.snackbar_message = '';
         vn.state.token = Auth.token;
         vn.state.auth = Auth;
         vn.state.vacation_spend = 0;
@@ -305,10 +308,13 @@ const Absences = {
                                         if( idx >= 0){
                                             vn.state.occurrences.splice(idx, 1);
                                         }
+                                        vn.state.snackbar.close();
                                         m.redraw();
                                     }).
                                     catch(function(error){
                                         console.log(error);
+                                        vn.state.snackbar_message = error.message;
+                                        vn.state.snackbar.open();
                                     });
                                     vn.state.dialog_remove_occurrence.outer.close();
                                 }
@@ -332,7 +338,10 @@ const Absences = {
                             m('.', 'Estas segur que vols eliminar aquesta ocurrencia?')
 
                         ]),
-
+                        m(Snackbar, {
+                            model: vn.state.snackbar,
+                            dismiss: true
+                        }, vn.state.snackbar_message),
                 ])    
         ]);
     }

@@ -5,6 +5,7 @@ import MCWCard from './mdc/card'
 import MCWTextField from './mdc/textfield'
 import MCWSelectmenu from './mdc/selectmenu'
 import MCWButton from './mdc/button'
+import Snackbar from './mdc/snackbar'
 
 
 var apibase = process.env.APIBASE;
@@ -18,6 +19,8 @@ const VacationPolicyForm = {
             m.route.set('/login');
             return false;
         }
+        vn.state.snackbar = {};
+        vn.state.snackbar_message = '';
         const token = Auth.token;
     },
     view: function(vn) {
@@ -76,14 +79,20 @@ const VacationPolicyForm = {
                                         data: vn.state.vacation_policy
                                         }).
                                         then(function(result) {
-                                            console.log('Vacation Policy created');
+                                            vn.state.snackbar.close();
                                             m.route.set('/somenergia');
                                         }).
                                         catch(function(error){
-                                        console.log(error);
+                                            vn.state.snackbar_message = error.message;
+                                            vn.state.snackbar.open();
+                                            console.log(error);
                                         });
                                     },
                                 }, 'Create'),
+                                m(Snackbar, {
+                                    model: vn.state.snackbar,
+                                    dismiss: true
+                                }, vn.state.snackbar_message),
                             )
                         )
                     ])

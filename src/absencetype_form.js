@@ -5,7 +5,7 @@ import MCWCard from './mdc/card'
 import MCWTextField from './mdc/textfield'
 import MCWSelectmenu from './mdc/selectmenu'
 import MCWButton from './mdc/button'
-
+import Snackbar from './mdc/snackbar'
 
 var apibase = process.env.APIBASE;
 
@@ -18,6 +18,8 @@ const AbsenceTypeForm = {
             m.route.set('/login');
             return false;
         }
+        vn.state.snackbar = {};
+        vn.state.snackbar_message = '';
         const token = Auth.token;
         vn.state.min_duration = 0.5;
         vn.state.absencetype['min_duration'] = 0.5;
@@ -161,9 +163,6 @@ const AbsenceTypeForm = {
                                 ),
                                 m(MCWButton, {
                                     onclick: function(){
-
-                                        console.log('create ', vn.state.absencetype);
-
                                         m.request({
                                         method: 'POST',
                                         url: apibase+'/absencies/absencetype',
@@ -174,16 +173,21 @@ const AbsenceTypeForm = {
                                         data: vn.state.absencetype
                                         }).
                                         then(function(result) {
-                                            console.log('AbsenceType created');
+                                            vn.state.snackbar.close();
                                             m.route.set('/somenergia');
                                         }).
-                                            catch(function(error){
+                                        catch(function(error){
                                             console.log(error);
+                                            vn.state.snackbar_message = error.message
+                                            vn.state.snackbar.open();
                                         });
                                     },
                                     raised: true,
-
                                 }, 'Create'),
+                                m(Snackbar, {
+                                    model: vn.state.snackbar,
+                                    dismiss: true
+                                }, vn.state.snackbar_message),
                             )
                         )
                     ])

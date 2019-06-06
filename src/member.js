@@ -7,6 +7,7 @@ import MCWTextField from './mdc/textfield'
 import MWCFab from './mdc/fab'
 import Dialog from './mdc/dialog'
 import MCWButton from './mdc/button'
+import Snackbar from './mdc/snackbar'
 
 
 var apibase = process.env.APIBASE;
@@ -18,6 +19,8 @@ const Member = {
             m.route.set('/login');
             return false;
         }
+        vn.state.snackbar = {};
+        vn.state.snackbar_message = '';
         vn.state.auth = Auth;
         const token = Auth.token;
         vn.state.dialog_remove_worker = {
@@ -99,7 +102,6 @@ const Member = {
                             value: (!vn.state.can_edit)?'edit':'save',
                             onclick: function() {
                                 if (vn.state.can_edit) {
-                                    // Es pot enviat el metode put!
                                     m.request({
                                         method: 'PUT',
                                         url: (apibase+'/absencies/workers/' + vn.attrs.memberid),
@@ -116,10 +118,12 @@ const Member = {
                                                 vn.state.member_info[key] = result[key];   
                                             }
                                         });
+                                        vn.state.snackbar.close();
                                         m.redraw();
-                                        //vn.state.can_edit = true;
                                     }).
                                     catch(function(error){
+                                        vn.state.snackbar_message = error.message;
+                                        vn.state.snackbar.open();
                                         console.log(error);
                                     });
                                 }
@@ -142,10 +146,12 @@ const Member = {
                                         }
                                     }).
                                     then(function(result) {
-                                        console.log('Worker removed!');
+                                        vn.state.snackbar.close();
                                         m.route.set('/et');
                                     }).
                                     catch(function(error){
+                                        vn.state.snackbar_message = error.message;
+                                        vn.state.snackbar.open();
                                         console.log(error);
                                     });    
                                     vn.state.dialog_remove_worker.outer.close();
@@ -170,6 +176,10 @@ const Member = {
                         }, [
                             m('.', 'Estas segur que vols eliminar aquest treballador?')
                         ]),
+                        m(Snackbar, {
+                            model: vn.state.snackbar,
+                            dismiss: true
+                        }, vn.state.snackbar_message),
                     ])
                 ])
         }

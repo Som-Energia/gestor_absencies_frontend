@@ -10,6 +10,7 @@ import Layout from './mdc/layout'
 import MCWCheckbox from './mdc/checkbox'
 import DatePicker from './mdc/datepicker'
 import MCWSelectmenu from './mdc/selectmenu'
+import Snackbar from './mdc/snackbar'
 
 
 var apibase = process.env.APIBASE;
@@ -22,6 +23,8 @@ const OccurrenceForm = {
             m.route.set('/login');
             return false;
         }
+        vn.state.snackbar = {};
+        vn.state.snackbar_message = '';
         vn.state.absence_info = {};
         vn.state.absence_info['start_morning'] = true;
         vn.state.absence_info['start_afternoon'] = true;
@@ -170,10 +173,15 @@ const OccurrenceForm = {
                                             m.route.set('/absences');
                                         }).
                                         catch(function(error){
-                                        console.log(error);
+                                            vn.state.snackbar_message = error.message
+                                            vn.state.snackbar.open();
                                         });
                                     },
                                 }, 'Create'),
+                                m(Snackbar, {
+                                    model: vn.state.snackbar,
+                                    dismiss: true
+                                }, vn.state.snackbar_message),
                             )
                         )
                     ])
