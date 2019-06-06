@@ -52,7 +52,10 @@ const VacationPolicy = {
         });
     },
     view: function(vn) {
-        return m('.vacationpolicy.drawer-frame-root', [
+        return (Auth.token === false) ?
+            m('', '')
+            :
+            m('.vacationpolicy.drawer-frame-root', [
                 m(Menu),
                     m('.drawer-main-content', [
                         m(Layout,

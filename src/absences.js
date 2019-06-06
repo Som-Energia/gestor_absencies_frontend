@@ -113,6 +113,12 @@ function get_occurrences(vn) {
 
 
 const Absences = {
+    oncreate: function(vn) {
+        if(Auth.token === false){
+            m.route.set('/login');
+            return false;
+        }    
+    },
     oninit: function(vn) {
         vn.state.year = (new Date()).getFullYear();
         vn.state.occurrences = [];
@@ -133,7 +139,10 @@ const Absences = {
         get_occurrences(vn);
     },
     view: function(vn) {
-        return m('.absences.drawer-frame-root', [
+        return (Auth.token === false) ?
+            m('', '')
+            : 
+            m('.absences.drawer-frame-root', [
                 m(Menu),
                 m('.drawer-main-content', [
                     m(Layout,

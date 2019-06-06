@@ -315,7 +315,10 @@ const Calendar = {
         )
     },
     view: function(vn) {
-        return m('.calendar.drawer-frame-root', [
+        return (Auth.token === false) ?
+            m('', '')
+            :
+            m('.calendar.drawer-frame-root', [
                 m(Menu),
                 m('.drawer-main-content', [
                     m(Layout,

@@ -63,7 +63,10 @@ const ET = {
         vn.state.option = 'members';
     },
     view: function(vn) {
-        return m('.et.drawer-frame-root', [
+        return (Auth.token === false) ?
+            m('', '')
+            :
+            m('.et.drawer-frame-root', [
                 m(Menu),
                 m('.drawer-main-content', [
                     m(Layout,

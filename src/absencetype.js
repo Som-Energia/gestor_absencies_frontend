@@ -7,6 +7,7 @@ import MCWTextField from './mdc/textfield'
 import MWCFab from './mdc/fab'
 import Dialog from './mdc/dialog'
 import MCWButton from './mdc/button'
+import Snackbar from './mdc/snackbar'
 
 
 var apibase = process.env.APIBASE;
@@ -49,7 +50,10 @@ const AbsenceType = {
         });
     },
     view: function(vn) {
-        return m('.vacationpolicy.drawer-frame-root', [
+        return (Auth.token === false) ?
+            m('', '')
+            :
+            m('.vacationpolicy.drawer-frame-root', [
                 m(Menu),
                     m('.drawer-main-content', [
                         m(Layout,

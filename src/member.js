@@ -51,7 +51,10 @@ const Member = {
         });    
     },
     view: function(vn) {
-        return m('.member.drawer-frame-root', [
+        return (Auth.token === false) ?
+            m('', '')
+            :
+            m('.member.drawer-frame-root', [
                 m(Menu),
                     m('.drawer-main-content', [
                         m(Layout,

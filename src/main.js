@@ -51,7 +51,6 @@ const Menu = {
             { 'name': 'Logout', 'link': '/login' },
             //{ 'name': 'Options', 'component': m(MCWMenuSurface) },
         ];
-        console.log('User id ', Auth.user_id);
     },
     view: function(vn) {
         return m('.menu', [

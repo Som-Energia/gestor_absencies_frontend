@@ -52,7 +52,10 @@ const OccurrenceForm = {
         });
     },
     view: function(vn) {
-        return m('.worker_form', [
+        return (Auth.token === false) ?
+            m('', '')
+            :
+            m('.occurrence_form', [
                 m(Layout,
                     m(Layout.Row, {align: 'center'}, [
                         m(Layout.Cell,  {span:4}),

@@ -191,7 +191,10 @@ const Team = {
 
     },
     view: function(vn) {
-        return m('.team.drawer-frame-root', [
+        return (Auth.token === false) ?
+            m('', '')
+            :
+            m('.team.drawer-frame-root', [
                 m(Menu),
                     m('.drawer-main-content', [
                         m(Layout,
