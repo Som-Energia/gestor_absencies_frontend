@@ -31,7 +31,7 @@ var Auth = {
                 Auth.token = 'JWT ' +  result.token;
                 Auth.user_id = result.user_id;
                 Auth.is_admin = result.is_admin;
-                m.route.set('/member/' + Auth.user_id);
+                m.route.set('/absences');
             } else {
                 Auth.token = false;
                 Auth.user_id = false;
