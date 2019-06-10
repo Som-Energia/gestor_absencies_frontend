@@ -25,6 +25,7 @@ function set_weekends(vn, row, month, year) {
         if (date.getDay() === 6 || date.getDay() === 0) {
             row[day-1]['id'] = 9;
             row[day-1]['name'] = 'Finde';
+            row[day-1]['color'] = '#000000';
         }
         day++;
         date.setDate(day);
@@ -82,7 +83,7 @@ function get_occurrences(vn) {
         row.length = moment(vn.state.month_seen).endOf('month').format('D')
         row.fill(new Object());
         row = row.map(function(e){
-            return {'id': 0, 'name': ''};
+            return {'id': 0, 'name': '', 'color': ''};
         });
         var a = JSON.parse(JSON.stringify(row));
         set_weekends(
@@ -103,6 +104,7 @@ function get_occurrences(vn) {
             );
             var occurrense_entity = new Object();
             occurrense_entity['name'] = e.name;
+            occurrense_entity['color'] = e.color;
             occurrense_entity['worker_id'] = e.id;
             occurrense_entity['mornings'] = morning_row;
             occurrense_entity['afternoon'] = afternoon_row;
@@ -118,11 +120,15 @@ function get_occurrences(vn) {
                 start_day = moment(e.start_time).format('D')-1;
                 if (new Date(e.start_time).getHours() == 9) {
                     actual_object['mornings'][start_day]['id'] = e.absence_type;
-                    actual_object['mornings'][start_day].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                    var absencetype = vn.state.absencetype.find( x => x.id === e.absence_type );
+                    actual_object['mornings'][start_day].name = absencetype.name;
+                    actual_object['mornings'][start_day].color = absencetype.color;
                 }
                 if (new Date(e.end_time).getHours() == 17) {
                     actual_object['afternoon'][start_day]['id'] = e.absence_type;
-                    actual_object['afternoon'][start_day].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                    var absencetype = vn.state.absencetype.find( x => x.id === e.absence_type );
+                    actual_object['afternoon'][start_day].name = absencetype.name;
+                    actual_object['afternoon'][start_day].color = absencetype.color;
                 }
             }
             else if (e.start_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0) && e.end_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
@@ -130,22 +136,32 @@ function get_occurrences(vn) {
                 end_day = new Date(e.end_time).getDate();
                 if (new Date(e.start_time).getHours() == 9) {
                     actual_object['mornings'][start_day]['id'] = e.absence_type;
-                    actual_object['mornings'][start_day].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                    var absencetype = vn.state.absencetype.find( x => x.id === e.absence_type );
+                    actual_object['mornings'][start_day].name = absencetype.name;
+                    actual_object['mornings'][start_day].color = absencetype.color;
                 }
                 actual_object['afternoon'][start_day]['id'] = e.absence_type;
-                actual_object['afternoon'][start_day].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                var absencetype = vn.state.absencetype.find( x => x.id === e.absence_type );
+                actual_object['afternoon'][start_day].name = absencetype.name;
+                actual_object['afternoon'][start_day].color = absencetype.color;
                 for (var i = start_day+1; i < end_day-1; i++){
                     console.log('dins 1er if ', i);
                     actual_object['mornings'][i]['id'] = e.absence_type;
-                    actual_object['mornings'][i].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                    var absencetype = vn.state.absencetype.find( x => x.id === e.absence_type );
+                    actual_object['mornings'][i].name = absencetype.name;
+                    actual_object['mornings'][i].color = absencetype.color;
                     actual_object['afternoon'][i]['id'] = e.absence_type;
-                    actual_object['afternoon'][i].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                    actual_object['afternoon'][i].name = absencetype.name;
+                    actual_object['afternoon'][i].color = absencetype.color;
                 }
                 actual_object['mornings'][end_day-1]['id'] = e.absence_type;
-                actual_object['mornings'][end_day-1].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                var absencetype = vn.state.absencetype.find( x => x.id === e.absence_type );
+                actual_object['mornings'][end_day-1].name = absencetype.name;
+                actual_object['mornings'][end_day-1].color = absencetype.color;
                 if (new Date(e.end_time).getHours() == 17) {
                     actual_object['afternoon'][end_day-1]['id'] = e.absence_type;
-                    actual_object['afternoon'][end_day-1].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                    actual_object['afternoon'][end_day-1].name = absencetype.name;
+                actual_object['afternoon'][end_day-1].color = absencetype.color;
                 }
             }
             else if (e.start_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
@@ -153,41 +169,60 @@ function get_occurrences(vn) {
                 end_day = moment(vn.state.month_seen).endOf('month').format('D');
                 if (new Date(e.start_time).getHours() == 9) {
                     actual_object['mornings'][start_day]['id'] = e.absence_type;
-                    actual_object['mornings'][start_day].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                    var absencetype = vn.state.absencetype.find( x => x.id === e.absence_type );
+                    actual_object['mornings'][start_day].name = absencetype.name;
+                    actual_object['mornings'][start_day].color = absencetype.color;
                 }
                 actual_object['afternoon'][start_day]['id'] = e.absence_type;
-                actual_object['afternoon'][start_day].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                var absencetype = vn.state.absencetype.find( x => x.id === e.absence_type );
+                actual_object['afternoon'][start_day].name = absencetype.name;
+                actual_object['afternoon'][start_day].color = absencetype.color;
                 for (var i = start_day+1; i < end_day-1; i++){
                     console.log('dins 2n if ', i);
                     actual_object['mornings'][i]['id'] = e.absence_type;
-                    actual_object['mornings'][i].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                    var absencetype = vn.state.absencetype.find( x => x.id === e.absence_type );
+                    actual_object['mornings'][i].name = absencetype.name;
+                    actual_object['mornings'][i].color = absencetype.color;
                     actual_object['afternoon'][i]['id'] = e.absence_type;
-                    actual_object['afternoon'][i].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                    actual_object['afternoon'][i].name = absencetype.name;
+                    actual_object['afternoon'][i].color = absencetype.color;
                 }
                 actual_object['mornings'][end_day-1]['id'] = e.absence_type;
-                actual_object['mornings'][end_day-1].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                var absencetype = vn.state.absencetype.find( x => x.id === e.absence_type );
+                actual_object['mornings'][end_day-1].name = absencetype.name;
+                actual_object['mornings'][end_day-1].color = absencetype.color;
                 actual_object['afternoon'][end_day-1]['id'] = e.absence_type;
-                actual_object['afternoon'][end_day-1].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                actual_object['afternoon'][end_day-1].name = absencetype.name;
+                actual_object['afternoon'][end_day-1].color = absencetype.color;
             }
             else if (e.end_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
                 start_day = 0;
                 end_day = new Date(e.end_time).getDate();
                 actual_object['mornings'][start_day]['id'] = e.absence_type;
-                actual_object['mornings'][start_day].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                var absencetype = vn.state.absencetype.find( x => x.id === e.absence_type );
+                actual_object['mornings'][start_day].name = absencetype.name;
+                actual_object['mornings'][start_day].color = absencetype.color;
                 actual_object['afternoon'][start_day]['id'] = e.absence_type;
-                actual_object['afternoon'][start_day].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                actual_object['afternoon'][start_day].name = absencetype.name;
+                actual_object['afternoon'][start_day].color = absencetype.color;
                 for (var i = start_day+1; i < end_day-1; i++){
                     console.log('dins 3er if ', i);
                     actual_object['mornings'][i]['id'] = e.absence_type;
-                    actual_object['mornings'][i].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                    var absencetype = vn.state.absencetype.find( x => x.id === e.absence_type );
+                    actual_object['mornings'][i].name = absencetype.name;
+                    actual_object['mornings'][i].color = absencetype.color;
                     actual_object['afternoon'][i]['id'] = e.absence_type;
-                    actual_object['afternoon'][i].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                    actual_object['afternoon'][i].name = absencetype.name;
+                    actual_object['afternoon'][i].color = absencetype.color;
                 }
                 actual_object['mornings'][end_day-1]['id'] = e.absence_type;
-                actual_object['mornings'][end_day-1].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                var absencetype = vn.state.absencetype.find( x => x.id === e.absence_type );
+                actual_object['mornings'][end_day-1].name = absencetype.name;
+                actual_object['mornings'][end_day-1].color = absencetype.color;
                 if (new Date(e.end_time).getHours() == 17) {
                     actual_object['afternoon'][end_day-1]['id'] = e.absence_type;
-                    actual_object['afternoon'][end_day-1].name = vn.state.absencetype.find( x => x.id === e.absence_type ).name
+                    actual_object['afternoon'][end_day-1].name = absencetype.name;
+                    actual_object['afternoon'][end_day-1].color = absencetype.color;
                 }
             }
         });

@@ -6,6 +6,7 @@ import MCWTextField from './mdc/textfield'
 import MCWSelectmenu from './mdc/selectmenu'
 import MCWButton from './mdc/button'
 import Snackbar from './mdc/snackbar'
+import RgbEditor from './mdc/colorPicker'
 
 var apibase = process.env.APIBASE;
 
@@ -161,6 +162,15 @@ const AbsenceTypeForm = {
                                         )
                                     ),
                                 ),
+                                m(RgbEditor, {
+                                        onupdate: function(vn) {
+                                            vn.state.color = '#'+('000'+(
+                                                +256*256*vn.state.red
+                                                +256*vn.state.green
+                                                +vn.state.blue
+                                                ).toString(16)).slice(-6)
+                                        },
+                                }),
                                 m(MCWButton, {
                                     onclick: function(){
                                         m.request({

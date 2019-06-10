@@ -54,13 +54,15 @@ const Table = {
                                 m('tr',
                                     m('td', {
                                         class: 'absence-type absence-type-' + element.id,
-                                        title: 'Mati ' + vn.state.days[index+1] + ' ' + ( element.name !== undefined ? element.name : '' )
+                                        title: 'Mati ' + vn.state.days[index+1] + ' ' + ( element.name !== undefined ? element.name : '' ),
+                                        style: { 'background-color': element.color },
                                     }, m.trust('&nbsp;'))
                                 ),
                                 m('tr',
                                     m('td', {
                                         class: 'absence-type absence-type-' + e['afternoon'][index].id,
-                                        title: 'Tarda ' + vn.state.days[index+1] + ' ' + ( /*e['afternoon'][index] !== undefined && */e['afternoon'][index].name !== undefined ? e['afternoon'][index].name : '' )
+                                        title: 'Tarda ' + vn.state.days[index+1] + ' ' + ( /*e['afternoon'][index] !== undefined && */e['afternoon'][index].name !== undefined ? e['afternoon'][index].name : '' ),
+                                        style: { 'background-color': e['afternoon'][index].color },
                                     }, m.trust('&nbsp;'))
                                 )
                             )
