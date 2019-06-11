@@ -13,6 +13,15 @@ import ColorPicker from './mdc/colorPicker'
 
 var apibase = process.env.APIBASE;
 
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        red: parseInt(result[1], 16),
+        green: parseInt(result[2], 16),
+        blue: parseInt(result[3], 16)
+    } : null;
+};
+
 const AbsenceType = {
     oninit: function(vn) {
         vn.state.absence_info = {};
@@ -49,6 +58,7 @@ const AbsenceType = {
                 }
             });
             ColorPicker.color = vn.state.absence_info['color'];
+            vn.state.color = hexToRgb(ColorPicker.color);
             m.redraw();
             vn.state.can_edit = true; // TODO: Check user permission
         }).
@@ -97,9 +107,12 @@ const AbsenceType = {
                                                                         ])
                                                                     )
                                                                 :
-                                                                m(ColorPicker, {
-                                                                    color: vn.state.absence_info[key]
-                                                                })
+                                                                    m(ColorPicker, {
+                                                                        color: vn.state.absence_info[key],
+                                                                        red: hexToRgb(ColorPicker.color)['red'],
+                                                                        green: hexToRgb(ColorPicker.color)['green'],
+                                                                        blue: hexToRgb(ColorPicker.color)['blue'],
+                                                                    })
                                                         )
                                                     })
                                                 ])

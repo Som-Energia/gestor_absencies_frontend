@@ -65,14 +65,21 @@ Slider.view = function(vn) {
     ]);
 };
 
-
 const ColorPicker = {
     color: '#000000',
     oninit: function(vn) {
-        (vn.attrs.color != undefined) ? ColorPicker.color = vn.attrs.color : ''
-        vn.state.red = 142;
-        vn.state.green = 100;
-        vn.state.blue = 32;
+        if (vn.attrs.color != undefined) {
+            ColorPicker.color = vn.attrs.color;
+            console.log('red', vn.attrs.red);
+            vn.state.red = vn.attrs.red;
+            vn.state.green = vn.attrs.green;
+            vn.state.blue = vn.attrs.blue;
+        }
+        else {
+            vn.state.red = 142;
+            vn.state.green = 100;
+            vn.state.blue = 32;
+        }
     },
     onupdate: function(vn) {
         ColorPicker.color = '#'+('000'+(
