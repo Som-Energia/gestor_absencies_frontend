@@ -11,6 +11,9 @@ import RgbEditor from './mdc/colorPicker'
 var apibase = process.env.APIBASE;
 
 const AbsenceTypeForm = {
+    oncreate: function(vn) {
+        vn.state.absencetype = {};
+    },
     oninit: function(vn){
         vn.state.absencetype = {};
         vn.state.elements_list = [];
@@ -29,6 +32,7 @@ const AbsenceTypeForm = {
         vn.state.absencetype['max_duration'] = -1;
         vn.state.absencetype['max_spend'] = -1;
         vn.state.absencetype['spend_days'] = 0;
+        vn.state.absencetype['color'] = '';
     },
     view: function(vn) {
         return m('.absencetype_form', [
@@ -93,8 +97,8 @@ const AbsenceTypeForm = {
                                                         label: 'Min duration',
                                                         outlined: true,
                                                         oninput: function(ev) {
-                                                            vn.state.absencetype['min_duration'] = parseInt(ev.target.value);
-                                                            vn.state.absencetype['min_spend'] = parseInt(ev.target.value);
+                                                            vn.state.absencetype['min_duration'] = ev.target.value;
+                                                            vn.state.absencetype['min_spend'] = ev.target.value;
                                                         }
                                                     })
                                                 )
@@ -132,8 +136,8 @@ const AbsenceTypeForm = {
                                                         label: 'Max duration',
                                                         outlined: true,
                                                         oninput: function(ev) {
-                                                            vn.state.absencetype['max_duration'] = parseInt(ev.target.value);
-                                                            vn.state.absencetype['max_spend'] = parseInt(ev.target.value);
+                                                            vn.state.absencetype['max_duration'] = ev.target.value;
+                                                            vn.state.absencetype['max_spend'] = ev.target.value;
                                                         }
                                                     })
                                                 )
@@ -156,23 +160,16 @@ const AbsenceTypeForm = {
                                                     {'value': 1, 'text': 'En cas de coincidir amb festes, genera dies de vacances'},
                                                 ],
                                                 onchange: function(ev){
-                                                    vn.state.absencetype['spend_days'] = ev.target.value;
+                                                    vn.state.absencetype['spend_days'] = parseInt(ev.target.value);
                                                 }
                                             })
                                         )
                                     ),
                                 ),
-                                m(RgbEditor, {
-                                        onupdate: function(vn) {
-                                            vn.state.color = '#'+('000'+(
-                                                +256*256*vn.state.red
-                                                +256*vn.state.green
-                                                +vn.state.blue
-                                                ).toString(16)).slice(-6)
-                                        },
-                                }),
+                                m(RgbEditor),
                                 m(MCWButton, {
                                     onclick: function(){
+                                        vn.state.absencetype['color'] = RgbEditor.color;
                                         m.request({
                                         method: 'POST',
                                         url: apibase+'/absencies/absencetype',

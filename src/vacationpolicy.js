@@ -98,7 +98,7 @@ const VacationPolicy = {
                                 ),
                             ])
                         ),
-                        ( vn.state.auth.is_admin  ?
+                        ( vn.state.auth.is_admin ?
                             m(MWCFab, {
                                 value: (vn.state.can_edit)?'edit':'save',
                                 onclick: function() {

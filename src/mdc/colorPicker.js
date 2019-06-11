@@ -67,10 +67,19 @@ Slider.view = function(vn) {
 
 
 const ColorPicker = {
+    color: '#000000',
     oninit: function(vn) {
+        (vn.attrs.color != undefined) ? ColorPicker.color = vn.attrs.color : ''
         vn.state.red = 142;
         vn.state.green = 100;
         vn.state.blue = 32;
+    },
+    onupdate: function(vn) {
+        ColorPicker.color = '#'+('000'+(
+            +256*256*vn.state.red
+            +256*vn.state.green
+            +vn.state.blue
+            ).toString(16)).slice(-6);
     },
     view: function(vn) {
         var Layout = require('./layout');
@@ -83,22 +92,21 @@ const ColorPicker = {
             ;
         };
         return m(Layout,
-            m(Layout.Row, m(Layout.Cell, m('h2', 'Sliders'))),
             m(Layout.Row, [
                 m(Layout.Cell, {span: 9}, [
-                    m('','Pick a color'),
                     m(Slider, {
                         discrete: true,
+                        disabled: vn.attrs.disabled,
                         min:0, max:255, step: 1,
                         value: vn.state.red,
                         color: 'red',
                         oninput: function(ev, value) {
                             vn.state.red = value;
-                            vn.attrs.red = value;
                         },
                     }),
                     m(Slider, {
                         discrete: true,
+                        disabled: vn.attrs.disabled,
                         min:0, max:255, step: 1,
                         value: vn.state.green,
                         color: '#00b100',
@@ -108,6 +116,7 @@ const ColorPicker = {
                     }),
                     m(Slider, {
                         discrete: true,
+                        disabled: vn.attrs.disabled,
                         min:0, max:255, step: 1,
                         value: vn.state.blue,
                         color: 'blue',
@@ -118,7 +127,7 @@ const ColorPicker = {
                 ]),
                 m(Layout.Cell, {span: 3}, [
                     m('.mdc-typography--headline5', { style: {
-                        'background-color': color(),
+                        'background-color': ColorPicker.color,
                         width: '100%',
                         height: '100%',
                         'text-align': 'center',
@@ -127,7 +136,7 @@ const ColorPicker = {
                             (vn.state.green*587)+
                             (vn.state.blue*114))
                             /1000>=128?'black':'white',
-                    }}, color()),
+                    }}, ColorPicker.color),
                 ]),
                 vn.attrs.button != undefined ? 
                     vn.attrs.button

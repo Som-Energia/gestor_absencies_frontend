@@ -8,6 +8,7 @@ import MWCFab from './mdc/fab'
 import Dialog from './mdc/dialog'
 import MCWButton from './mdc/button'
 import Snackbar from './mdc/snackbar'
+import ColorPicker from './mdc/colorPicker'
 
 
 var apibase = process.env.APIBASE;
@@ -19,6 +20,11 @@ const AbsenceType = {
             m.route.set('/login');
             return false;
         }
+        vn.state.dialog_edit_color = {
+            backdrop: true,
+            outer: {},
+            inner: {},
+        };
         vn.state.auth = Auth;
         const token = Auth.token;
         vn.state.dialog_remove_absencetype = {
@@ -42,6 +48,7 @@ const AbsenceType = {
                     vn.state.absence_info[key] = result[key];   
                 }
             });
+            ColorPicker.color = vn.state.absence_info['color'];
             m.redraw();
             vn.state.can_edit = true; // TODO: Check user permission
         }).
@@ -65,16 +72,35 @@ const AbsenceType = {
                                                 m(Layout.Row, [
                                                     Object.keys(vn.state.absence_info).map(function(key){
                                                         return m(Layout.Cell, {span:6},
-                                                                        m(MCWTextField, {
-                                                                            label: key,
-                                                                            outlined: true,
-                                                                            value: vn.state.absence_info[key],
-                                                                            disabled : vn.state.can_edit,
-                                                                            oninput: function (e){
-                                                                                vn.state.absence_info[key] = e.target.value;
-                                                                            },
-                                                                        })
+                                                            (key != 'color') ?
+                                                                m(MCWTextField, {
+                                                                    label: key,
+                                                                    outlined: true,
+                                                                    value: vn.state.absence_info[key],
+                                                                    disabled : vn.state.can_edit,
+                                                                    oninput: function (e){
+                                                                        vn.state.absence_info[key] = e.target.value;
+                                                                    },
+                                                                })
+                                                            :
+                                                                vn.state.can_edit ?
+                                                                    m(Layout,
+                                                                        m(Layout.Row, [
+                                                                            m(Layout.Cell, {span: 12}, [
+                                                                                m('.mdc-typography--headline5', { style: {
+                                                                                    'background-color': vn.state.absence_info[key],
+                                                                                    width: '100%',
+                                                                                    height: '100%',
+                                                                                    color: vn.state.absence_info[key],
+                                                                                }}, vn.state.absence_info[key]),
+                                                                            ])
+                                                                        ])
                                                                     )
+                                                                :
+                                                                m(ColorPicker, {
+                                                                    color: vn.state.absence_info[key]
+                                                                })
+                                                        )
                                                     })
                                                 ])
                                             ])
@@ -92,8 +118,7 @@ const AbsenceType = {
                                                 ),
                                                 m(Layout.Cell, {span:5})
                                             )
-                                        :
-                                            undefined
+                                        : ''
                                     ]),
                                 ),
                             ])
@@ -103,6 +128,7 @@ const AbsenceType = {
                                 value: (vn.state.can_edit)?'edit':'save',
                                 onclick: function() {
                                     if (vn.state.can_edit === false) {
+                                        vn.state.absence_info['color'] = ColorPicker.color;
                                         // Es pot enviat el metode put!
                                         m.request({
                                             method: 'PUT',
@@ -130,6 +156,7 @@ const AbsenceType = {
                                         });
                                     }
                                     vn.state.can_edit = !vn.state.can_edit;
+                                    m.redraw();
                                 }
                             })
                         :
