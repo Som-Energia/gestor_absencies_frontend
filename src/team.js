@@ -10,7 +10,7 @@ import MCWList from './mdc/list'
 import Dialog from './mdc/dialog'
 import MCWSelectmenu from './mdc/selectmenu'
 import Snackbar from './mdc/snackbar'
-
+import get_objects from './iterate_request'
 
 var apibase = process.env.APIBASE;
 
@@ -59,7 +59,7 @@ const Team = {
                 'Authorization': token
             }
         }).
-        then(function(result) {
+        then(async function(result) {
 
             Object.keys(result).map(function(key){
                 if (key !== 'id') {
@@ -70,15 +70,10 @@ const Team = {
             console.log('team info', vn.state.team_info);
             vn.state.editing = true; // TODO: Check user permission
             
-            m.request({
-                method: 'GET',
-                url: (apibase+'/absencies/workers'),
-                headers: {
-                    'Authorization': token
-                }
-            }).
-            then(function(result) {
-                vn.state.workers_info = result.results;
+            var url = apibase+'/absencies/workers';
+            var headers = {'Authorization': token}
+            vn.state.workers_info = await get_objects(url, headers);
+
                 m.redraw();
                 console.log('worker info', vn.state.workers_info);
                 vn.state.workers_info.map(function(e){
@@ -92,15 +87,10 @@ const Team = {
                 });
                 vn.state.editing = true; // TODO: Check user permission
 
-                m.request({
-                    method: 'GET',
-                    url: (apibase+'/absencies/members?team=' + vn.attrs.teamid),
-                    headers: {
-                        'Authorization': token
-                    }
-                }).
-                then(function(result) {
-                    vn.state.members_info = result.results;
+                var url = apibase+'/absencies/members?team=' + vn.attrs.teamid;
+                var headers = {'Authorization': token}
+                vn.state.members_info = await get_objects(url, headers);
+
                     console.log('members info', vn.state.members_info);
                     vn.state.members_list = [];
                     if (vn.state.members_info !== undefined && vn.state.workers_info !== undefined) {
@@ -174,18 +164,6 @@ const Team = {
                 catch(function(error){
                     console.log(error);
                 });
-
-
-
-            }).
-            catch(function(error){
-                console.log(error);
-            });
-
-        }).
-        catch(function(error){
-            console.log(error);
-        });
 
         vn.state.editing = true; // TODO: Check user permission
 

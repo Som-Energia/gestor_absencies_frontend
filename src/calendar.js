@@ -14,7 +14,7 @@ import MCWSelectmenu from './mdc/selectmenu'
 import MCWCheckbox from './mdc/checkbox'
 import Table from './mdc/table'
 import Menu from './main'
-
+import get_objects from './iterate_request'
 
 var apibase = process.env.APIBASE;
 
@@ -25,7 +25,7 @@ function set_weekends(vn, row, month, year) {
         if (date.getDay() === 6 || date.getDay() === 0) {
             row[day-1]['id'] = 9;
             row[day-1]['name'] = 'Finde';
-            row[day-1]['color'] = '#000000';
+            row[day-1]['color'] = '#0007';
         }
         day++;
         date.setDate(day);
@@ -61,7 +61,7 @@ function set_occurrence_attributes(occurrence, id, name, color) {
     occurrence.color = color;
 }
 
-function get_occurrences(vn) {
+async function get_occurrences(vn) {
 
     vn.state.start_period = new Date(
         vn.state.month_seen.getFullYear(),
@@ -74,124 +74,112 @@ function get_occurrences(vn) {
         moment(vn.state.month_seen).endOf('month').format('D')
     )
     vn.state.object_list = [];
-    m.request({
-        method: 'GET',
-        url: apibase+'/absencies/absences?' +
-            'start_period=' + formatDate(vn.state.start_period) +
-            '&' +
-            'end_period=' + formatDate(vn.state.end_period),
-        headers: {
-            'Authorization': vn.state.token
-        }
-    }).
-    then(function(result) {
-        var row = new Array(moment(vn.state.month_seen).endOf('month').format('D'));
-        row.length = moment(vn.state.month_seen).endOf('month').format('D')
-        row.fill(new Object());
-        row = row.map(function(e){
-            return {'id': 0, 'name': '', 'color': ''};
-        });
-        var a = JSON.parse(JSON.stringify(row));
-        set_weekends(
-            vn,
-            row,
-            vn.state.start_period.getMonth(),
-            vn.state.start_period.getFullYear()
-        );
-        vn.state.object_list = [];
-        vn.state.workers.map(function(e) {
-            var morning_row = JSON.parse(JSON.stringify(row));
-            var afternoon_row = JSON.parse(JSON.stringify(row));
-            console.log(
-                'inside bucle ',
-                morning_row,
-                ' ',
-                afternoon_row
-            );
-            var occurrense_entity = new Object();
-            occurrense_entity['name'] = e.name;
-            occurrense_entity['color'] = e.color;
-            occurrense_entity['worker_id'] = e.id;
-            occurrense_entity['mornings'] = morning_row;
-            occurrense_entity['afternoon'] = afternoon_row;
-            vn.state.object_list.push(occurrense_entity);
-        });
 
-        console.log('DESPUES DE SETEJAR ', vn.state.object_list);
-        result.results.map( function(e) {
-            var start_day = '';
-            var end_day = '';
-            var actual_object = find_row(vn.state.object_list, vn.state.workers, e.worker);
-            var absencetype = vn.state.absencetype.find( x => x.id === e.absence_type );
-            if (moment(e.start_time).format('D') == moment(e.end_time).format('D') && moment(e.start_time).format('M') == moment(e.end_time).format('M')) {
-                start_day = moment(e.start_time).format('D')-1;
-                if (new Date(e.start_time).getHours() == 9) {
-                    set_occurrence_attributes(actual_object['mornings'][start_day], e.absence_type, absencetype.name, absencetype.color)
-                }
-                if (new Date(e.end_time).getHours() == 17) {
-                    set_occurrence_attributes(actual_object['afternoon'][start_day], e.absence_type, absencetype.name, absencetype.color)
-                }
-            }
-            else if (e.start_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0) && e.end_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
-                start_day = new Date(e.start_time).getDate() - 1;
-                end_day = new Date(e.end_time).getDate();
-                if (new Date(e.start_time).getHours() == 9) {
-                    set_occurrence_attributes(actual_object['mornings'][start_day], e.absence_type, absencetype.name, absencetype.color)
-                }
-                set_occurrence_attributes(actual_object['afternoon'][start_day], e.absence_type, absencetype.name, absencetype.color)
-                for (var i = start_day+1; i < end_day-1; i++){
-                    console.log('dins 1er if ', i);
-                    set_occurrence_attributes(actual_object['mornings'][i], e.absence_type, absencetype.name, absencetype.color)
-                    set_occurrence_attributes(actual_object['afternoon'][i], e.absence_type, absencetype.name, absencetype.color)
-                }
-                set_occurrence_attributes(actual_object['mornings'][end_day-1], e.absence_type, absencetype.name, absencetype.color)
-                if (new Date(e.end_time).getHours() == 17) {
-                    set_occurrence_attributes(actual_object['afternoon'][end_day-1], e.absence_type, absencetype.name, absencetype.color)
-                }
-            }
-            else if (e.start_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
-                start_day = new Date(e.start_time).getDate() - 1;
-                end_day = moment(vn.state.month_seen).endOf('month').format('D');
-                if (new Date(e.start_time).getHours() == 9) {
-                    set_occurrence_attributes(actual_object['mornings'][start_day], e.absence_type, absencetype.name, absencetype.color)
-                }
-                set_occurrence_attributes(actual_object['afternoon'][start_day], e.absence_type, absencetype.name, absencetype.color)
-                for (var i = start_day+1; i < end_day-1; i++){
-                    console.log('dins 2n if ', i);
-                    set_occurrence_attributes(actual_object['mornings'][i], e.absence_type, absencetype.name, absencetype.color)
-                    set_occurrence_attributes(actual_object['afternoon'][i], e.absence_type, absencetype.name, absencetype.color)
-                }
-                set_occurrence_attributes(actual_object['mornings'][end_day-1], e.absence_type, absencetype.name, absencetype.color)
-                set_occurrence_attributes(actual_object['afternoon'][end_day-1], e.absence_type, absencetype.name, absencetype.color)
-            }
-            else if (e.end_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
-                start_day = 0;
-                end_day = new Date(e.end_time).getDate();
-                set_occurrence_attributes(actual_object['mornings'][start_day], e.absence_type, absencetype.name, absencetype.color)
-                set_occurrence_attributes(actual_object['afternoon'][start_day], e.absence_type, absencetype.name, absencetype.color)
-                for (var i = start_day+1; i < end_day-1; i++){
-                    console.log('dins 3er if ', i);
-                    set_occurrence_attributes(actual_object['mornings'][i], e.absence_type, absencetype.name, absencetype.color)
-                    set_occurrence_attributes(actual_object['afternoon'][i], e.absence_type, absencetype.name, absencetype.color)
-                }
-                set_occurrence_attributes(actual_object['mornings'][end_day-1], e.absence_type, absencetype.name, absencetype.color)
-                if (new Date(e.end_time).getHours() == 17) {
-                    set_occurrence_attributes(actual_object['afternoon'][end_day-1], e.absence_type, absencetype.name, absencetype.color)
-                }
-            }
-        });
-        vn.state.selected_object_list = vn.state.object_list;
-        
-        m.redraw();
-    }).
-    catch(function(error){
-        console.log(error);
+    var url = apibase+'/absencies/absences?' +
+        'start_period=' + formatDate(vn.state.start_period) +
+        '&' +
+        'end_period=' + formatDate(vn.state.end_period);
+    
+    var headers = {'Authorization': vn.state.token}
+
+    vn.state.occurrences = await get_objects(url, headers);
+    console.log('after await', vn.state.occurrences);
+
+    var row = new Array(moment(vn.state.month_seen).endOf('month').format('D'));
+    row.length = moment(vn.state.month_seen).endOf('month').format('D')
+    row.fill(new Object());
+    row = row.map(function(e){
+        return {'id': 0, 'name': '', 'color': ''};
+    });
+    var a = JSON.parse(JSON.stringify(row));
+    set_weekends(
+        vn,
+        row,
+        vn.state.start_period.getMonth(),
+        vn.state.start_period.getFullYear()
+    );
+    vn.state.object_list = [];
+    vn.state.workers.map(function(e) {
+        var morning_row = JSON.parse(JSON.stringify(row));
+        var afternoon_row = JSON.parse(JSON.stringify(row));
+        var occurrense_entity = new Object();
+        occurrense_entity['name'] = e.name;
+        occurrense_entity['color'] = e.color;
+        occurrense_entity['worker_id'] = e.id;
+        occurrense_entity['mornings'] = morning_row;
+        occurrense_entity['afternoon'] = afternoon_row;
+        vn.state.object_list.push(occurrense_entity);
     });
 
+    vn.state.occurrences.map( function(e) {
+        var start_day = '';
+        var end_day = '';
+        var actual_object = find_row(vn.state.object_list, vn.state.workers, e.worker);
+        var absencetype = vn.state.absencetype.find( x => x.id === e.absence_type );
+        if (moment(e.start_time).format('D') == moment(e.end_time).format('D') && moment(e.start_time).format('M') == moment(e.end_time).format('M')) {
+            start_day = moment(e.start_time).format('D')-1;
+            if (new Date(e.start_time).getHours() == 9) {
+                set_occurrence_attributes(actual_object['mornings'][start_day], e.absence_type, absencetype.name, absencetype.color)
+            }
+            if (new Date(e.end_time).getHours() == 17) {
+                set_occurrence_attributes(actual_object['afternoon'][start_day], e.absence_type, absencetype.name, absencetype.color)
+            }
+        }
+        else if (e.start_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0) && e.end_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
+            start_day = new Date(e.start_time).getDate() - 1;
+            end_day = new Date(e.end_time).getDate();
+            if (new Date(e.start_time).getHours() == 9) {
+                set_occurrence_attributes(actual_object['mornings'][start_day], e.absence_type, absencetype.name, absencetype.color)
+            }
+            set_occurrence_attributes(actual_object['afternoon'][start_day], e.absence_type, absencetype.name, absencetype.color)
+            for (var i = start_day+1; i < end_day-1; i++){
+                //console.log('dins 1er if ', i);
+                set_occurrence_attributes(actual_object['mornings'][i], e.absence_type, absencetype.name, absencetype.color)
+                set_occurrence_attributes(actual_object['afternoon'][i], e.absence_type, absencetype.name, absencetype.color)
+            }
+            set_occurrence_attributes(actual_object['mornings'][end_day-1], e.absence_type, absencetype.name, absencetype.color)
+            if (new Date(e.end_time).getHours() == 17) {
+                set_occurrence_attributes(actual_object['afternoon'][end_day-1], e.absence_type, absencetype.name, absencetype.color)
+            }
+        }
+        else if (e.start_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
+            start_day = new Date(e.start_time).getDate() - 1;
+            end_day = moment(vn.state.month_seen).endOf('month').format('D');
+            if (new Date(e.start_time).getHours() == 9) {
+                set_occurrence_attributes(actual_object['mornings'][start_day], e.absence_type, absencetype.name, absencetype.color)
+            }
+            set_occurrence_attributes(actual_object['afternoon'][start_day], e.absence_type, absencetype.name, absencetype.color)
+            for (var i = start_day+1; i < end_day-1; i++){
+                //console.log('dins 2n if ', i);
+                set_occurrence_attributes(actual_object['mornings'][i], e.absence_type, absencetype.name, absencetype.color)
+                set_occurrence_attributes(actual_object['afternoon'][i], e.absence_type, absencetype.name, absencetype.color)
+            }
+            set_occurrence_attributes(actual_object['mornings'][end_day-1], e.absence_type, absencetype.name, absencetype.color)
+            set_occurrence_attributes(actual_object['afternoon'][end_day-1], e.absence_type, absencetype.name, absencetype.color)
+        }
+        else if (e.end_time.includes(formatDate(vn.state.month_seen).substring(0,7), 0)) {
+            start_day = 0;
+            end_day = new Date(e.end_time).getDate();
+            set_occurrence_attributes(actual_object['mornings'][start_day], e.absence_type, absencetype.name, absencetype.color)
+            set_occurrence_attributes(actual_object['afternoon'][start_day], e.absence_type, absencetype.name, absencetype.color)
+            for (var i = start_day+1; i < end_day-1; i++){
+                //console.log('dins 3er if ', i);
+                set_occurrence_attributes(actual_object['mornings'][i], e.absence_type, absencetype.name, absencetype.color)
+                set_occurrence_attributes(actual_object['afternoon'][i], e.absence_type, absencetype.name, absencetype.color)
+            }
+            set_occurrence_attributes(actual_object['mornings'][end_day-1], e.absence_type, absencetype.name, absencetype.color)
+            if (new Date(e.end_time).getHours() == 17) {
+                set_occurrence_attributes(actual_object['afternoon'][end_day-1], e.absence_type, absencetype.name, absencetype.color)
+            }
+        }
+    });
+    vn.state.selected_object_list = vn.state.object_list;
+    
+    m.redraw();
 }
 
 const Calendar = {
-    oncreate: function(vn){
+    oncreate: async function(vn){
         vn.state.year = (new Date()).getFullYear();
         vn.state.month = (new Date()).getMonth();
         if(Auth.token === false){
@@ -214,84 +202,52 @@ const Calendar = {
         vn.state.workers_result = [];
         vn.state.type_filter = 'worker';
 
-        m.request({
-            method: 'GET',
-            url: apibase+'/absencies/workers',
-            headers: {
-                'Authorization': vn.state.token
-            }
-        }).
-        then(function(result) {
-            vn.state.workers_result = result.results;
+        var url = apibase+'/absencies/workers';
+        var headers = {
+            'Authorization': vn.state.token
+        };
+        vn.state.workers_result = await get_objects(url, headers);
             
-            vn.state.workers = vn.state.workers_result.map(function(e){
-                return {
-                    'name': e.first_name + ' ' + e.last_name,
-                    'id': e.id
-                }
-            });
-
-                m.request({
-                    method: 'GET',
-                    url: apibase+'/absencies/absencetype',
-                    headers: {
-                        'Authorization': vn.state.token
-                    }
-                }).
-                then(function(result) {
-                    vn.state.absencetype = result.results
-
-
-                    get_occurrences(vn);
-                }).
-                catch(function(error){
-                    console.log(error);
-                });            
-
-
-
-        }).
-        catch(function(error){
-            console.log(error);
-        }); 
-
-        m.request({
-            method: 'GET',
-            url: apibase+'/absencies/teams',
-            headers: {
-                'Authorization': vn.state.token
+        vn.state.workers = vn.state.workers_result.map(function(e){
+            return {
+                'name': e.first_name + ' ' + e.last_name,
+                'id': e.id
             }
-        }).
-        then(function(result) {
-            vn.state.teams = result.results.map(function(e){
-                return {'name': e.name, 'id': e.id};
-            });
-        }).
-        catch(function(error){
-            console.log(error);
         });
 
-        m.request({
-            method: 'GET',
-            url: apibase+'/absencies/members',
-            headers: {
-                'Authorization': vn.state.token
-            }
-        }).
-        then(function(result) {
-            vn.state.members = result.results.map(function(e){
-                return {'team': e.team, 'worker': e.worker};
-            });
-        }).
-        catch(function(error){
-            console.log(error);
+        var url = apibase+'/absencies/absencetype';
+        var headers = {
+            'Authorization': vn.state.token
+        };
+        vn.state.absencetype = await get_objects(url, headers);
+        
+        await get_occurrences(vn);
+        console.log('AFTER GET_OCCURRENCES', vn.state.occurrences, vn.state.absencetype);
+
+        var url = apibase+'/absencies/teams';
+        var headers = {
+            'Authorization': vn.state.token
+        };
+        vn.state.teams_response = await get_objects(url, headers);
+
+        vn.state.teams = vn.state.teams_response.map(function(e){
+            return {'name': e.name, 'id': e.id};
         });
 
+        var url = apibase+'/absencies/members';
+        var headers = {
+            'Authorization': vn.state.token
+        };
+        vn.state.members_response = await get_objects(url, headers);
 
+        vn.state.members = vn.state.members_response.map(function(e){
+            return {'team': e.team, 'worker': e.worker};
+        });
 
     },
     oninit: function(vn) {
         vn.state.occurrences = [];
+        vn.state.selected_object_list = [];
         if(Auth.token === false){
             m.route.set('/login');
             return false;

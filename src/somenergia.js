@@ -7,12 +7,12 @@ import MCWList from './mdc/list'
 import Layout from './mdc/layout'
 import MCWCard from './mdc/card'
 import MCWTextField from './mdc/textfield'
-
+import get_objects from './iterate_request'
 
 var apibase = process.env.APIBASE;
 
 const SomEnergia = {
-    oninit: function(vn) {
+    oninit: async function(vn) {
         vn.state.vacation_policies = [];
         vn.state.absence_types = []; 
         vn.state.selected_vacationpolicy = [];
@@ -25,43 +25,33 @@ const SomEnergia = {
         }
         vn.state.auth = Auth;
         const token = Auth.token;
-        m.request({
-            method: 'GET',
-            url: apibase+'/absencies/vacationpolicy',
-            headers: {
-                'Authorization': token
-            }
-        }).
-        then(function(result) {
-            vn.state.vacation_policies = result.results.map(function(e){
-                return {'name': e.name, 'link': '/vacationpolicy/' + e.id};
-            })
-            vn.state.selected_vacationpolicy = vn.state.vacation_policies;
-        }).
-        catch(function(error){
-            console.log(error);
-        });
-        m.request({
-            method: 'GET',
-            url: apibase+'/absencies/absencetype',
-            headers: {
-                'Authorization': token
-            }
-        }).
-        then(function(result) {
-            vn.state.absence_type = result.results.map(function(e){
-                return {'name': e.name, 'link': '/absencetype/' + e.id};
-            });
-            console.log('vn.state.absence_type ', vn.state.absence_type);
-            vn.state.selected_absencetype = vn.state.absence_type;
-            vn.state.can_edit = true;
-        }).
-        catch(function(error){
-            console.log(error);
-        });
-        vn.state.option = 'vacation_policy';
-    },
 
+        var url = apibase+'/absencies/vacationpolicy';
+
+        var headers = {'Authorization': token}
+
+        vn.state.vacation_pocilies_result = await get_objects(url, headers);
+
+        vn.state.vacation_policies = vn.state.vacation_pocilies_result.map(function(e){
+            return {'name': e.name, 'link': '/vacationpolicy/' + e.id};
+        })
+        vn.state.selected_vacationpolicy = vn.state.vacation_policies;
+
+        var url = apibase+'/absencies/absencetype';
+
+        var headers = {'Authorization': token}
+
+        vn.state.absence_type_result = await get_objects(url, headers);
+
+        vn.state.absence_type = vn.state.absence_type_result.map(function(e){
+            return {'name': e.name, 'link': '/absencetype/' + e.id};
+        });
+        console.log('vn.state.absence_type ', vn.state.absence_type);
+        vn.state.selected_absencetype = vn.state.absence_type;
+        vn.state.can_edit = true;
+        vn.state.option = 'vacation_policy';
+        m.redraw();
+    },
     view: function(vn) {
         return (Auth.token === false) ?
             m('', '')

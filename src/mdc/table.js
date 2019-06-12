@@ -31,7 +31,7 @@ const Table = {
         }
         console.log(
             'PREPARAT PER PINTAR ',
-            vn.state.absences
+            vn.attrs.absences
         );
     },
     view: (vn) =>
@@ -45,7 +45,7 @@ const Table = {
                     )
                 })
             ),
-            vn.state.absences.map(function(e) {
+            vn.attrs.absences.map(function(e) {
                 return [ m('tr.worker-item',
                     m('td.worker', e['name']),
                     e['mornings'].map(function(element, index) {

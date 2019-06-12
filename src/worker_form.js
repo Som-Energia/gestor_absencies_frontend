@@ -6,12 +6,12 @@ import MCWTextField from './mdc/textfield'
 import MCWSelectmenu from './mdc/selectmenu'
 import MCWButton from './mdc/button'
 import Snackbar from './mdc/snackbar'
-
+import get_objects from './iterate_request'
 
 var apibase = process.env.APIBASE;
 
 const WorkerForm = {
-    oninit: function(vn){
+    oninit: async function(vn){
         vn.state.worker = {};
         vn.state.elements_list = [];
         if(Auth.token === false){
@@ -21,23 +21,18 @@ const WorkerForm = {
         vn.state.snackbar = {};
         vn.state.snackbar_message = '';
         const token = Auth.token;
-        m.request({
-            method: 'GET',
-            url: apibase+'/absencies/vacationpolicy',
-            headers: {
-                'Authorization': token
-            }
-        }).
-        then(function(result) {
-            vn.state.elements_list = result.results.map(function(e){
-                return {'value': e.id, 'text': e.name};
-            })
 
-            vn.state.worker['vacation_policy'] = vn.state.elements_list.length > 0 ? vn.state.elements_list[0] : '';
-        }).
-        catch(function(error){
-            console.log(error);
-        });
+        var url = apibase+'/absencies/vacationpolicy';
+
+        var headers = {'Authorization': token}
+
+        vn.state.vacationpolicy_result = await get_objects(url, headers);
+
+        vn.state.elements_list = vn.state.vacationpolicy_result.map(function(e){
+            return {'value': e.id, 'text': e.name};
+        })
+
+        vn.state.worker['vacation_policy'] = vn.state.elements_list.length > 0 ? vn.state.elements_list[0] : '';
     },
     view: function(vn) {
         return m('.worker_form', [

@@ -7,12 +7,12 @@ import MWCFab from './mdc/fab'
 import Layout from './mdc/layout'
 import MCWCard from './mdc/card'
 import MCWTextField from './mdc/textfield'
-
+import get_objects from './iterate_request'
 
 var apibase = process.env.APIBASE;
 
 const ET = {
-    oninit: function(vn) {
+    oninit: async function(vn) {
         vn.state.members = [];
         vn.state.teams = [];
         vn.state.selected_members = [];
@@ -23,44 +23,34 @@ const ET = {
         }
         vn.state.auth = Auth;
         const token = Auth.token;
-        m.request({
-            method: 'GET',
-            url: apibase+'/absencies/workers',
-            headers: {
-                'Authorization': token
-            }
-        }).
-        then(function(result) {
-            vn.state.members = result.results.map(function(e){
-                return {
-                    'name': e.first_name + ' ' + e.last_name,
-                    'link': '/member/' + e.id,
-                };
-            })
-            vn.state.selected_members = vn.state.members;
-            console.log('list ', vn.state.members);
-            console.log('selected list ', vn.state.selected_members);
-        }).
-        catch(function(error){
-            console.log(error);
+
+        var url = apibase+'/absencies/workers';
+
+        var headers = {'Authorization': token}
+
+        vn.state.workers_result = await get_objects(url, headers);
+
+        vn.state.members = vn.state.workers_result.map(function(e){
+            return {
+                'name': e.first_name + ' ' + e.last_name,
+                'link': '/member/' + e.id,
+            };
+        })
+        vn.state.selected_members = vn.state.members;
+
+        var url = apibase+'/absencies/teams';
+
+        var headers = {'Authorization': token}
+
+        vn.state.teams_result = await get_objects(url, headers);
+
+        vn.state.teams = vn.state.teams_result.map(function(e){
+            return {'name': e.name, 'link': '/team/' + e.id};
         });
-        m.request({
-            method: 'GET',
-            url: apibase+'/absencies/teams',
-            headers: {
-                'Authorization': token
-            }
-        }).
-        then(function(result) {
-            vn.state.teams = result.results.map(function(e){
-                return {'name': e.name, 'link': '/team/' + e.id};
-            });
-            vn.state.selected_teams = vn.state.teams;
-        }).
-        catch(function(error){
-            console.log(error);
-        });
+        vn.state.selected_teams = vn.state.teams;
+
         vn.state.option = 'members';
+        m.redraw();
     },
     view: function(vn) {
         return (Auth.token === false) ?
