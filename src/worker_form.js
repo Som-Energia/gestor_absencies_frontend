@@ -1,4 +1,5 @@
 import m from 'mithril';
+import moment from 'moment';
 import Auth from './models/auth'
 import Layout from './mdc/layout'
 import MCWCard from './mdc/card'
@@ -6,6 +7,7 @@ import MCWTextField from './mdc/textfield'
 import MCWSelectmenu from './mdc/selectmenu'
 import MCWButton from './mdc/button'
 import Snackbar from './mdc/snackbar'
+import DatePicker from './mdc/datepicker'
 import get_objects from './iterate_request'
 
 var apibase = process.env.APIBASE;
@@ -32,7 +34,8 @@ const WorkerForm = {
             return {'value': e.id, 'text': e.name};
         })
 
-        vn.state.worker['vacation_policy'] = vn.state.elements_list.length > 0 ? vn.state.elements_list[0] : '';
+        vn.state.worker['vacation_policy'] = vn.state.elements_list.length > 0 ? vn.state.elements_list[0].value : '';
+        m.redraw();
     },
     view: function(vn) {
         return m('.worker_form', [
@@ -117,6 +120,38 @@ const WorkerForm = {
                                                     vn.state.worker['category'] = e.target.value
                                                 },
                                             })
+                                        )
+                                    )
+                                ),
+                                m(Layout,
+                                    m(Layout.Row,
+                                        m(Layout.Cell, {span:12},
+                                            m(MCWTextField, {
+                                                label: "Hours",
+                                                outlined: true,
+                                                onblur: function (e){
+                                                    vn.state.worker['working_week'] = e.target.value
+                                                },
+                                            })
+                                        )
+                                    )
+                                ),
+                                m(Layout,
+                                    m(Layout.Row,
+                                        m(Layout.Cell, {span:12},
+                                            m(DatePicker, 
+                                                {id: 'contract_date',
+                                                label: 'Contract date',
+                                                help: 'Contract date',
+                                                value: undefined,
+                                                outlined: true,
+                                                future: moment().add(20, 'years'),
+                                                onchange: function(newvalue) {
+                                                    vn.state.worker['contract_date'] = newvalue.format("YYYY-MM-DD HH:mm:ss");
+                                                },
+                                                boxed: true,
+                                                autoclose: true,}
+                                            )
                                         )
                                     )
                                 ),

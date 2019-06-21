@@ -37,7 +37,7 @@ const SomEnergia = {
         })
         vn.state.selected_vacationpolicy = vn.state.vacation_policies;
 
-        var url = apibase+'/absencies/absencetype';
+        var url = apibase+'/absencies/absencetype'+(vn.state.auth.is_admin ? '' : '?global_date=False');
 
         var headers = {'Authorization': token}
 

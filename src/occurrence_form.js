@@ -30,7 +30,7 @@ const OccurrenceForm = {
         vn.state.absence_info['start_afternoon'] = true;
         vn.state.absence_info['end_morning'] = true;
         vn.state.absence_info['end_afternoon'] = true;
-        vn.state.absence_info['worker'] = Auth.user_id;
+        vn.state.absence_info['worker'] = [Auth.user_id];
         const token = Auth.token;
 
         var url = apibase+'/absencies/absencetype';
@@ -42,13 +42,13 @@ const OccurrenceForm = {
         vn.state.elements_list = vn.state.absencetype_result.map(function(e){
             return {'value': e.id, 'text': e.name};
         })
-        vn.state.absence_info['absence_type'] = vn.state.elements_list.length > 0 ? vn.state.elements_list[0] : '';
-
+        vn.state.absence_info['absence_type'] = vn.state.elements_list.length > 0 ? vn.state.elements_list[0].value : '';
+        m.redraw();
         console.log('ABSENCE TYPE ', vn.state.elements_list);
     },
     view: function(vn) {
         return (Auth.token === false) ?
-            m('', '')
+            m('', '.')
             :
             m('.occurrence_form', [
                 m(Layout,

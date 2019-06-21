@@ -177,7 +177,7 @@ const Team = {
                     m('.drawer-main-content', [
                         m(Layout,
                             m(Layout.Row, [
-                                m(Layout.Cell, {span:12},
+                                m(Layout.Cell, {span:11},
                                 m(MCWCard, { header: m('h2','Team') }, [
                                         m(Layout,
                                             m('.team_info', [

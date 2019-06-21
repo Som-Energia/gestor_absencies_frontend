@@ -36,60 +36,50 @@ async function get_occurrences(vn) {
 
     vn.state.occurrences = await get_objects(url, headers);
 
+    var url = apibase+'/absencies/absencetype'
+
+    var headers = {
+            'Authorization': vn.state.token
+    };
+
+    vn.state.absencetype_result = await get_objects(url, headers);
+
+    console.log(vn.state.absencetype_result);
+    vn.state.absence_type = vn.state.absencetype_result.map(function(e){
+        return {'name': e.name, 'id': e.id};
+    });
+    vn.state.occurrences.map(function(e) {
+        var start_occurrence = moment(e.start_time);
+        var end_occurrence = moment(e.end_time);
+        vn.state.vacation_spend +=
+            start_occurrence.format('H') == 9 && end_occurrence.format('H') == 17 ?
+                    moment.duration(end_occurrence.diff(start_occurrence)).days()+1
+                :
+                    start_occurrence.format('H') == end_occurrence.format('H') ?
+                        moment.duration(end_occurrence.diff(start_occurrence)).days()
+                    :
+                        moment.duration(end_occurrence.diff(start_occurrence)).days()+0.5
+        for ( start_occurrence ; end_occurrence.isSameOrAfter(start_occurrence) ; start_occurrence.add(1, 'days') ) {
+            var absencetype_name = vn.state.absencetype_result.find( x => e.absence_type == x.id ).name;
+            vn.state.occurrence_days.push({
+                'absencetype_id': e.absence_type,
+                'absencetype_name': absencetype_name,
+                'day': start_occurrence.format('YYYY-MM-DD')
+            })
+        }
+    });
+
     m.request({
         method: 'GET',
-        url: apibase+'/absencies/absencetype',
+        url: (apibase + '/absencies/workers/' + vn.state.auth.user_id),
         headers: {
             'Authorization': vn.state.token
         }
     }).
-    then(function(absencetype_result) {
-        
-        m.request({
-            method: 'GET',
-            url: (apibase + '/absencies/workers/' + vn.state.auth.user_id),
-            headers: {
-                'Authorization': vn.state.token
-            }
-        }).
-        then(function(worker_result) {
-            vn.state.holidays = worker_result.holidays;
-
-            vn.state.absence_type = absencetype_result.results.map(function(e){
-                return {'name': e.name, 'id': e.id};
-            });
-            //vn.state.occurrences = occurrence_result.results;
-            //console.log('SOME LIST', vn.state.occurrences, vn.state.absence_type);
-
-            vn.state.occurrences.map(function(e) {
-
-                var start_occurrence = moment(e.start_time);
-                var end_occurrence = moment(e.end_time);
-                vn.state.vacation_spend +=
-                    start_occurrence.format('H') == 9 && end_occurrence.format('H') == 17 ?
-                            moment.duration(end_occurrence.diff(start_occurrence)).days()+1
-                        :
-                            start_occurrence.format('H') == end_occurrence.format('H') ?
-                                moment.duration(end_occurrence.diff(start_occurrence)).days()
-                            :
-                                moment.duration(end_occurrence.diff(start_occurrence)).days()+0.5
-
-                for ( start_occurrence ; end_occurrence.isSameOrAfter(start_occurrence) ; start_occurrence.add(1, 'days') ) {
-                    var absencetype_name = absencetype_result.results.find( x => e.absence_type == x.id ).name;
-                    vn.state.occurrence_days.push({
-                        'absencetype_id': e.absence_type,
-                        'absencetype_name': absencetype_name,
-                        'day': start_occurrence.format('YYYY-MM-DD')
-                    })
-                }
-                //console.log(vn.state.occurrence_days);
-            })
-            vn.state.semaphore = true;
-            m.redraw();
-        }).
-        catch(function(error){
-            console.log(error);
-        });
+    then(function(worker_result) {
+        vn.state.holidays = worker_result.holidays;
+        vn.state.semaphore = true;
+        m.redraw();
     }).
     catch(function(error){
         console.log(error);
@@ -306,9 +296,20 @@ const Absences = {
                     m(MWCFab, {
                         value: 'add',
                         onclick: function() {
-                                m.route.set('/occurrence/form');
+                            m.route.set('/occurrence/form');
                         }
                     }),
+                    (vn.state.auth.is_admin) ?
+                        m(MWCFab, {
+                            value: 'calendar_today',
+                            style: {
+                                bottom: '5rem',
+                            },
+                            onclick: function() {
+                                m.route.set('/globaldate/form');
+                            }
+                        })
+                    : '',
                         m(Dialog, {
                             id: 'remove_occurrence',
                             header: 'Remove Occurrence',

@@ -31,6 +31,7 @@ import TeamForm from './team_form'
 import AbsenceTypeForm from './absencetype_form'
 import Calendar from './calendar'
 import Absences from './absences'
+import GlobalDateForm from './globaldate_form'
 
 const Menu = {
     oninit: function(vn){
@@ -74,6 +75,7 @@ m.route(document.getElementById('app'), "/login", {
     '/vacationpolicy_form': VacationPolicyForm,
     '/absencetype_form': AbsenceTypeForm,
     '/occurrence/form': OccurrenceForm,
+    '/globaldate/form': GlobalDateForm
 });
 
 export default Menu
