@@ -45,6 +45,11 @@ const Member = {
             outer: {},
             inner: {},
         };
+        vn.state.dialog_change_password = {
+            backdrop: true,
+            outer: {},
+            inner: {},
+        };
         m.request({
             method: 'GET',
             url: (apibase+'/absencies/workers/' + vn.attrs.memberid),
@@ -160,16 +165,24 @@ const Member = {
                                         ),
                                         vn.state.can_edit ?
                                             m(Layout.Row,
-                                                m(Layout.Cell, {span:5}),
+                                                m(Layout.Cell, {span:4}),
                                                 m(Layout.Cell, {span:2},
                                                     m(MCWButton, {
                                                         raised: true,
                                                         onclick: function(){
                                                             vn.state.dialog_remove_worker.outer.open();
                                                         }
-                                                    }, 'Remove Worker'),
+                                                    }, 'Eliminar'),
                                                 ),
-                                                m(Layout.Cell, {span:5})
+                                                m(Layout.Cell, {span:2},
+                                                    m(MCWButton, {
+                                                        raised: true,
+                                                        onclick: function(){
+                                                            vn.state.dialog_change_password.outer.open();
+                                                        }
+                                                    }, 'Canviar la contrasenya'),
+                                                ),
+                                                m(Layout.Cell, {span:4})
                                             ) : ''
                                     ]),
                                 ),
@@ -260,6 +273,76 @@ const Member = {
                             backdrop: vn.state.dialog_remove_worker.backdrop,
                         }, [
                             m('.', 'Estas segur que vols eliminar aquest treballador?')
+                        ]),
+                        m(Dialog, {
+                            id: 'change_password',
+                            header: 'Canviar contrasenya',
+                            model: vn.state.dialog_change_password.outer,
+                            content: 'Quina contrasenya vols posar?',
+                            buttons: [{
+                                text: 'Canviar la contrasenya',
+                                onclick: function(){
+                                    if (vn.state.new_password != vn.state.new_password_repetition) {
+                                        vn.state.snackbar_message = 'Els dos camps no coincideixen';
+                                        vn.state.snackbar.open();
+                                    }
+                                    else {
+                                        m.request({
+                                            method: 'PUT',
+                                            url: (apibase+'/absencies/workers/' + vn.attrs.memberid),
+                                            headers: {
+                                                'Authorization': Auth.token
+                                            },
+                                            data: {
+                                                'username': vn.state.member_info['username'],
+                                                'password': vn.state.new_password
+                                            }
+                                        }).
+                                        then(function(result) {
+                                            vn.state.snackbar.close();
+                                            vn.state.dialog_change_password.outer.close();
+                                        }).
+                                        catch(function(error){
+                                            vn.state.snackbar_message = error.message;
+                                            vn.state.snackbar.open();
+                                            console.log(error);
+                                        });    
+                                    }
+                                }
+                            },{
+                                text: 'Cancel·lar',
+                                onclick: function(){
+                                    console.log('cancel dialog');
+                                    vn.state.dialog_change_password.outer.close();
+                                }
+                            }],
+                            onaccept: function(ev) {
+                                ev.cancelBubble = true;
+                                vn.state.dialog_remove_worker.innerexit = 'Accepted';
+                                m.redraw();
+                            },
+                            onclose: function(ev) {
+                                vn.state.self.dialog_remove_worker.innerexit = 'Rejected';
+                                m.redraw();
+                            },
+                            backdrop: vn.state.dialog_remove_worker.backdrop,
+                        }, [
+                                m(MCWTextField, {
+                                    type: 'password',
+                                    label: 'Password',
+                                    outlined: true,
+                                    onblur: function(e) {
+                                        vn.state.new_password = e.target.value
+                                    },
+                                }),
+                                m(MCWTextField, {
+                                    type: 'password',
+                                    label: 'Password',
+                                    outlined: true,
+                                    onblur: function(e) {
+                                        vn.state.new_password_repetition = e.target.value
+                                    },
+                                })
                         ]),
                         m(Snackbar, {
                             model: vn.state.snackbar,
