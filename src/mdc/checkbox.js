@@ -10,12 +10,16 @@ const MCWCheckbox = {
         m('.mdc-form-field', 
             m('.mdc-checkbox',
                 m('input[type=checkbox].mdc-checkbox__native-control', vn.attrs),
-                m('.mdc-checkbox__background',
-                    m('svg.mdc-checkbox__checkmark',
-                        
-                    )
-                )
-            ),
+                m('.mdc-checkbox__background', [
+                    m('svg.mdc-checkbox__checkmark', {
+                        viewBox: '0 0 24 24',
+                    }, [
+                        m('path.mdc-checkbox__checkmark-path', {
+                            fill: 'none',
+                            d: 'M1.73,12.91 8.1,19.28 22.79,4.59',
+                        }),
+                    ]),
+                ])            ),
             m('label', {'for': vn.attrs.id}, vn.attrs.label)
         )
 };

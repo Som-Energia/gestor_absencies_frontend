@@ -1,4 +1,5 @@
 import m from 'mithril';
+import moment from 'moment';
 import Menu from './main'
 import Auth from './models/auth'
 import Layout from './mdc/layout'
@@ -39,7 +40,15 @@ const Member = {
 
             Object.keys(result).map(function(key){
                 if (key !== 'id') {
-                    vn.state.member_info[key] = result[key];   
+                    if (key == 'contract_date') {
+                        vn.state.member_info[key] = moment(result[key]).format('YYYY/MM/DD');
+                    }
+                    else {
+                        vn.state.member_info[key] = result[key];
+                    }
+                }
+                else {
+                    vn.state.worker_id = result[key];
                 }
             });
             m.redraw();
@@ -101,38 +110,46 @@ const Member = {
                                 ),
                             ])
                         ),
-                        m(MWCFab, {
-                            value: (!vn.state.can_edit)?'edit':'save',
-                            onclick: function() {
-                                if (vn.state.can_edit) {
-                                    m.request({
-                                        method: 'PUT',
-                                        url: (apibase+'/absencies/workers/' + vn.attrs.memberid),
-                                        headers: {
-                                            'Authorization': Auth.token,
-                                            'Content-type': 'application/json',
-                                        },
-                                        data: vn.state.member_info
-                                    }).
-                                    then(function(result) {
-
-                                        Object.keys(result).map(function(key){
-                                            if (key !== 'id') {
-                                                vn.state.member_info[key] = result[key];   
-                                            }
+                        ( vn.state.auth.user_id == vn.state.worker_id || vn.state.auth.is_admin ?
+                            m(MWCFab, {
+                                value: (!vn.state.can_edit)?'edit':'save',
+                                onclick: function() {
+                                    if (vn.state.can_edit) {
+                                        vn.state.member_info['contract_date'] = moment(vn.state.member_info['contract_date']).format('YYYY-MM-DDThh:mm:ss')
+                                        m.request({
+                                            method: 'PUT',
+                                            url: (apibase+'/absencies/workers/' + vn.attrs.memberid),
+                                            headers: {
+                                                'Authorization': Auth.token,
+                                                'Content-type': 'application/json',
+                                            },
+                                            data: vn.state.member_info
+                                        }).
+                                        then(function(result) {
+                                            Object.keys(result).map(function(key){
+                                                if (key !== 'id') {
+                                                    if (key == 'contract_date') {
+                                                        vn.state.member_info[key] = moment(result[key]).format('YYYY/MM/DD');
+                                                    }
+                                                    else {
+                                                        vn.state.member_info[key] = result[key];
+                                                    }
+                                                }
+                                            });
+                                            vn.state.snackbar.close();
+                                            m.redraw();
+                                        }).
+                                        catch(function(error){
+                                            vn.state.snackbar_message = error.message;
+                                            vn.state.snackbar.open();
+                                            console.log(error);
                                         });
-                                        vn.state.snackbar.close();
-                                        m.redraw();
-                                    }).
-                                    catch(function(error){
-                                        vn.state.snackbar_message = error.message;
-                                        vn.state.snackbar.open();
-                                        console.log(error);
-                                    });
+                                    }
+                                    vn.state.can_edit = !vn.state.can_edit;
                                 }
-                                vn.state.can_edit = !vn.state.can_edit;
-                            }
-                        }),
+                            })
+                        :
+                            ''),
                         m(Dialog, {
                             id: 'remove_worker',
                             header: 'Remove Worker',

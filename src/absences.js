@@ -44,28 +44,32 @@ async function get_occurrences(vn) {
 
     vn.state.absencetype_result = await get_objects(url, headers);
 
-    console.log(vn.state.absencetype_result);
+    console.log('occurrences --->', vn.state.occurrences);
     vn.state.absence_type = vn.state.absencetype_result.map(function(e){
-        return {'name': e.name, 'id': e.id};
+        return {'name': e.name, 'id': e.id, 'spend_days': e.spend_days};
     });
     vn.state.occurrences.map(function(e) {
-        var start_occurrence = moment(e.start_time);
-        var end_occurrence = moment(e.end_time);
-        vn.state.vacation_spend +=
-            start_occurrence.format('H') == 9 && end_occurrence.format('H') == 17 ?
-                    moment.duration(end_occurrence.diff(start_occurrence)).days()+1
-                :
-                    start_occurrence.format('H') == end_occurrence.format('H') ?
-                        moment.duration(end_occurrence.diff(start_occurrence)).days()
+        var absencetype = vn.state.absence_type.find( x => e.absence_type == x.id );
+        console.log('AT', absencetype);
+        if (absencetype.spend_days == -1) {
+            var start_occurrence = moment(e.start_time);
+            var end_occurrence = moment(e.end_time);
+            vn.state.vacation_spend +=
+                start_occurrence.format('H') == 9 && end_occurrence.format('H') == 17 ?
+                        moment.duration(end_occurrence.diff(start_occurrence)).days()+1
                     :
-                        moment.duration(end_occurrence.diff(start_occurrence)).days()+0.5
-        for ( start_occurrence ; end_occurrence.isSameOrAfter(start_occurrence) ; start_occurrence.add(1, 'days') ) {
-            var absencetype_name = vn.state.absencetype_result.find( x => e.absence_type == x.id ).name;
-            vn.state.occurrence_days.push({
-                'absencetype_id': e.absence_type,
-                'absencetype_name': absencetype_name,
-                'day': start_occurrence.format('YYYY-MM-DD')
-            })
+                        start_occurrence.format('H') == end_occurrence.format('H') ?
+                            moment.duration(end_occurrence.diff(start_occurrence)).days()
+                        :
+                            moment.duration(end_occurrence.diff(start_occurrence)).days()+0.5
+            for ( start_occurrence ; end_occurrence.isSameOrAfter(start_occurrence) ; start_occurrence.add(1, 'days') ) {
+                var absencetype_name = vn.state.absencetype_result.find( x => e.absence_type == x.id ).name;
+                vn.state.occurrence_days.push({
+                    'absencetype_id': e.absence_type,
+                    'absencetype_name': absencetype_name,
+                    'day': start_occurrence.format('YYYY-MM-DD')
+                })
+            }
         }
     });
 
@@ -151,7 +155,19 @@ const Absences = {
                                                     radius: 50,
                                                     rtl: true,
                                                     onclick: function(ev) {
-                                                        vn.state.year --;
+                                                        vn.state.year--;
+                                                        vn.state.start_period = new Date(
+                                                            vn.state.year,
+                                                            0,
+                                                            1
+                                                        )
+                                                        vn.state.end_period = new Date(
+                                                            vn.state.year,
+                                                            11,
+                                                            31
+                                                        )
+                                                        vn.state.occurrences = [];
+                                                        vn.state.vacation_spend = 0;
                                                         get_occurrences(vn);
                                                     },
                                                 })
@@ -167,7 +183,19 @@ const Absences = {
                                                     radius: 50,
                                                     rtl: true,
                                                     onclick: function(ev) {
-                                                        vn.state.year ++;
+                                                        vn.state.year++;
+                                                        vn.state.start_period = new Date(
+                                                            vn.state.year,
+                                                            0,
+                                                            1
+                                                        )
+                                                        vn.state.end_period = new Date(
+                                                            vn.state.year,
+                                                            11,
+                                                            31
+                                                        )
+                                                        vn.state.occurrences = [];
+                                                        vn.state.vacation_spend = 0;
                                                         get_occurrences(vn);
                                                     },
                                                 })

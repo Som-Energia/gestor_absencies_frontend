@@ -62,6 +62,7 @@ const WorkerForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
+                                                type: 'password',
                                                 label: 'Password',
                                                 outlined: true,
                                                 onblur: function (e){

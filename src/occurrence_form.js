@@ -30,10 +30,10 @@ const OccurrenceForm = {
         vn.state.absence_info['start_afternoon'] = true;
         vn.state.absence_info['end_morning'] = true;
         vn.state.absence_info['end_afternoon'] = true;
-        vn.state.absence_info['worker'] = [Auth.user_id];
+        vn.state.absence_info['worker'] = [String(Auth.user_id)];
         const token = Auth.token;
 
-        var url = apibase+'/absencies/absencetype';
+        var url = apibase+'/absencies/absencetype?global_date=False';
 
         var headers = {'Authorization': token}
 
