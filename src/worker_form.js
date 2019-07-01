@@ -22,6 +22,19 @@ const WorkerForm = {
         }
         vn.state.snackbar = {};
         vn.state.snackbar_message = '';
+        vn.state.gender_options = [
+            {'value': 'Female', 'text': 'Dona'},
+            {'value': 'Male', 'text': 'Home'},
+            {'value': 'Intersex', 'text': 'Intersex'},
+            {'value': 'Trans', 'text': 'Trans'},
+            {'value': 'Queer', 'text': 'Queer'},
+            {'value': 'Other', 'text': 'Altre'},
+        ]
+        vn.state.category_options = [
+            {'value': 'Technical', 'text': 'Tècnic'},
+            {'value': 'Specialist', 'text': 'Especialista'},
+            {'value': 'Manager', 'text': 'Gerència'},
+        ]
         const token = Auth.token;
 
         var url = apibase+'/absencies/vacationpolicy';
@@ -98,15 +111,19 @@ const WorkerForm = {
                                         )
                                     )
                                 ),
+
                                 m(Layout,
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
-                                            m(MCWTextField, {
-                                                label: "Gender",
+                                            m(MCWSelectmenu, {
+                                                options: vn.state.gender_options,
                                                 outlined: true,
-                                                onblur: function (e){
-                                                    vn.state.worker['gender'] = e.target.value
-                                                },
+                                                label: 'Gènere',
+                                                id: 'gender',
+                                                value: vn.state.worker['gender'],
+                                                onchange: function(ev){
+                                                    vn.state.worker['gender'] = ev.target.value;
+                                                }
                                             })
                                         )
                                     )
@@ -114,12 +131,15 @@ const WorkerForm = {
                                 m(Layout,
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
-                                            m(MCWTextField, {
-                                                label: "Category",
+                                            m(MCWSelectmenu, {
+                                                options: vn.state.category_options,
                                                 outlined: true,
-                                                onblur: function (e){
-                                                    vn.state.worker['category'] = e.target.value
-                                                },
+                                                label: 'Categoria',
+                                                id: 'category',
+                                                value: vn.state.worker['category'],
+                                                onchange: function(ev){
+                                                    vn.state.worker['category'] = ev.target.value;
+                                                }
                                             })
                                         )
                                     )

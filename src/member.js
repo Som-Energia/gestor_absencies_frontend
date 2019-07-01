@@ -9,6 +9,7 @@ import MWCFab from './mdc/fab'
 import Dialog from './mdc/dialog'
 import MCWButton from './mdc/button'
 import Snackbar from './mdc/snackbar'
+import MCWSelectmenu from './mdc/selectmenu'
 
 
 var apibase = process.env.APIBASE;
@@ -24,6 +25,19 @@ const Member = {
         vn.state.snackbar_message = '';
         vn.state.auth = Auth;
         const token = Auth.token;
+        vn.state.gender_options = [
+            {'value': 'Female', 'text': 'Dona'},
+            {'value': 'Male', 'text': 'Home'},
+            {'value': 'Intersex', 'text': 'Intersex'},
+            {'value': 'Trans', 'text': 'Trans'},
+            {'value': 'Queer', 'text': 'Queer'},
+            {'value': 'Other', 'text': 'Altre'},
+        ]
+        vn.state.category_options = [
+            {'value': 'Technical', 'text': 'Tècnic'},
+            {'value': 'Specialist', 'text': 'Especialista'},
+            {'value': 'Manager', 'text': 'Gerència'},
+        ]
         vn.state.dialog_remove_worker = {
             backdrop: true,
             outer: {},
@@ -74,7 +88,8 @@ const Member = {
                                         m('.personal_info', [
                                                 m(Layout.Row,[
                                                     Object.keys(vn.state.member_info).map(function(key) {
-                                                        return m(Layout.Cell, {span:6}, [
+                                                        return (key != 'gender' && key != 'category') ?
+                                                            m(Layout.Cell, {span:6}, [
                                                                 m(MCWTextField, {
                                                                     label: key,
                                                                     value: vn.state.member_info[key],
@@ -87,10 +102,38 @@ const Member = {
                                                                     oninput: function (e){
                                                                         vn.state.member_info[key] = e.target.value;
                                                                     },
-                                                                })]
-                                                            );
+                                                                })
+                                                            ])
+                                                        :
+                                                            ''
                                                     }),
-                                                ])        
+                                                    m(Layout.Cell, {span:6},
+                                                        m(MCWSelectmenu, {
+                                                            outlined: true,
+                                                            label: 'Gènere',
+                                                            id: 'gender',
+                                                            value: vn.state.member_info['gender'] != undefined ? vn.state.member_info['gender'] : '',
+                                                            options: vn.state.gender_options,
+                                                            disabled: !vn.state.can_edit,
+                                                            onchange: function(ev){
+                                                                vn.state.member_info['gender'] = ev.target.value;
+                                                            }
+                                                        })
+                                                    ),
+                                                    m(Layout.Cell, {span:6},
+                                                        m(MCWSelectmenu, {
+                                                            outlined: true,
+                                                            label: 'Categoria',
+                                                            id: 'category',
+                                                            value: vn.state.member_info['category'] != undefined ? vn.state.member_info['category'] : '',
+                                                            options: vn.state.category_options,
+                                                            disabled: !vn.state.can_edit,
+                                                            onchange: function(ev){
+                                                                vn.state.member_info['category'] = ev.target.value;
+                                                            }
+                                                        })
+                                                    ),
+                                                ])
                                             ])
                                         ),
                                         vn.state.can_edit ?
