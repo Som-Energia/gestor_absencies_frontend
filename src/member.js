@@ -10,6 +10,7 @@ import Dialog from './mdc/dialog'
 import MCWButton from './mdc/button'
 import Snackbar from './mdc/snackbar'
 import MCWSelectmenu from './mdc/selectmenu'
+import get_objects from './iterate_request'
 
 
 var apibase = process.env.APIBASE;
@@ -38,6 +39,7 @@ const Member = {
             {'value': 'Specialist', 'text': 'Especialista'},
             {'value': 'Manager', 'text': 'Gerència'},
         ]
+        vn.state.vacationpolicy_options = []
         vn.state.dialog_remove_worker = {
             backdrop: true,
             outer: {},
@@ -50,23 +52,30 @@ const Member = {
                 'Authorization': token
             }
         }).
-        then(function(result) {
+        then(async function(worker_result) {
 
-            Object.keys(result).map(function(key){
+            Object.keys(worker_result).map(function(key){
                 if (key !== 'id') {
                     if (key == 'contract_date') {
-                        vn.state.member_info[key] = moment(result[key]).format('YYYY/MM/DD');
+                        vn.state.member_info[key] = moment(worker_result[key]).format('YYYY/MM/DD');
                     }
                     else {
-                        vn.state.member_info[key] = result[key];
+                        vn.state.member_info[key] = worker_result[key];
                     }
                 }
                 else {
-                    vn.state.worker_id = result[key];
+                    vn.state.worker_id = worker_result[key];
                 }
             });
-            m.redraw();
-            console.log('ADMIN? ', vn.state.auth.is_admin);
+
+            var url = apibase+'/absencies/vacationpolicy'
+            var headers = {'Authorization': vn.state.auth.token};
+            vn.state.vacationpolicy_result = await get_objects(url, headers);
+
+            vn.state.vacationpolicy_options = vn.state.vacationpolicy_result.map(function(e){
+                return {'value': e.id, 'text': e.name};
+            })
+
             vn.state.can_edit = false;
         }).
         catch(function(error){
@@ -83,12 +92,12 @@ const Member = {
                         m(Layout,
                             m(Layout.Row, [
                                 m(Layout.Cell, {span:11},
-                                m(MCWCard, { header: m('h2','Worker') }, [
+                                m(MCWCard, { header: m('h2','Usuari') }, [
                                     m(Layout,
                                         m('.personal_info', [
                                                 m(Layout.Row,[
                                                     Object.keys(vn.state.member_info).map(function(key) {
-                                                        return (key != 'gender' && key != 'category') ?
+                                                        return (key != 'gender' && key != 'category' && key != 'vacation_policy') ?
                                                             m(Layout.Cell, {span:6}, [
                                                                 m(MCWTextField, {
                                                                     label: key,
@@ -107,6 +116,19 @@ const Member = {
                                                         :
                                                             ''
                                                     }),
+                                                    m(Layout.Cell, {span:6},
+                                                        m(MCWSelectmenu, {
+                                                            outlined: true,
+                                                            label: 'Política de Vacances',
+                                                            id: 'vacation_policy',
+                                                            value: vn.state.member_info['vacation_policy'] != undefined ? vn.state.member_info['vacation_policy'] : '',
+                                                            options: vn.state.vacationpolicy_options,
+                                                            disabled: !(vn.state.auth.is_admin && vn.state.can_edit),
+                                                            onchange: function(ev){
+                                                                vn.state.member_info['vacation_policy'] = ev.target.value;
+                                                            }
+                                                        })
+                                                    ),
                                                     m(Layout.Cell, {span:6},
                                                         m(MCWSelectmenu, {
                                                             outlined: true,

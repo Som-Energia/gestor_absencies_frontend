@@ -23,6 +23,25 @@ function arrayContains(needle, arrhaystack) {
 
 async function get_occurrences(vn) {
 
+    m.request({
+        method: 'GET',
+        url: (apibase+'/absencies/workers/'+vn.state.auth.user_id),
+        headers: {
+            'Authorization': vn.state.token
+        }
+    }).
+    then(async function(worker_result) {
+        vn.state.holidays = worker_result.holidays;
+
+        var url = apibase+'/absencies/vacationpolicy'
+        var headers = {'Authorization': vn.state.token};
+        vn.state.vacationpolicy_result = await get_objects(url, headers);
+        vn.state.vacation_policy = vn.state.vacationpolicy_result.find( x => worker_result.vacation_policy == x.id);
+    }).
+    catch(function(error){
+        console.log(error);
+    });
+
     var url = apibase+'/absencies/absences?' +
             'worker=' + Auth.user_id +
             '&' +
@@ -44,16 +63,22 @@ async function get_occurrences(vn) {
 
     vn.state.absencetype_result = await get_objects(url, headers);
 
-    console.log('occurrences --->', vn.state.occurrences);
     vn.state.absence_type = vn.state.absencetype_result.map(function(e){
         return {'name': e.name, 'id': e.id, 'spend_days': e.spend_days};
     });
     vn.state.occurrences.map(function(e) {
         var absencetype = vn.state.absence_type.find( x => e.absence_type == x.id );
-        console.log('AT', absencetype);
+        var start_occurrence = moment(e.start_time);
+        var end_occurrence = moment(e.end_time);
+        for ( start_occurrence ; end_occurrence.isSameOrAfter(start_occurrence) ; start_occurrence.add(1, 'days') ) {
+            var absencetype_name = vn.state.absencetype_result.find( x => e.absence_type == x.id ).name;
+            vn.state.occurrence_days.push({
+                'absencetype_id': e.absence_type,
+                'absencetype_name': absencetype_name,
+                'day': start_occurrence.format('YYYY-MM-DD')
+            })
+        }
         if (absencetype.spend_days == -1) {
-            var start_occurrence = moment(e.start_time);
-            var end_occurrence = moment(e.end_time);
             vn.state.vacation_spend +=
                 start_occurrence.format('H') == 9 && end_occurrence.format('H') == 17 ?
                         moment.duration(end_occurrence.diff(start_occurrence)).days()+1
@@ -62,32 +87,9 @@ async function get_occurrences(vn) {
                             moment.duration(end_occurrence.diff(start_occurrence)).days()
                         :
                             moment.duration(end_occurrence.diff(start_occurrence)).days()+0.5
-            for ( start_occurrence ; end_occurrence.isSameOrAfter(start_occurrence) ; start_occurrence.add(1, 'days') ) {
-                var absencetype_name = vn.state.absencetype_result.find( x => e.absence_type == x.id ).name;
-                vn.state.occurrence_days.push({
-                    'absencetype_id': e.absence_type,
-                    'absencetype_name': absencetype_name,
-                    'day': start_occurrence.format('YYYY-MM-DD')
-                })
-            }
         }
     });
-
-    m.request({
-        method: 'GET',
-        url: (apibase + '/absencies/workers/' + vn.state.auth.user_id),
-        headers: {
-            'Authorization': vn.state.token
-        }
-    }).
-    then(function(worker_result) {
-        vn.state.holidays = worker_result.holidays;
-        vn.state.semaphore = true;
-        m.redraw();
-    }).
-    catch(function(error){
-        console.log(error);
-    });
+    m.redraw();
 }
 
 
@@ -206,7 +208,6 @@ const Absences = {
                                                 m(Layout.Cell, {span:6},
                                                     m('ul.absences-list',
                                                         vn.state.occurrences.map(function(e){
-                                                        //console.log('itaretion! --', e, typeof(e));
                                                         return m('li.absences-list__item',
                                                             (e != undefined) ?
                                                             m('.absences-list__item-container', [
@@ -271,7 +272,7 @@ const Absences = {
                                                 m(Layout.Cell, {span:6},
                                                     m('ul.total-absences',
                                                         m('li.total-absences__item', [
-                                                            m('.num', '25'),
+                                                            m('.num', (vn.state.vacation_policy != undefined) ? vn.state.vacation_policy.holidays : '0'),
                                                             m('.desc', 'Dies totals'),
                                                         ]),
                                                         m('li.total-absences__item', [
