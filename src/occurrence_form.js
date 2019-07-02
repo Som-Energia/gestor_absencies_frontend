@@ -62,8 +62,8 @@ const OccurrenceForm = {
                                         m(Layout.Cell, {span:12},
                                            m(DatePicker, 
                                                 {id: 'start_date',
-                                                label: 'Start',
-                                                help: 'First day that will be included',
+                                                label: 'Inici',
+                                                help: 'El primer dia està inclòs',
                                                 value: undefined,
                                                 outlined: true,
                                                 future: moment().add(20,'years'),
@@ -85,8 +85,8 @@ const OccurrenceForm = {
                                         m(Layout.Cell, {span:12},
                                             m(DatePicker, 
                                                 {id: 'end_date',
-                                                label: 'End',
-                                                help: 'Last day that will be included',
+                                                label: 'Final',
+                                                help: 'L\'últim dia està inclòs',
                                                 value: undefined,
                                                 outlined: true,
                                                 future: moment().add(20,'years'),
@@ -107,7 +107,7 @@ const OccurrenceForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWCheckbox, {
-                                                'label': 'Start morning',
+                                                'label': 'Primer matí inclòs',
                                                 'checked': (vn.state.absence_info['start_morning'] !== undefined) ?
                                                     vn.state.absence_info['start_morning']
                                                     :
@@ -124,7 +124,7 @@ const OccurrenceForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWCheckbox, {
-                                                'label': 'End afternoon',
+                                                'label': 'Última tarda inclosa',
                                                 'checked': (vn.state.absence_info['end_afternoon'] !== undefined) ?
                                                     vn.state.absence_info['end_afternoon']
                                                     :
@@ -175,7 +175,7 @@ const OccurrenceForm = {
                                             vn.state.snackbar.open();
                                         });
                                     },
-                                }, 'Create'),
+                                }, 'Crear'),
                                 m(Snackbar, {
                                     model: vn.state.snackbar,
                                     dismiss: true

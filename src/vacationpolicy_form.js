@@ -30,12 +30,12 @@ const VacationPolicyForm = {
                         m(Layout.Cell,  {span:4}),
                         m(Layout.Cell,  {span:4}, 
                             m(MCWCard,
-                                m('h1', 'Formulari de creació d\'una Vacation Policy'),
+                                m('h1', 'Formulari de creació d\'una Política de Vacances'),
                                 m(Layout,
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
-                                                label : "Name",
+                                                label : "Nom",
                                                 outlined: true,
                                                 onblur: function (e){
                                                     vn.state.vacation_policy['name'] = e.target.value
@@ -46,7 +46,7 @@ const VacationPolicyForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
-                                                label : "Description",
+                                                label : "Descripció",
                                                 outlined: true,
                                                 onblur: function (e){
                                                     vn.state.vacation_policy['description'] = e.target.value
@@ -57,7 +57,7 @@ const VacationPolicyForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
-                                                label : "Holidays",
+                                                label : "Dies de vacances",
                                                 outlined: true,
                                                 onblur: function (e){
                                                     vn.state.vacation_policy['holidays'] = e.target.value
@@ -88,7 +88,7 @@ const VacationPolicyForm = {
                                             console.log(error);
                                         });
                                     },
-                                }, 'Create'),
+                                }, 'Crear'),
                                 m(Snackbar, {
                                     model: vn.state.snackbar,
                                     dismiss: true

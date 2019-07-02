@@ -309,7 +309,7 @@ const Calendar = {
                                         m(Layout.Row, [
                                             m(Layout.Cell, {span:9},
                                                 m(MCWTextField, {
-                                                    label: 'Filter',
+                                                    label: 'Filtrar',
                                                     outlined: true,
                                                     oninput: function(ev) {
                                                         if (vn.state.type_filter === 'worker') {
@@ -364,11 +364,11 @@ const Calendar = {
                                                     required: true,
                                                     options: [
                                                         {
-                                                            'text': 'Team',
+                                                            'text': 'Equip',
                                                             'value': 'team'
                                                         },
                                                         {
-                                                            'text': 'Worker',
+                                                            'text': 'Usuari',
                                                             'value': 'worker'
                                                         },
                                                     ],

@@ -17,6 +17,17 @@ import get_objects from './iterate_request'
 var apibase = process.env.APIBASE;
 
 
+function count_work_days(start, end) {
+    var work_days = 0;
+    var date = moment(start);
+    for ( date ; end.isSameOrAfter(date) ; date.add(1, 'days') ) {
+        if (date.isoWeekday() !== 6 && date.isoWeekday() !== 7) {
+            work_days++;
+        }
+    }
+    return work_days;
+}
+
 function arrayContains(needle, arrhaystack) {
     return (arrhaystack.indexOf(needle) > -1);
 }
@@ -70,6 +81,17 @@ async function get_occurrences(vn) {
         var absencetype = vn.state.absence_type.find( x => e.absence_type == x.id );
         var start_occurrence = moment(e.start_time);
         var end_occurrence = moment(e.end_time);
+        if (absencetype.spend_days == -1) {
+            vn.state.vacation_spend +=
+                start_occurrence.format('H') == 9 && end_occurrence.format('H') == 17 ?
+                        count_work_days(start_occurrence, end_occurrence)
+                    :
+                        start_occurrence.format('H') == end_occurrence.format('H') ?
+                            count_work_days(start_occurrence, end_occurrence)-1
+                        :
+                            count_work_days(start_occurrence, end_occurrence)-0.5
+        }
+
         for ( start_occurrence ; end_occurrence.isSameOrAfter(start_occurrence) ; start_occurrence.add(1, 'days') ) {
             var absencetype_name = vn.state.absencetype_result.find( x => e.absence_type == x.id ).name;
             vn.state.occurrence_days.push({
@@ -77,16 +99,6 @@ async function get_occurrences(vn) {
                 'absencetype_name': absencetype_name,
                 'day': start_occurrence.format('YYYY-MM-DD')
             })
-        }
-        if (absencetype.spend_days == -1) {
-            vn.state.vacation_spend +=
-                start_occurrence.format('H') == 9 && end_occurrence.format('H') == 17 ?
-                        moment.duration(end_occurrence.diff(start_occurrence)).days()+1
-                    :
-                        start_occurrence.format('H') == end_occurrence.format('H') ?
-                            moment.duration(end_occurrence.diff(start_occurrence)).days()
-                        :
-                            moment.duration(end_occurrence.diff(start_occurrence)).days()+0.5
         }
     });
     m.redraw();
@@ -341,10 +353,10 @@ const Absences = {
                     : '',
                         m(Dialog, {
                             id: 'remove_occurrence',
-                            header: 'Remove Occurrence',
+                            header: 'Eliminar',
                             model: vn.state.dialog_remove_occurrence.outer,
                             buttons: [{
-                                text: 'Remove Occurrence',
+                                text: 'Eliminar',
                                 onclick: function(){
                                     m.request({
                                         method: 'DELETE',
@@ -369,7 +381,7 @@ const Absences = {
                                     vn.state.dialog_remove_occurrence.outer.close();
                                 }
                             },{
-                                text: 'Cancel',
+                                text: 'Cancel·lar',
                                 onclick: function(){
                                     vn.state.dialog_remove_occurrence.outer.close();
                                 }

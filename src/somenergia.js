@@ -72,7 +72,7 @@ const SomEnergia = {
                                                         vn.state.option = 'vacation_policy';
                                                     }
                                                 },
-                                                'Vacation Policy'
+                                                'Polítiques de Vacances'
                                             )
                                         ),
                                         m('li',
@@ -83,7 +83,7 @@ const SomEnergia = {
                                                         vn.state.option = 'absence_type';
                                                     }
                                                 },
-                                                'Absence Type'
+                                                'Tipus d\'Absències'
                                             )
                                         )
                                     ])
@@ -94,9 +94,9 @@ const SomEnergia = {
                                         m(Layout.Cell, {span: 12}, [
                                         (vn.state.option == 'vacation_policy') ? 
                                             [
-                                                m('h2', 'Vacation Policy'),
+                                                m('h2', 'Polítiques de Vacances'),
                                                 m(MCWTextField, {
-                                                    label: 'Nom de la politica de vacances a cercar',
+                                                    label: 'Filtrar',
                                                     outlined: true,
                                                     oninput: function(ev) {
                                                         if (ev.target.value !== ''){
@@ -125,9 +125,9 @@ const SomEnergia = {
                                             ]
                                         :
                                             [
-                                                m('h2', 'Abscence Type'),
+                                                m('h2', 'Tipus d\'Absències'),
                                                 m(MCWTextField, {
-                                                    label: 'Nom del tipus d\'absencia',
+                                                    label: 'Filtrar',
                                                     outlined: true,
                                                     oninput: function(ev) {
                                                         if (ev.target.value !== ''){

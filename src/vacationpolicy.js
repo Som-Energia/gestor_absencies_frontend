@@ -61,7 +61,7 @@ const VacationPolicy = {
                         m(Layout,
                             m(Layout.Row, [
                                 m(Layout.Cell, {span:11},
-                                m(MCWCard, { header: m('h2','Vacation Policy') }, [
+                                m(MCWCard, { header: m('h2','Política de Vacances') }, [
                                     m(Layout,
                                         m('.vacation_policy', [
                                                 m(Layout.Row, [
@@ -90,7 +90,7 @@ const VacationPolicy = {
                                                         onclick: function(){
                                                             vn.state.dialog_remove_vacationpolicy.outer.open();
                                                         }
-                                                    }, 'Remove Vacation Policy'),
+                                                    }, 'Eliminar'),
                                                 ),
                                                 m(Layout.Cell, {span:5})
                                             ) : ''
@@ -135,11 +135,10 @@ const VacationPolicy = {
                             ''),
                             m(Dialog, {
                             id: 'remove_vacationpolicy',
-                            header: 'Remove VacationPolicy',
+                            header: 'Eliminar',
                             model: vn.state.dialog_remove_vacationpolicy.outer,
-                            content: 'Estas segur?',
                             buttons: [{
-                                text: 'Eliminar la VacationPolicy',
+                                text: 'Eliminar',
                                 onclick: function(){
                                     m.request({
                                         method: 'DELETE',
@@ -160,7 +159,7 @@ const VacationPolicy = {
                                     vn.state.dialog_remove_vacationpolicy.outer.close();
                                 }
                             },{
-                                text: 'Cancel',
+                                text: 'Cancel·lar',
                                 onclick: function(){
                                     console.log('cancel dialog');
                                     vn.state.dialog_remove_vacationpolicy.outer.close();
@@ -177,7 +176,7 @@ const VacationPolicy = {
                             },
                             backdrop: vn.state.dialog_remove_vacationpolicy.backdrop,
                         }, [
-                            m('.', 'Estas segur que vols eliminar aquesta politica de vacances?')
+                            m('.', 'Estas segur que vols eliminar aquesta Política de Vacances?')
                         ]),
                     ]),
                     m(Snackbar, {

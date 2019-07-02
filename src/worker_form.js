@@ -89,7 +89,7 @@ const WorkerForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
-                                                label: "First Name",
+                                                label: 'Nom',
                                                 outlined: true,
                                                 onblur: function (e){
                                                     vn.state.worker['first_name'] = e.target.value
@@ -102,7 +102,7 @@ const WorkerForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
-                                                label: "Last Name",
+                                                label: 'Cognoms',
                                                 outlined: true,
                                                 onblur: function (e){
                                                     vn.state.worker['last_name'] = e.target.value
@@ -148,7 +148,7 @@ const WorkerForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
-                                                label: "Hours",
+                                                label: "Hores de jornada",
                                                 outlined: true,
                                                 onblur: function (e){
                                                     vn.state.worker['working_week'] = e.target.value
@@ -162,8 +162,7 @@ const WorkerForm = {
                                         m(Layout.Cell, {span:12},
                                             m(DatePicker, 
                                                 {id: 'contract_date',
-                                                label: 'Contract date',
-                                                help: 'Contract date',
+                                                label: 'Data de contractació',
                                                 value: undefined,
                                                 outlined: true,
                                                 future: moment().add(20, 'years'),
@@ -182,7 +181,7 @@ const WorkerForm = {
                                             m(MCWSelectmenu, {
                                                 options: vn.state.elements_list,
                                                 outlined: true,
-                                                label: 'Politica de Vacances',
+                                                label: 'Política de Vacances',
                                                 id: 'vacation_policy',
                                                 value: vn.state.worker['vacation_policy'],
                                                 onchange: function(ev){
@@ -215,7 +214,7 @@ const WorkerForm = {
                                             console.log(error);
                                         });
                                     },
-                                }, 'Create'),
+                                }, 'Crear'),
                                 m(Snackbar, {
                                     model: vn.state.snackbar,
                                     dismiss: true

@@ -58,7 +58,7 @@ const Login = {
                                 m(Snackbar, {
                                     model: vn.state.snackbar,
                                     dismiss: true
-                                }, 'No te sabe tu credensiale o k ase?'),
+                                }, 'Credencials incorrectes'),
                             ] : [
                                 m('h1', 'Logout'),
                                 m(MCWButton, {

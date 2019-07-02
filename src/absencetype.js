@@ -76,7 +76,7 @@ const AbsenceType = {
                         m(Layout,
                             m(Layout.Row, [
                                 m(Layout.Cell, {span:11},
-                                    m(MCWCard, { header: m('h2','Absence Type') }, [
+                                    m(MCWCard, { header: m('h2','Tipus d\'Abencia') }, [
                                         m(Layout,
                                             m('.absence_info', [
                                                 m(Layout.Row, [
@@ -127,7 +127,7 @@ const AbsenceType = {
                                                         onclick: function(){
                                                             vn.state.dialog_remove_absencetype.outer.open();
                                                         }
-                                                    },'remove AbsenceType'),
+                                                    },'Eliminar'),
                                                 ),
                                                 m(Layout.Cell, {span:5})
                                             )
@@ -177,11 +177,11 @@ const AbsenceType = {
                         ),
                         m(Dialog, {
                             id: 'remove_absencetype',
-                            header: 'Remove AbsenceType',
+                            header: 'Eliminar',
                             model: vn.state.dialog_remove_absencetype.outer,
                             content: 'Estas segur?',
                             buttons: [{
-                                text: 'Eliminar l\'AbsenceType',
+                                text: 'Eliminar',
                                 onclick: function(){
                                     m.request({
                                         method: 'DELETE',
@@ -202,7 +202,7 @@ const AbsenceType = {
                                     vn.state.dialog_remove_absencetype.outer.close();
                                 }
                             },{
-                                text: 'Cancel',
+                                text: 'Cancel·lar',
                                 onclick: function(){
                                     console.log('cancel dialog');
                                     vn.state.dialog_remove_absencetype.outer.close();
@@ -219,7 +219,7 @@ const AbsenceType = {
                             },
                             backdrop: vn.state.dialog_remove_absencetype.backdrop,
                         }, [
-                            m('.', 'Estas segur que vols eliminar aquest tipus d\'absència?')
+                            m('.', 'Estas segur que vols eliminar aquest Tipus d\'Absència?')
                         ]),
                         m(Snackbar, {
                             model: vn.state.snackbar,

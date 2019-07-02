@@ -72,7 +72,7 @@ const ET = {
                                                         vn.state.option = 'members';
                                                     }
                                                 },
-                                                'Members'
+                                                'Usuaris'
                                             )
                                         ),
                                         m('li',
@@ -83,7 +83,7 @@ const ET = {
                                                         vn.state.option = 'teams';
                                                     }
                                                 },
-                                                'Teams'
+                                                'Equips'
                                             )
                                         )
                                     ])
@@ -94,9 +94,9 @@ const ET = {
                                         m(Layout.Cell, {span: 12}, [
                                         (vn.state.option == 'members') ? 
                                             [
-                                                m('h2', 'Members'),
+                                                m('h2', 'Usuaris'),
                                                 m(MCWTextField, {
-                                                    label: 'Nom de la persona a cercar',
+                                                    label: 'Filtrar',
                                                     outlined: true,
                                                     oninput: function(ev) {
                                                         if (ev.target.value !== ''){
@@ -127,9 +127,9 @@ const ET = {
                                             ]
                                         :
                                             [
-                                                m('h2', 'Teams'),
+                                                m('h2', 'Equips'),
                                                 m(MCWTextField, {
-                                                    label: 'Nom de l\'equip a cercar',
+                                                    label: 'Filtrar',
                                                     outlined: true,
                                                     oninput: function(ev) {
                                                         if (ev.target.value !== ''){

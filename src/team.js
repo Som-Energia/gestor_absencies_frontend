@@ -178,7 +178,7 @@ const Team = {
                         m(Layout,
                             m(Layout.Row, [
                                 m(Layout.Cell, {span:11},
-                                m(MCWCard, { header: m('h2','Team') }, [
+                                m(MCWCard, { header: m('h2','Equip') }, [
                                         m(Layout,
                                             m('.team_info', [
                                                 m(Layout.Row, [
@@ -267,7 +267,7 @@ const Team = {
                                                             onclick: function(){
                                                                 vn.state.dialog_add_member.outer.open();
                                                             }
-                                                        }, 'Add Member'),
+                                                        }, 'Afegir integrant'),
                                                     ),
                                                     m(Layout.Cell,
                                                         m(MCWButton, {
@@ -275,7 +275,7 @@ const Team = {
                                                             onclick: function(){
                                                                 vn.state.dialog_remove_team.outer.open();
                                                             }
-                                                        }, 'Remove Team'),
+                                                        }, 'Eliminar'),
                                                     )
                                                 )
                                             :
@@ -461,10 +461,10 @@ const Team = {
                         ),
                         m(Dialog, {
                             id: 'add_member',
-                            header: 'Add member',
+                            header: 'Usuari',
                             model: vn.state.dialog_add_member.outer,
                             buttons: [{
-                                text: 'Sub dialog',
+                                text: 'Afegir',
                                 onclick: function(){
                                     m.request({
                                         method: 'POST',
@@ -509,7 +509,7 @@ const Team = {
                                     vn.state.dialog_add_member.outer.close();
                                 }
                             },{
-                                text: 'Cancel dialog',
+                                text: 'Cancel·lar',
                                 onclick: function(){
                                     console.log('cancel dialog');
                                     vn.state.dialog_add_member.outer.close();
@@ -528,7 +528,6 @@ const Team = {
                         }, [
                             m(MCWSelectmenu, {
                                 outlined: true,
-                                label: 'Treballador',
                                 options: vn.state.possibles_members,
                                 onchange: function(ev){
                                     vn.state.new_member = ev.target.value;
@@ -537,10 +536,10 @@ const Team = {
                         ]),
                         m(Dialog, {
                             id: 'remove_member',
-                            header: 'Remove member',
+                            header: 'Eliminar l\'usuari de l\'equip',
                             model: vn.state.dialog_remove_member.outer,
                             buttons: [{
-                                text: 'Sub dialog',
+                                text: 'Eliminar',
                                 onclick: function(){
                                     m.request({
                                         method: 'DELETE',
@@ -566,7 +565,7 @@ const Team = {
                                     vn.state.dialog_remove_member.outer.close();
                                 }
                             },{
-                                text: 'Cancel dialog',
+                                text: 'Cancel·lar',
                                 onclick: function(){
                                     console.log('cancel dialog');
                                     vn.state.dialog_remove_member.outer.close();
@@ -586,10 +585,10 @@ const Team = {
                         ),
                         m(Dialog, {
                             id: 'remove_team',
-                            header: 'Remove Team',
+                            header: 'Eliminar',
                             model: vn.state.dialog_remove_team.outer,
                             buttons: [{
-                                text: 'Remove Team',
+                                text: 'Eliminar',
                                 onclick: function(){
                                     m.request({
                                         method: 'DELETE',
@@ -610,7 +609,7 @@ const Team = {
                                     vn.state.dialog_remove_team.outer.close();
                                 }
                             },{
-                                text: 'Cancel',
+                                text: 'Cancel·lar',
                                 onclick: function(){
                                     console.log('cancel dialog');
                                     vn.state.dialog_remove_team.outer.close();

@@ -41,12 +41,12 @@ const AbsenceTypeForm = {
                         m(Layout.Cell,  {span:4}),
                         m(Layout.Cell,  {span:4}, 
                             m(MCWCard,
-                                m('h1', 'Formulari de creació d\'una tipolodia d\'absència'),
+                                m('h1', 'Formulari de creació d\'un Tipus d\'Absència'),
                                 m(Layout,
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
-                                                label : 'Name',
+                                                label : 'Nom',
                                                 outlined: true,
                                                 onchange: function (e){
                                                     vn.state.absencetype['name'] = e.target.value
@@ -59,7 +59,7 @@ const AbsenceTypeForm = {
                                     m(Layout.Row,
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
-                                                label: 'Description',
+                                                label: 'Descripció',
                                                 outlined: true,
                                                 onchange: function (e){
                                                     vn.state.absencetype['description'] = e.target.value
@@ -73,7 +73,7 @@ const AbsenceTypeForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWSelectmenu, {
                                                 value: vn.state.min_duration,
-                                                label: 'Minima duració',
+                                                label: 'Duració mínima',
                                                 id: 'min_duration',
                                                 outlined: true,
                                                 options: [
@@ -94,7 +94,7 @@ const AbsenceTypeForm = {
                                             m(Layout.Row,
                                                 m(Layout.Cell, {span:12},
                                                     m(MCWTextField, {
-                                                        label: 'Min duration',
+                                                        label: 'Duració mínima',
                                                         outlined: true,
                                                         oninput: function(ev) {
                                                             vn.state.absencetype['min_duration'] = ev.target.value;
@@ -112,7 +112,7 @@ const AbsenceTypeForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWSelectmenu, {
                                                 value: vn.state.max_duration,
-                                                label: 'Màxima duració',
+                                                label: 'Duració màxima',
                                                 id: 'max_duration',
                                                 outlined: true,
                                                 options: [
@@ -133,7 +133,7 @@ const AbsenceTypeForm = {
                                             m(Layout.Row,
                                                 m(Layout.Cell, {span:12},
                                                     m(MCWTextField, {
-                                                        label: 'Max duration',
+                                                        label: 'Duració màxima',
                                                         outlined: true,
                                                         oninput: function(ev) {
                                                             vn.state.absencetype['max_duration'] = ev.target.value;
@@ -190,7 +190,7 @@ const AbsenceTypeForm = {
                                         });
                                     },
                                     raised: true,
-                                }, 'Create'),
+                                }, 'Crear'),
                                 m(Snackbar, {
                                     model: vn.state.snackbar,
                                     dismiss: true
