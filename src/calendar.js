@@ -297,6 +297,8 @@ const Calendar = {
                                                     shaped: true,
                                                     radius: 50,
                                                     rtl: true,
+                                                    disabled: (vn.state.month_seen.getMonth() === 11 &&
+                                                        vn.state.month_seen.getFullYear() === (new Date()).getFullYear()+1) && !Auth.is_admin,
                                                     onclick: function(ev) {
                                                         vn.state.month_seen.setMonth(
                                                             vn.state.month_seen.getMonth()+1

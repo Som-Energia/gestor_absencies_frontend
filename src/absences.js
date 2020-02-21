@@ -196,6 +196,7 @@ const Absences = {
                                                     shaped: true,
                                                     radius: 50,
                                                     rtl: true,
+                                                    disabled: ((new Date()).getFullYear()+1 === vn.state.year) && !vn.state.auth.is_admin,
                                                     onclick: function(ev) {
                                                         vn.state.year++;
                                                         vn.state.start_period = new Date(
