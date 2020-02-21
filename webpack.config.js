@@ -1,11 +1,11 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TerserPlugin = require('terser-webpack-plugin');
 const path = require('path');
 
-
 const api_urls = {
-    production: 'https://gestorabsencies-demo.somenergia.local',
+    production: 'https://gestor-absencies.somenergia.coop',
     testing: 'https://gestorabsencies-demo.somenergia.local',
     development: 'http://localhost:8000',
 };
@@ -31,6 +31,14 @@ module.exports = (env, argv) => {
           options: {minimize: true}
         }
 	  },
+    {
+         test: /\.js$/,
+         loader: 'babel-loader',
+         exclude: /node_modules/,
+         query: {
+             presets: ['es2015']
+         }
+     },
 	  {
 		test: /\.(scss|sass|css)$/,
 		//exclude: /node_modules/,
@@ -62,18 +70,28 @@ module.exports = (env, argv) => {
   resolve: {
     extensions: ['*', '.js']
   },
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          ecma: 6,
+          warnings: false,
+        },
+      }),
+    ],
+  },  
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',
       filename: 'index.html'
-	}),
-	new MiniCssExtractPlugin({
-		filename: '[name].[hash].css',
-		chunkFilename: 'chunk-[name].[hash].css',
-	}),
-  new webpack.EnvironmentPlugin({
-    APIBASE: api_urls[mode],
-  })
+  	}),
+  	new MiniCssExtractPlugin({
+  		filename: '[name].[hash].css',
+  		chunkFilename: 'chunk-[name].[hash].css',
+  	}),
+    new webpack.EnvironmentPlugin({
+      APIBASE: api_urls[mode],
+    }),
   ],
 }
 };
