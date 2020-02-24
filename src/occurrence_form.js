@@ -66,12 +66,10 @@ const OccurrenceForm = {
                                                 help: 'El primer dia està inclòs',
                                                 value: undefined,
                                                 outlined: true,
-                                                future: moment().add(20,'years'),
+                                                future: (!Auth.is_admin) ? moment([moment().year()+1, 11, 31]) : moment().add(20,'years'),
                                                 past: moment(),
                                                 onchange: function(newvalue) {
                                                     console.log("changin from ", newvalue.format("YYYY-MM-DD HH:mm:ss"));
-
-                                                    //DatePicker.Example.fromdate=newvalue;
                                                     vn.state.absence_info['start_time'] = newvalue.format("YYYY-MM-DD HH:mm:ss");
                                                 },
                                                 boxed: true,
@@ -89,12 +87,10 @@ const OccurrenceForm = {
                                                 help: 'L\'últim dia està inclòs',
                                                 value: undefined,
                                                 outlined: true,
-                                                future: moment().add(20,'years'),
+                                                future: (!Auth.is_admin) ? moment([moment().year()+1, 11, 31]) : moment().add(20,'years'),
                                                 past: moment(),
                                                 onchange: function(newvalue) {
                                                     console.log("changin from ", newvalue.format("YYYY-MM-DD HH:mm:ss"));
-
-                                                    //DatePicker.Example.fromdate=newvalue;
                                                     vn.state.absence_info['end_time'] = newvalue.format("YYYY-MM-DD HH:mm:ss");
                                                 },
                                                 boxed: true,
