@@ -63,6 +63,7 @@ const WorkerForm = {
                                         m(Layout.Cell, {span:12},
                                             m(MCWTextField, {
                                                 label : "Username",
+                                                type: 'email',
                                                 outlined: true,
                                                 onblur: function (e){
                                                     vn.state.worker['username'] = e.target.value
@@ -195,6 +196,7 @@ const WorkerForm = {
                                 m(MCWButton, {
                                     raised: true,
                                     onclick: function(){
+                                        vn.state.worker.email = vn.state.worker.username;
                                         m.request({
                                         method: 'POST',
                                         url: apibase+'/absencies/workers',
